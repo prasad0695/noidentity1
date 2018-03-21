@@ -5,7 +5,8 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
 <ui:composition template="layout.xhtml">
 	<ui:define name="content">
 		<h:form id="empForm">
@@ -31,12 +32,11 @@
 					<p:outputLabel for="empdept" value="Department " />
 
 					<p:selectOneMenu id="empdept"
-						value="#{emplController.empUiTO.empDeptId}" style="width:150px">
-						<f:selectItem itemLabel="Select Department" itemValue=""
-							noSelectionOption="true" />
+						value="#{emplController.empUiTO.departmentUITO}"
+						style="width:150px" converter="#{deptConverter}">
 						<f:selectItems value="#{emplController.departmentUiToList}"
-							var="dept" itemLabel="#{dept.deptName}"
-							itemValue="#{dept.deptId}" />
+							var="departmentUITO" itemLabel="#{departmentUITO.deptName}"
+							itemValue="#{departmentUITO}" />
 
 					</p:selectOneMenu>
 					<h:commandButton value="#{emplController.actionLabel}"
@@ -68,8 +68,7 @@
 					</p:column>
 					<p:column>
 						<f:facet name="header">Department </f:facet>
-						<h:outputText value="#{emp.empDeptId}">
-						</h:outputText>
+						<h:outputText value="#{emp.departmentUITO.deptName}" />
 					</p:column>
 					<p:column id="action">
 						<f:facet name="header">Action</f:facet>
@@ -77,10 +76,12 @@
 							action="#{emplController.editEmployee(emp)}">
 							<f:ajax execute="action" render="empForm" />
 						</h:commandLink> /
-						<h:commandLink value="Delete"
-							action="#{emplController.deleteEmployee(emp)}">
-							<f:ajax execute="action" render="table" />
-						</h:commandLink>
+						  <sec:authorize access="hasRole('ROLE_ADMIN')">
+							<h:commandLink value="Delete"
+								action="#{emplController.deleteEmployee(emp)}">
+								<f:ajax execute="action" render="table" />
+							</h:commandLink>
+						</sec:authorize>
 					</p:column>
 
 				</p:dataTable>

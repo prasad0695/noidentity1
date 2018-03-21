@@ -7,4 +7,6 @@ import com.jsfspring.curddemo.entity.DepartmentDTO;
 
 @Repository
 public interface DepartmentRepo extends JpaRepository<DepartmentDTO, Long> {
+
+	DepartmentDTO findTitleByDeptName(String deptName);
 }

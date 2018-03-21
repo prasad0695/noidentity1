@@ -12,10 +12,10 @@ import org.springframework.context.annotation.Bean;
 import com.sun.faces.config.ConfigureListener;
 
 @SpringBootApplication
-public class CurddemoApplication extends SpringBootServletInitializer {
+public class SpringJsfApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CurddemoApplication.class, args);
+		SpringApplication.run(SpringJsfApplication.class, args);
 	}
 
 	/*
@@ -28,8 +28,7 @@ public class CurddemoApplication extends SpringBootServletInitializer {
 
 	@Bean
 	public ServletRegistrationBean<Servlet> facesServletRegistration() {
-		ServletRegistrationBean<Servlet> registration = new ServletRegistrationBean<Servlet>(facesServlet(), "*.xhtml");
-		registration.setName("FacesServlet");
+		ServletRegistrationBean<Servlet> registration = new ServletRegistrationBean<Servlet>(facesServlet(), "*.jsf");
 		return registration;
 	}
 

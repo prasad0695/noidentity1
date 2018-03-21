@@ -18,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jsfspring.curddemo.entity.DepartmentDTO;
 import com.jsfspring.curddemo.repositry.DepartmentRepo;
 import com.jsfspring.curddemo.service.DepartmentService;
-import com.jsfspring.curddemo.ui.DepartmentUITO;
-import com.jsfspring.curddemo.ui.EmployeeUITO;
+import com.jsfspring.curddemo.uito.DepartmentUITO;
+import com.jsfspring.curddemo.uito.EmployeeUITO;
 
 @Service
 @Transactional
@@ -42,4 +42,13 @@ public class DepartmentServiceImpl implements DepartmentService {
 		return departmentUITOLst;
 	}
 
+	@Override
+	public DepartmentUITO getDepartment(DepartmentUITO departmentUITO) {
+		System.out.println(">>>>> "+departmentUITO.getDeptName());
+		DepartmentDTO dto = departmentRepo.findTitleByDeptName(departmentUITO.getDeptName());
+		DepartmentUITO uito = new DepartmentUITO();
+
+		BeanUtils.copyProperties(dto, uito);
+		return uito;
+	}
 }

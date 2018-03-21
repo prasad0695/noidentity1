@@ -3,10 +3,12 @@ package com.jsfspring.curddemo.service;
 
 import java.util.List;
 
-import com.jsfspring.curddemo.ui.DepartmentUITO;
+import com.jsfspring.curddemo.uito.DepartmentUITO;
 
 public interface DepartmentService {
 
-	List<DepartmentUITO> getAllDepartment();
+	List<DepartmentUITO> getAllDepartment(); 
+
+	DepartmentUITO getDepartment(DepartmentUITO departmentUITO);
 
 }

@@ -21,8 +21,8 @@ import org.springframework.web.context.annotation.SessionScope;
 
 import com.jsfspring.curddemo.service.DepartmentService;
 import com.jsfspring.curddemo.service.EmployeeService;
-import com.jsfspring.curddemo.ui.DepartmentUITO;
-import com.jsfspring.curddemo.ui.EmployeeUITO;
+import com.jsfspring.curddemo.uito.DepartmentUITO;
+import com.jsfspring.curddemo.uito.EmployeeUITO;
 
 @Controller("emplController")
 @SessionScope
@@ -58,12 +58,12 @@ public class EmployeeController {
 	 * Default load all the Employee info
 	 */
 	@PostConstruct
-	public void getAllEmpl() {
-		System.out.println("##########################");
+	public void getAllEmpl() { 
 		if (!this.getEmpUiToList().isEmpty()) {
 			this.getEmpUiToList().clear();
 			this.getDepartmentUiToList().clear();
 		}
+		System.out.println(" >>>>>>>>>>>>> " + employeeService);
 		this.getEmpUiToList().addAll(employeeService.doFetchAllEmp());
 		this.getDepartmentUiToList().addAll(departmentService.getAllDepartment());
 		this.setActionLabel("Add");
@@ -75,14 +75,12 @@ public class EmployeeController {
 	 * @return
 	 */
 
-	public void deleteEmployee(EmployeeUITO employeeUiTO) {
-		System.out.println("#####deleteEmployee####################");
+	public void deleteEmployee(EmployeeUITO employeeUiTO) { 
 		employeeService.doDeleteEmp(employeeUiTO);
 		getAllEmpl();
 	}
 
-	public void editEmployee(EmployeeUITO employeeUiTO) {
-		System.out.println("##### editEmployee ####################");
+	public void editEmployee(EmployeeUITO employeeUiTO) { 
 		this.setActionLabel("Update");
 		BeanUtils.copyProperties(employeeUiTO, this.getEmpUiTO());
 		System.out.println(this.getEmpUiTO());

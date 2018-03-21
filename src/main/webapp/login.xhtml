@@ -12,17 +12,18 @@
 </h:head>
 
 <h:body>
-	<h:form prependId="false">
-
+	<h:form prependId="false" action="#{request.contextPath}/appLogin"
+		method="post">
 		<p:panelGrid columns="1" styleClass="ui-fluid center ui-noborder">
 			<h2>Please login</h2>
 
-			<p:outputLabel value="Login failed!" styleClass="red" rendered="${!empty param['error']}" />
+			<p:outputLabel value="Login failed!" styleClass="red"
+				rendered="${!empty param['error']}" />
 
-			<p:inputText id="username" placeholder="User name" />
+			<p:inputText id="username"  placeholder="User name" />
 			<p:password id="password" placeholder="Password" />
 
-			<p:commandButton value="Login" ajax="false" />
+			<p:commandButton value="Login"/>
 		</p:panelGrid>
 
 	</h:form>

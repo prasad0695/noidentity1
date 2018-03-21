@@ -7,17 +7,24 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.NamedQuery;
 
 /**
  * @author s727953
  *
  */
+
 @Entity
 @Table(name = "EMP_INFO")
+@NamedQuery(name = "EmployeeDTO.findAll", query = "SELECT a FROM EmployeeDTO a")
 public class EmployeeDTO implements Serializable {
 
 	/**
@@ -34,8 +41,10 @@ public class EmployeeDTO implements Serializable {
 	private String address1;
 	@Column(name = "EMAIL_ID")
 	private String emailId;
-	@Column(name = "EMP_DEPT_ID")
-	private Long empDeptId;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "DEPT_ID")
+	private DepartmentDTO departmentDTO;
 
 	public Long getEmpId() {
 		return empId;
@@ -77,59 +86,13 @@ public class EmployeeDTO implements Serializable {
 		this.emailId = emailId;
 	}
 
-	public Long getEmpDeptId() {
-		return empDeptId;
+	public DepartmentDTO getDepartmentDTO() {
+
+		return departmentDTO;
 	}
 
-	public void setEmpDeptId(Long empDeptId) {
-		this.empDeptId = empDeptId;
+	public void setDepartmentDTO(DepartmentDTO departmentDTO) {
+		this.departmentDTO = departmentDTO;
 	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((empDeptId == null) ? 0 : empDeptId.hashCode());
-		result = prime * result + ((empName == null) ? 0 : empName.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EmployeeDTO other = (EmployeeDTO) obj;
-		if (empDeptId == null) {
-			if (other.empDeptId != null)
-				return false;
-		} else if (!empDeptId.equals(other.empDeptId))
-			return false;
-		if (empName == null) {
-			if (other.empName != null)
-				return false;
-		} else if (!empName.equals(other.empName))
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "EmployeeDTO [empId=" + empId + ", empName=" + empName + ", password=" + password + ", address1="
-				+ address1 + ", emailId=" + emailId + ", empDeptId=" + empDeptId + "]";
-	}
-
-	// @Column(name = "addded_BY", insertable = true, updatable = false)
-	// @NotNull
-	// private String addedBy;
-	// @Column(name = "ADDED_DT", insertable = true, updatable = false)
-	// private Date addedDate;
-	// @Column(name = "MODIFIED_BY", insertable = true, updatable = true)
-	// private String modifiedby;
-	// @Column(name = "MODIFIED_DT", insertable = true, updatable = true)
-	// private Date modifedDate;
 
 }
