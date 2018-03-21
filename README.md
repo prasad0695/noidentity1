@@ -1,20 +1,26 @@
 # Spring Boot JSF Integration Application
-Authentication and authorization of user. Add, delete and update the employee information.
+Add, delete and update the employee information with with the help of JSF and Spring. 
+
 
 ### Prerequisites
-- JSF 2.2.7
+- JSF 2.2.9
 - Java 8
-- Spring Boot 2.0.0.RELEASE
-- Spirng Boot Security
+- Spring Boot 2.0.0.RELEASE 
 - Spring boot AOP
 - Maven latest
 - H2 (With the dev profile you can use H2)
-- tomcate 
+- tomcat
 
 ### Getting Started
 ##### Deployment Process
-- Spring Boot
+- Spring Boot (SpringJsfApplication.java)
 - mvn clean
-- mvn package
-- java -jar target/spring-jsf-1.0.0.jar
+- mvn package 
+- acess point
 
+- applicaiton :
+- http://localhost:9090/jsfspring/employeelist.jsf
+-  H2 DB console:
+-  http://localhost:9090/jsfspring/h2/
+
+- data.sql will insert some employee information and Department information in h2 db
