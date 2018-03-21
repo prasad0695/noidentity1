@@ -1,5 +1,5 @@
 # Spring Boot JSF Integration Application
-Read and Upload CSV file this is a Spring boot & AngularJS Application. With the help of this application, we can upload and read CSV.
+Authentication and authorization of user. Add, delete and update the employee information.
 
 ### Prerequisites
 - JSF 2.2.7
