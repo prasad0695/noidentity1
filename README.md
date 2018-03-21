@@ -18,9 +18,9 @@ Add, delete and update the employee information with with the help of JSF and Sp
 - mvn package 
 - acess point
 
-- applicaiton :
+#####  Application :
 - http://localhost:9090/jsfspring/employeelist.jsf
--  H2 DB console:
+#####   H2 DB Console:
 -  http://localhost:9090/jsfspring/h2/
 
 - data.sql will insert some employee information and Department information in h2 db
