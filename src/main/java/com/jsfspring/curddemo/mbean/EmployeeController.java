@@ -65,7 +65,6 @@ public class EmployeeController {
 		}
 		System.out.println(" >>>>>>>>>>>>> " + employeeService);
 		this.getEmpUiToList().addAll(employeeService.doFetchAllEmp());
-		this.getDepartmentUiToList().addAll(departmentService.getAllDepartment());
 		this.setActionLabel("Add");
 	}
 
