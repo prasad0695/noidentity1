@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<style type="text/css" >
+body .ui-datatable thead tr th {
+border:1px  solid grey;
+}
+body .ui-datatable tbody tr td {
+border:1px solid grey;
+}
+
+body .ui-inputfield {border-width:0px;}
+
+</style>
+</h:head>
+<h:body>
+<h:form id="printorderestimate">
+
+<p:panelGrid styleClass="panelgrid1" id="printorderestimate1" style="width:100%;">
+    <f:facet name="header">
+        <p:row>
+            <p:column style="font-size:12px;" colspan="14">
+            <p:graphicImage style="width:100%;height:110px" url="/resources/images/Capture.PNG"></p:graphicImage>
+            </p:column>
+        </p:row> 
+    </f:facet> 
+ <f:facet name="header" >
+        <p:row >
+        <p:column colspan="8" >
+        <h:panelGrid columns="2" cellpadding="1" >
+        <h:panelGrid columns="1"  style="margin-top:-80px">
+        <p:outputLabel value="To:" style="font-size:22px;color:black" styleClass="printfontsize"  />
+        </h:panelGrid>
+        <h:panelGrid columns="1" style="margin-top:-10px;margin-left:35px" >
+        <p:outputLabel style="font-size:22px;color:black" styleClass="LabelCustomer ui-inputfield1 printfontsize" value="#{sukiJMSProductMBean.company.compName}"  />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:22px;width:115px;color:black" value="#{sukiJMSProductMBean.company.area1}"  />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:22px;width:115px;color:black" value="#{sukiJMSProductMBean.company.area2}"   />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:22px;width:115px;color:black" value="#{sukiJMSProductMBean.company.city}"   />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:22px;width:115px;color:black" value="#{sukiJMSProductMBean.company.gst}"   />
+        </h:panelGrid>
+        </h:panelGrid>
+        </p:column>
+        <p:column colspan="6" width="40%" >
+        <h:panelGrid columns="2" cellpadding="1" style="text-align:left;width:80%;" >
+        <p:outputLabel style="font-size:22px;color:black" styleClass="LabelCustomer ui-inputfield1 printfontsize" value="Date:"  />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:22px;width:115px;color:black" value="#{sukiJMSProductMBean.billMaster.dateUtil}" >
+        <f:convertDateTime pattern="dd/MM/YYYY" timeZone="IST"/>
+        </p:outputLabel>
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:22px;width:170px;color:black" value="Invoice No:"   />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:22px;width:115px;color:black" value="#{sukiJMSProductMBean.billMaster.billNo}"   />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:22px;width:170px;color:black" value="#{sukiJMSProductMBean.billMaster.poNoTrans}"   />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:22px;width:115px;color:black" value="#{sukiJMSProductMBean.billMaster.poNo}"   />
+         </h:panelGrid>
+        </p:column>
+    </p:row>
+    <p:row>
+    <p:column colspan="14" width="40%" >
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:22px;width:115px;color:black" value="Dc's:"   />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:22px;width:115px;color:black" value="#{sukiJMSProductMBean.billMaster.dcNos}"   />
+    </p:column>
+    </p:row>
+    </f:facet>
+    <p:row>
+    <p:column  width="5%" style="font-size:22px;text-align:center;padding:3px;font-weight:bold"  styleClass="printfontsize" >Sl.No</p:column>
+    <p:column style="font-size:22px;text-align:center;font-weight:bold" colspan="4" styleClass="printfontsize" >ITEMS</p:column>
+    <p:column style="font-size:22px;text-align:center;font-weight:bold;padding-left:1px;padding-right:1px" styleClass="printfontsize" >HSN</p:column>
+    <p:column style="font-size:22px;text-align:center;font-weight:bold" styleClass="printfontsize" >QTY</p:column>
+    <p:column style="font-size:22px;text-align:center;font-weight:bold" styleClass="printfontsize" >UOM</p:column>
+    <p:column style="font-size:22px;text-align:center;font-weight:bold" styleClass="printfontsize" >RATE</p:column>
+    <p:column style="font-size:22px;text-align:center;font-weight:bold" styleClass="printfontsize" >CGST</p:column>
+    <p:column style="font-size:22px;text-align:center;font-weight:bold" styleClass="printfontsize" >SGST</p:column>
+    <p:column style="font-size:22px;text-align:center;font-weight:bold" styleClass="printfontsize" >AMOUNT</p:column>    
+    </p:row>
+    <p:repeat var="obj"  value="#{sukiJMSProductMBean.duplicatebillList}" >
+    <p:row >
+    <p:column styleClass="printfontsize" style="padding-top:15px;padding-bottom:15px" ><p:outputLabel   style="font-size:20px;" value="#{obj.slNo}" /></p:column>
+    <p:column styleClass="printfontsize" colspan="4" ><p:outputLabel   style="font-size:20px;" value="#{obj.products}"  /></p:column>
+    <p:column styleClass="printfontsize"  ><p:outputLabel value="#{obj.hsn}" style="font-size:20px;" /></p:column>
+    <p:column styleClass="printfontsize"  style="text-align:right;font-size:20px;"  ><p:outputLabel value="#{obj.qty}" /></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:20px;" ><p:outputLabel value="#{obj.uom}" ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:20px;" ><p:outputLabel  value="#{obj.rate}"><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:20px;" ><p:outputLabel value="#{obj.cgst}" ><f:convertNumber pattern="#0.0"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:20px;" ><p:outputLabel value="#{obj.sgst}" ><f:convertNumber pattern="#0.0"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:20px;" ><p:outputLabel value="#{obj.amount}" ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    </p:row>
+    </p:repeat>
+    <p:row>
+    </p:row>
+     <p:column colspan="11" styleClass="printfontsize" style="text-align:right;font-size:20px;" ><p:outputLabel value="TOTAL" ></p:outputLabel></p:column>
+     <p:column colspan="2" styleClass="printfontsize" style="text-align:right;font-size:20px;" ><p:outputLabel value="#{sukiJMSProductMBean.billMaster.totalWithoutTax}" style="font-weight:bold;" ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;" colspan="9" >
+    <h:panelGrid  columns="4" cellpadding="5">
+<h:outputLabel style="font-size:22px;" value="CGST 2.5%" />
+<h:outputLabel style="font-size:22px;" value="#{sukiJMSProductMBean.newBill.totalCgst25}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel style="font-size:22px;" value="SGST 2.5%" />
+<h:outputLabel style="font-size:22px;" value="#{sukiJMSProductMBean.newBill.totalSgst25}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel style="font-size:22px;" value="CGST 6%" />
+<h:outputLabel style="font-size:22px;" value="#{sukiJMSProductMBean.newBill.totalCgst6}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel style="font-size:22px;" value="SGST 6%" />
+<h:outputLabel style="font-size:22px;" value="#{sukiJMSProductMBean.newBill.totalSgst6}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel style="font-size:22px;" value="CGST 9%" />
+<h:outputLabel style="font-size:22px;" value="#{sukiJMSProductMBean.newBill.totalCgst9}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel style="font-size:22px;" value="SGST 9%" />
+<h:outputLabel style="font-size:22px;" value="#{sukiJMSProductMBean.newBill.totalSgst9}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel style="font-size:22px;" value="CGST 14%" />
+<h:outputLabel style="font-size:22px;" value="#{sukiJMSProductMBean.newBill.totalCgst14}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel style="font-size:22px;" value="SGST 14%" />
+<h:outputLabel style="font-size:22px;" value="#{sukiJMSProductMBean.newBill.totalSgst14}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+    </p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" colspan="2" >
+    <h:panelGrid columns="1" cellpadding="5" >
+        <p:outputLabel style="font-size:22px;" styleClass="LabelCustomer ui-inputfield1 printfontsize" value="GST 5%"  />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:22px;width:115px;color:black" value="GST 12%"  />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:22px;width:115px;color:black" value="GST 18%"   />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:22px;width:115px;color:black" value="GST 28%"   />
+    </h:panelGrid>
+    </p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;"> 
+     <h:panelGrid columns="1" cellpadding="7">
+     <h:outputLabel style="font-size:22px;" value="#{sukiJMSProductMBean.billMaster.totalGst25}" >
+     <f:convertNumber pattern="0.00"/>
+     </h:outputLabel>
+     <h:outputLabel style="font-size:22px;" value="#{sukiJMSProductMBean.billMaster.totalGst6}" >
+     <f:convertNumber pattern="0.00"/>
+     </h:outputLabel>
+     <h:outputLabel style="font-size:22px;" value="#{sukiJMSProductMBean.billMaster.totalGst9}" >
+     <f:convertNumber pattern="0.00"/>
+     </h:outputLabel>
+     <h:outputLabel style="font-size:22px;" value="#{sukiJMSProductMBean.billMaster.totalGst14}" >
+     <f:convertNumber pattern="0.00"/>
+     </h:outputLabel>
+     </h:panelGrid>
+    </p:column>
+    </p:row>
+    <p:row>
+    <p:column colspan="9">
+    <p:outputLabel value="(#{sukiJMSProductMBean.newBill.amountNumeric})" style="font-weight:bold;font-size:22px" ></p:outputLabel>
+    </p:column>
+    <p:column colspan="2">
+    <p:outputLabel value="TOTAL WITH TAX" style="font-weight:bold;font-size:18px"></p:outputLabel>
+    </p:column>
+    <p:column colspan="1">
+    <p:outputLabel value="#{sukiJMSProductMBean.newBill.totalAmount}" style="font-weight:bold;font-size:24px">
+    <f:convertNumber pattern="0.00"/>
+    </p:outputLabel>
+    </p:column>
+    </p:row>
+    </p:panelGrid>
+    <div align="right" style="margin-top:35px">
+    <p:outputLabel value="For Wright Office Solutions" style="font-weight:bold;font-size:24px"></p:outputLabel>
+    </div>
+</h:form>
+</h:body>
+</html>

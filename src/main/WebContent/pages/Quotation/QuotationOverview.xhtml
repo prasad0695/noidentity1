@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+	<ui:define name="title"></ui:define>
+	<ui:define name="head">
+		<style type="text/css">
+		.ui-paginator .ui-paginator-top{
+			height:2px;
+		}
+body .ui-datalist .ui-datalist-header {
+    padding: 1px 1px; }
+    .ui-paginator .ui-paginator-top .ui-widget-header .ui-corner-top{
+    padding:1px;
+    height:1px;
+    }
+</style>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="mainform">
+		<p:growl id="messages" showDetail="true" ></p:growl>
+		<p:dataTable id="sizetable" var="item" value="#{productMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="10"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+                    <p:column style="width:2%;margin-left:80px" headerText="S.No">
+					<p:outputLabel value="#{rowId + 1}" />
+					<h:inputHidden id="slNo" value="#{item.quotationNo}" />
+				</p:column>
+				<p:column filterBy="#{item.date}" style="width:3%;" headerText="Date">
+					<p:outputLabel value="#{item.date}" >
+					<f:convertDateTime pattern="dd/MM/yy" timeZone="IST" />
+					</p:outputLabel>
+				</p:column>
+				<p:column filterBy="#{item.company}" filterMatchMode="contains" style="width:14%;" headerText="Company">
+					<p:outputLabel value="#{item.company}" />
+				</p:column>
+				<p:column style="width:4%;" headerText="">
+					<p:commandLink style="margin-left:20px" 
+						actionListener="#{productMBean.getQuotationActionEvent}" ><i class="material-icons">edit</i></p:commandLink>
+						<p:commandLink style="margin-left:20px" 
+						actionListener="#{productMBean.getQuotationDeleteActionEvent}" update="sizetable,mainform:messages" ><i class="material-icons">delete</i></p:commandLink>
+						<p:commandLink style="margin-left:20px" 
+						actionListener="#{productMBean.printQuotation}" update="sizetable,mainform:messages" ><i class="material-icons">print</i></p:commandLink>
+				</p:column>
+			</p:dataTable>
+<div align="right" style="margin-top:10px;" >
+				<p:commandButton
+					value="New Quotation " action="#{productMBean.newQuotation}" />
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

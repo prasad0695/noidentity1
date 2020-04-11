@@ -1,0 +1,78 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+<style>
+body .ui-datatable thead tr th {
+border:1px  solid black;
+}
+body .ui-datatable tbody tr td {
+border:1px solid black;
+}
+body .ui-inputfield {border-width:0px}
+</style>
+</h:head>
+<h:body>
+<h:form id="form">
+<div align="left">
+<p:outputLabel value="GST No: 33456365178"/>
+</div>
+<div align="center" style="margin-top:-20px">
+DELIVERY CHALLAN
+</div>
+<div  style="margin-top:-30px;margin-left:83%">
+<h:panelGrid columns="2" cellpadding="3">
+<p:outputLabel value="Dc.No"/>
+<p:outputLabel value="#{sukiJMSProductMBean.deliveryMaster.deliveryNo}"/>
+<p:outputLabel value="Date"/>
+<p:calendar value="#{sukiJMSProductMBean.deliveryMaster.date}" >
+<f:convertDateTime pattern="dd/MM/YY" timeZone="IST" />
+</p:calendar>
+</h:panelGrid>
+</div>
+<h:panelGrid columns="2" style="width:100%">
+<div style="margin-left:25px;width:100%">
+<h3 style="margin-bottom:-1px">WRIGHT OFFICE SOLUTIONS</h3>
+   ( A complete Stationery)
+ <br/>
+  No.178,M.G.R Main Road,kandanchavadi,<br/> Chennai-600096.
+  cell:9940665721,9940582622<br/>
+  E-mail:wrightofficesolution@gmail.com
+</div>
+<div style="width:40%">
+<h:panelGrid columns="2" style="width:100%">
+<p:outputLabel value="To" style="font-size:20px;position:relative;bottom:45px"></p:outputLabel>
+<h:panelGrid columns="1" style="width:100%">
+<p:outputLabel value="#{sukiJMSProductMBean.company.compName}" style="font-size:20px"></p:outputLabel>
+<p:outputLabel value="#{sukiJMSProductMBean.company.area1}" style=" text-align: justify; text-justify: inter-word;"></p:outputLabel>
+<p:outputLabel value="#{sukiJMSProductMBean.company.area2}" style=" text-align: justify; text-justify: inter-word;"></p:outputLabel>
+<p:outputLabel value="#{sukiJMSProductMBean.company.city}" style=" text-align: justify; text-justify: inter-word;"></p:outputLabel>
+</h:panelGrid>
+</h:panelGrid>
+</div>
+</h:panelGrid>
+<p:dataTable rowIndexVar="rowId" var="obj" style="margin-top:15px"  value="#{sukiJMSProductMBean.deliveryChalanList}" id="datatable" >
+<p:column headerText="Sl.No" width="15%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="Description" width="50%">
+<p:outputLabel value="#{obj.itemTrans}" style="margin-left:40px"></p:outputLabel>
+</p:column>
+<p:column headerText="Quantiy" width="30%">
+<p:outputLabel value="#{obj.nos}" style="width:30px;margin-left:60px" ></p:outputLabel>
+<p:outputLabel value="#{obj.uom}" style="margin-left:5px"></p:outputLabel>
+</p:column>
+</p:dataTable>
+<div>
+<div align="left" style="margin-top:20px">
+<p:outputLabel value="Customer Signature with seal"/>
+</div>
+<div align="right" style="margin-top:10px">
+<p:outputLabel value="WRIGHT OFFICE SOLUTION"/>
+</div>
+</div>
+</h:form>
+</h:body>
+</html>

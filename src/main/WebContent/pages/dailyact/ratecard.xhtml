@@ -1,0 +1,78 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title">Dashboard</ui:define>
+<h:head>
+
+</h:head>
+<ui:define name="content">
+<body>
+<h:form id="rateform"> 
+ <p:panel id="horizontal" header="Today's Rate" toggleable="true" toggleOrientation="horizontal" styleClass="titlepanel">
+    <div align="center">
+    <p:panel  header="ENTRY DATE AND TIME" styleClass="titlepanell" style="width:100%">
+    <h:inputText value="#{sukiJMSSalesBean.dailyRateCard.rateAsOnUtil}"  style="text-align:center">
+    	<f:convertDateTime pattern="M/d/yy hh:mm"/>
+    </h:inputText>
+    </p:panel></div><BR></BR>
+    <div align="center">
+    <p:panel  header="NEW"  >
+       <p:repeat  var="item"  value="#{sukiJMSSalesBean.rateCardTransNew}">
+           <h:panelGrid  columns="5" cellspacing="5" cellpadding="5">
+         	<h:inputText value="#{item.itemName}"  />
+		    <h:inputText value="#{item.currentRate}"  style="text-align:center"/>
+	        <h:outputText value="#{item.uom}" />
+	     </h:panelGrid>
+	   </p:repeat>
+	</p:panel>
+  </div>  
+   <div align="center">
+    <p:panel header="OLD GOLD"  >
+       <p:repeat  var="item"  value="#{sukiJMSSalesBean.rateCardTransOldGold}">
+           <h:panelGrid  columns="6" cellspacing="5" cellpadding="5" >
+         	<h:inputText value="#{item.itemName}"  />
+		    <h:outputText value="From "  />
+		    <h:inputText value="#{item.fromRate}"  style="text-align:center"/>
+		    <h:outputText value="To"  />
+		    <h:inputText value="#{item.toRate}"  style="text-align:center"/>
+	        <h:outputText value="#{item.uom} " />
+	     </h:panelGrid>
+	   </p:repeat>
+	</p:panel>
+  </div><BR></BR>
+  
+  <div align="center">
+    <p:panel  header="OLD SILVER"  >
+       <p:repeat  var="item"  value="#{sukiJMSSalesBean.rateCardTransOldSilver}">
+           <h:panelGrid  columns="6" cellspacing="5" cellpadding="5">
+         	<h:inputText value="#{item.itemName}"  />
+		    <h:outputText value="From" />
+		    <h:inputText value="#{item.fromRate}"  style="text-align:center"/>
+		    <h:outputText value="To" />
+		    <h:inputText value="#{item.toRate}"  style="text-align:center"/>
+	        <h:outputText value="#{item.uom} " />
+	     </h:panelGrid>
+	   </p:repeat>
+	</p:panel>
+  </div><BR></BR>
+
+      <label style="font-size:12px; color:white;margin-top:10px;margin-left:520px;">Print Rate Card</label>
+      <div align="center">
+       <p:commandButton value="Print Rate Card" action="#{sukiJMSSalesBean.saveChangesDailyRateCard}"  style="font-weight:bold;font-size:10px;width:300px; margin-top:25px;" /> 
+      </div>
+         
+      <div align="center">
+       <p:commandButton value="SAVE AND PRINT RATE CARD" action="#{sukiJMSSalesBean.saveChangesDailyRateCard}"  style="font-weight:bold;font-size:16px;height:45px;color:white; background:#F6953D; text-align:center; width:300px; margin-top:25px;" /> 
+         </div>
+      <div style="text-align:right; font-family:Calibri regular; font-size:11px;margin-top:-45px;">
+      <p>SKIP FOR NOW <i class="fa fa-angle-right Fs100 "></i>
+      </p>
+</div>
+</p:panel>
+</h:form>
+</body>
+</ui:define>
+</ui:composition>

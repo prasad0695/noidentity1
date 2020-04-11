@@ -1,0 +1,207 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+
+body .ui-datatable thead tr th {
+border:0px solid white;
+}
+body .ui-datatable tbody tr td {
+border:0px solid white;
+}
+body.layout-compact .ui-datatable thead th {
+background-color:#CBCBCB;
+}
+body .ui-inputfield {border-width:0px;}
+body.layout-compact .ui-datatable thead th {
+font-size:12px;
+	background-color:#CBCBCB;
+}
+body .ui-scrollpanel .ui-scrollpanel-drag {
+background-color:		#CDCDCD;
+}
+element.style {
+min-width:0px;
+}
+body .ui-dialog .ui-dialog-titlebar{
+background-color: #607D8B;
+color:white;
+}
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	background-color: #CBCBCB;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="datalist3">
+<h:panelGrid id="payAmt" columns="3" style="width:60%;margin-top:-20px">
+<h:panelGrid columns="1" style="margin-left:50px">
+<p:outputLabel value="Cash" style="color:green;font-weight:bold;font-size:16px;" />
+<p:outputLabel value="#{sukiJMSProductMBean.supcashPayment}" style="font-weight:bold;" >
+<f:convertNumber pattern="#0.00" />
+</p:outputLabel>
+</h:panelGrid>
+<h:panelGrid columns="1" style="margin-left:50px" >
+<p:outputLabel value="Cheque" style="color:green;font-weight:bold;font-size:16px;" />
+<p:outputLabel value="#{sukiJMSProductMBean.supChequePayment}" style="font-weight:bold;" >
+<f:convertNumber pattern="#0.00" />
+</p:outputLabel>
+</h:panelGrid>
+<h:panelGrid columns="1">
+<p:outputLabel value="NEFT" style="color:green;font-weight:bold;font-size:16px;" />
+<p:outputLabel value="#{sukiJMSProductMBean.supNeftPayment}" style="font-weight:bold;" >
+<f:convertNumber pattern="#0.00" />
+</p:outputLabel>
+</h:panelGrid>
+</h:panelGrid>
+<div align="right" style="margin-top:-40px;">
+<h:panelGrid columns="3">
+<h:selectOneMenu id="month" value="#{sukiJMSProductMBean.reportKey.lotGroup}" style="height:25px;width:110px" >
+<f:selectItem itemLabel="Select" itemValue="Select"/>
+<f:selectItems value="#{sukiJMSProductMBean.monthList}"></f:selectItems>
+<p:ajax event="change" listener="#{sukiJMSProductMBean.getSupplierPaymentsSearchList}" update="datatable1,payAmt" />
+</h:selectOneMenu>
+<h:selectOneMenu style="border-radius:10px;border-width:1px 1px 1px 1px;border-color:darkgrey;height:26px;background-color:white;" value="#{sukiJMSProductMBean.reportKey.colName}">
+<p:ajax event="change" listener="#{sukiJMSProductMBean.getSupplierPaymentsSearchList}" update="datatable1,payAmt" />
+<f:selectItem  itemLabel="-Select-" itemValue="-Select-" />
+<f:selectItem  itemLabel="Supplier Name" itemValue="Supplier Name" />
+<f:selectItem  itemLabel="Payment Mode" itemValue="Payment Mode" />
+</h:selectOneMenu>
+				<p:inputText id="txt" icon="ui-icon-disk"
+					style="border-radius:10px;border-width:1px 1px 1px 1px;border-color:darkgrey; width:100%;height:22px;background-color:white;"
+					value="#{sukiJMSProductMBean.reportKey.colValue}">
+					<p:ajax event="keyup"
+						listener="#{sukiJMSProductMBean.getSupplierPaymentsSearchList}"
+						update="datatable1,payAmt" />
+				</p:inputText>
+				<p:watermark for="txt" value="Search" />
+				</h:panelGrid>
+			</div>
+<p:dataTable rowIndexVar="rowId" var="obj"  id="datatable1" value="#{sukiJMSProductMBean.supplierPaymentsBillList}" selection="#{sukiJMSProductMBean.seletedSupplierPaymentsBillList}" rowKey="#{obj.paymentNo}" scrollHeight="430" scrollable="true" scrollRows="20" liveScroll="true" >
+<p:column selectionMode="multiple" width="2%">
+</p:column>
+<p:column headerText="Sl.No" width="5%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="Date" width="10%">
+<p:outputLabel  value="#{obj.date}" style="margin-left:20px" >
+<f:convertDateTime pattern="dd/MM/YYYY" timeZone="IST" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Company" width="25%">
+<p:outputLabel value="#{obj.supplierName}" style="margin-left:20px" ></p:outputLabel>
+</p:column>
+<p:column headerText="Mode" width="10%">
+<p:outputLabel value="#{obj.paymentmode}"  style="margin-left:20px" ></p:outputLabel>
+</p:column>
+<p:column headerText="Amount" width="15%">
+<p:outputLabel value="#{obj.amount}" style="margin-left:30px" >
+<f:convertNumber pattern="#0.00" />
+</p:outputLabel>
+</p:column>
+</p:dataTable>
+<div align="right" style="margin-top:5px">
+<p:commandButton value="Delete"  action="#{sukiJMSProductMBean.deleteSupplierPayment}" update="datatable1"></p:commandButton>
+<p:commandButton value="Edit" action="#{sukiJMSProductMBean.editPayment}" update=":pay"></p:commandButton>
+</div>
+<div align="center" style="margin-top:-20px">
+<p:commandButton value="New Payments" oncomplete="PF('dlg2').show()" action="#{sukiJMSProductMBean.supplierPaymentPopup}" update=":pay"></p:commandButton>
+</div>
+</h:form>
+<p:dialog header="outstanding Bills" widgetVar="dlg1" height="350" width="700" modal="true">
+<h:form id="paymentbill">
+<p:dataTable rowIndexVar="row" var="obj1" value="#{sukiJMSProductMBean.billPaymentList}" rowKey="#{obj1.billNo}" selection="#{sukiJMSProductMBean.selectedBillPaymentList}" id="datatable2" >
+<p:column selectionMode="multiple" style="width:5%">
+</p:column>
+<p:column headerText="Bill.No" width="10%">
+<p:outputLabel value="#{obj1.billNo}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="Company Name" width="30%">
+<p:outputLabel  value="#{obj1.companyName}" style="margin-left:20px" />
+</p:column>
+<p:column headerText="Amount" width="10%">
+<p:outputLabel  value="#{obj1.totalAmount}" style="margin-left:20px" />
+</p:column>
+</p:dataTable>
+</h:form>
+</p:dialog>
+<p:dialog header="Payments" widgetVar="dlg2" height="500" width="700" modal="true" >
+<h:form id="pay">
+<p:growl id="messages" showDetail="true"></p:growl>
+<h:panelGrid columns="2" cellpadding="5" style="margin-top:20px;width:100%">
+		<p:outputLabel for="advanced" value="Company Name" style="font-weight:bold;" />
+		<p:selectOneMenu id="advanced" value="#{sukiJMSProductMBean.supplierPayments.supplierName}" filterMatchMode="startsWith" filter="true"  style="height:25px;width:50px;border:1px solid black" >
+		<p:ajax event="change" listener="#{sukiJMSProductMBean.supplierPaymentBill}" update="pay"></p:ajax>
+		<f:selectItem itemValue="-Select-" itemLabel="-Select-"/>
+		<f:selectItems value="#{sukiJMSProductMBean.supplierDropDownList}"></f:selectItems>
+		</p:selectOneMenu>
+		<p:outputLabel value="Date" style="font-weight:bold;" />
+		<p:calendar value="#{sukiJMSProductMBean.supplierPayments.paymentDate}" style="border:1px solid grey"  > </p:calendar>
+		<p:outputLabel value="Payment Mode" style="font-weight:bold;" />
+		<h:selectOneMenu  value="#{sukiJMSProductMBean.supplierPayments.paymentmode}" style="height:23px;width:160px" >
+		<f:selectItem itemValue="-Select-" itemLabel="-Select-"/>
+		<p:ajax event="change" listener="#{sukiJMSProductMBean.paymentModeRender}" update="cheq,cheqNo"  />
+		<f:selectItem itemValue="Cash" itemLabel="Cash"/>
+		<f:selectItem itemValue="Cheque" itemLabel="Cheque"/>
+		<f:selectItem itemValue="NEFT" itemLabel="NEFT"/>
+		</h:selectOneMenu>
+		<p:outputLabel id="cheq"  value="Cheque No" style="font-weight:bold;" />
+		<p:inputText id="cheqNo"  value="#{sukiJMSProductMBean.supplierPayments.chequeNo}" style="border:1px solid black;"></p:inputText>
+		<p:outputLabel   value="Bank" style="font-weight:bold;" />
+		<p:inputText id="bank"  value="#{sukiJMSProductMBean.supplierPayments.bank}" style="border:1px solid black;"></p:inputText>
+		</h:panelGrid>
+		<h:panelGrid columns="1" style="margin-top:15px;">
+		<p:outputLabel value="Outstanding Bills" style="font-weight:bold;" />
+		<p:selectBooleanCheckbox value="#{sukiJMSProductMBean.supplierPayments.selectAll}" style="position:relative;top:25px;left:18px;">
+        <p:ajax listener="#{sukiJMSProductMBean.supPaymentAmountSelectAll}" update="datatable2,amount" />
+        </p:selectBooleanCheckbox>
+		<p:dataTable rowIndexVar="row" var="obj1"  value="#{sukiJMSProductMBean.poBillMasterList}"  id="datatable2" >
+        <p:column  style="width:5%">
+        <p:selectBooleanCheckbox value="#{obj1.select}" >
+        <p:ajax  listener="#{sukiJMSProductMBean.supplierPaymentAmount}" update="pay:amount" />
+        </p:selectBooleanCheckbox>
+        </p:column>
+        <p:column headerText="Date" width="15%">
+        <p:outputLabel value="#{obj1.date}" style="margin-left:20px">
+        <f:convertDateTime pattern="dd-MM-YYYY" timeZone="IST" />
+        </p:outputLabel>
+        </p:column>
+        <p:column headerText="Bill.No" width="10%">
+        <p:outputLabel value="#{obj1.billNo}" style="margin-left:20px"></p:outputLabel>
+        </p:column>
+        <p:column headerText="Supplier Name" width="30%">
+        <p:outputLabel  value="#{obj1.supplierTrans}" style="margin-left:20px" />
+        </p:column>
+        <p:column headerText="Amount" width="10%">
+        <p:outputLabel  value="#{obj1.totalAmount}" style="margin-left:20px" >
+        <f:convertNumber pattern="#0.00" />
+        </p:outputLabel>
+        </p:column>
+        </p:dataTable>
+        </h:panelGrid>
+        <h:panelGrid columns="2" cellpadding="5" style="margin-top:20px;width:90%" >
+		<p:outputLabel value="Amount" style="font-weight:bold;" />
+		<p:inputText id="amount" value="#{sukiJMSProductMBean.supplierPayments.amount}" style="border:1px solid black;" >
+		<f:convertNumber pattern="#0.00" />
+		</p:inputText>
+		</h:panelGrid>
+		<div align="center" style="margin-top:25px;">
+		<p:commandButton value="save" action="#{sukiJMSProductMBean.supplierPaymentSave}" update="messages,datalist3:datatable1,pay" ></p:commandButton>
+		</div>
+</h:form>
+</p:dialog>
+</ui:define>
+</ui:composition>

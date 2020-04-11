@@ -1,0 +1,141 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 2px;
+	padding-bottom: 1px;
+	background-color: #CBCBCB;
+}
+body .ui-datatable thead tr th {
+border:0px solid white;
+}
+body .ui-datatable tbody tr td {
+border:0px solid white;
+}
+body.layout-compact .ui-datatable thead th {
+background-color:#CBCBCB;
+}
+body.layout-compact .ui-datatable thead th {
+font-size:12px;
+	background-color:#CBCBCB;
+}
+body .ui-scrollpanel .ui-scrollpanel-drag {
+background-color:		#CDCDCD;
+}
+.ui-datatable .ui-column-filter{
+margin-top:-20px;
+margin-right:50px;
+width:150px;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="form">
+<div align="center" style="margin-top:-20px">
+<h:panelGrid columns="5" >
+<p:outputLabel value="From Date" />
+<p:calendar value="#{sukiJMSProductMBean.reportKey.fromDateUtil}" pattern="dd/MM/yyyy" ></p:calendar>
+<p:outputLabel value="To Date" />
+<p:calendar value="#{sukiJMSProductMBean.reportKey.toDateUtil}" pattern="dd/MM/yyyy" ></p:calendar>
+<p:commandButton value="search" action="#{sukiJMSProductMBean.getDcByDate}" update="datatable,month" ></p:commandButton>
+</h:panelGrid>
+<div align="right" style="margin-top:-28px">
+<h:selectOneMenu id="month" value="#{sukiJMSProductMBean.deliveryMaster.month}" style="height:25px;width:110px" >
+<f:selectItem itemLabel="-Select-" itemValue="-Select-"/>
+<f:selectItems value="#{sukiJMSProductMBean.monthList}"></f:selectItems>
+<p:ajax event="change" listener="#{sukiJMSProductMBean.dcbillList}" update="datatable" />
+</h:selectOneMenu>
+</div>
+<p:dataTable rowIndexVar="rowId" var="obj" style="margin-top:15px" widgetVar="billTable" scrollable="true" scrollHeight="470" value="#{sukiJMSProductMBean.deliveryMasterList1}" id="datatable" >
+<p:column headerText="Sl.No" width="2%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="Count" width="2%">
+<p:outputLabel value="#{obj.count}" style="width:80px;margin-left:40px;font-weight:bold"></p:outputLabel>
+<h:inputHidden value="#{obj.companyId}" id="companyname" />
+</p:column>
+<p:column filterBy="#{obj.company}"  filterMatchMode="contains" headerText="Company" sortBy="#{obj.company}" width="10%">
+<p:outputLabel value="#{obj.company}" style="margin-left:40px;font-weight:bold"></p:outputLabel>
+</p:column>
+<p:column  width="5%">
+<p:commandButton value="show"  actionListener="#{sukiJMSProductMBean.getBillListAction}" update="datalist1"  />
+</p:column>
+</p:dataTable>
+
+</div>
+</h:form>
+<p:dialog widgetVar="dlg1" height="550" width="900" modal="true" >
+<h:form id="datalist">
+<p:selectOneMenu value="#{sukiJMSProductMBean.delivery.company}" filterMatchMode="startsWith" filter="true"  style="height:25px;width:30%;border:1px solid black">
+<f:selectItems value="#{sukiJMSProductMBean.gradeColList}"></f:selectItems>
+</p:selectOneMenu>
+<p:calendar value="#{sukiJMSProductMBean.deliveryMaster.dateUtil}"></p:calendar>
+<div style="overflow:scroll;height:450px">
+<p:dataTable rowIndexVar="rowId" var="obj" value="#{sukiJMSProductMBean.deliveryChalanList}" id="datatable" >
+<p:column headerText="Sl.No" width="10%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="Description" width="30%">
+<p:selectOneMenu style="width:350px" value="#{obj.items}" filterMatchMode="startsWith" filter="true">
+<f:selectItems value="#{sukiJMSProductMBean.productList}" />
+</p:selectOneMenu>
+</p:column>
+<p:column headerText="Quantiy" width="15%">
+<p:inputText value="#{obj.nos}" style="width:30px;margin-left:60px" ></p:inputText>
+</p:column>
+<p:column headerText="UOM" width="15%">
+<h:selectOneMenu value="#{obj.uom}" style="width:80px;margin-left:40px" >
+<f:selectItem itemValue="Pkt" itemLabel="pkt"/>
+		<f:selectItem itemValue="Box" itemLabel="Box"/>
+		<f:selectItem itemValue="Roll" itemLabel="Roll"/>
+		<f:selectItem itemValue="Nos" itemLabel="Nos"/>
+		<f:selectItem itemValue="Cotton" itemLabel="Cotton"/>
+</h:selectOneMenu>
+</p:column>
+</p:dataTable>
+<p:commandButton value="+" action="#{sukiJMSProductMBean.addRow}" update="datatable"></p:commandButton>
+</div>
+<div align="center">
+<p:commandButton value="Print" action="#{sukiJMSProductMBean.saveDeliveryChalan}" ></p:commandButton>
+</div>
+</h:form>
+</p:dialog>
+<p:dialog widgetVar="dlg2" height="550" width="900" modal="true" >
+<h:form id="datalist1">
+<p:dataTable rowIndexVar="rowId" var="obj" style="margin-top:15px"  value="#{sukiJMSProductMBean.deliveryMasterList2}" id="datatable" >
+<p:column headerText="select" width="5%">
+<p:selectBooleanCheckbox  style="margin-left:40px"></p:selectBooleanCheckbox> 
+</p:column>
+
+<p:column headerText="DC.No" width="3%">
+<p:outputLabel value="#{obj.deliveryNo}" style="width:80px;margin-left:40px"></p:outputLabel>
+<h:inputHidden value="#{obj.company}" id="companyname" />
+</p:column>
+
+<p:column headerText="Date" width="7%">
+<p:outputLabel value="#{obj.date}" style="margin-left:40px"></p:outputLabel>
+</p:column>
+
+<p:column headerText="Company" width="10%">
+<p:outputLabel value="#{obj.company}" style="width:30px;margin-left:60px" ></p:outputLabel>
+</p:column>
+<p:column  width="5%">
+<p:commandButton value="show" oncomplete="PF('dlg2').show()" actionListener="#{sukiJMSProductMBean.getDcListAction}" update="datalist1" />
+</p:column>
+</p:dataTable>
+</h:form>
+</p:dialog>
+</ui:define>
+</ui:composition>

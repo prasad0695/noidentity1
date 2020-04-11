@@ -1,0 +1,286 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+.layout-wrapper .topbar{
+height:25px;
+}
+body .ui-datatable thead tr th {
+border:0px solid white;
+}
+body .ui-datatable tbody tr td {
+border:0px solid white;
+}
+body.layout-compact .ui-datatable thead th {
+background-color:#CBCBCB;
+}
+body.layout-compact .ui-datatable thead th {
+font-size:12px;
+	background-color:#CBCBCB;
+}
+body .ui-scrollpanel .ui-scrollpanel-drag {
+background-color:		#CDCDCD;
+}
+body .ui-dialog .ui-dialog-titlebar{
+background-color:#607D8B;
+}
+.buttonColor{
+background-color:yellow;
+}
+ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover{
+background-color:yellow;
+}
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	background-color: #CBCBCB;
+}
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+.statusColor{
+color:red;
+font-weight:bold;
+}
+.statusColorGreen{
+color:green;
+font-weight:bold;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="form">
+<p:growl id="messages" showDetail="true"></p:growl>
+<div align="right" style="margin-top: -30px;">
+<h:panelGrid columns="2">
+				<p:inputText id="txt" icon="ui-icon-disk"
+					style="border-radius:10px;border-width:1px 1px 1px 1px;border-color:darkgrey; width:100%;height:22px;background-color:white;"
+					value="#{sukiJMSProductMBean.reportKey.colValue}">
+					<p:ajax event="keyup"
+						listener="#{sukiJMSProductMBean.inwardSearch}"
+						update="datatable" />
+				</p:inputText>
+				<p:watermark for="txt" value="Search" />
+				</h:panelGrid>
+			</div>
+<div align="left" style="margin-top: -30px;">
+<p:commandButton value="Get Inward By Products" action="#{sukiJMSProductMBean.getInwardByProducts}" ></p:commandButton>
+</div>
+<p:dataTable rowIndexVar="rowId" var="obj" style="margin-top:-1px;" rowKey="#{obj.inwardNo}" scrollRows="15" liveScroll="true" scrollable="true" scrollHeight="470" value="#{sukiJMSProductMBean.inwardMasterList}" selection="#{sukiJMSProductMBean.selectedInwardMasterList}"  id="datatable" >
+<p:column selectionMode="multiple" width="2%" />
+<p:ajax event="rowSelect" listener="#{sukiJMSProductMBean.inwardRowSelect}" oncomplete="PF('dlg2').show()" update="showList:datatable3"  />
+<p:column headerText="Sl.No" width="5%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="IN.No" width="5%">
+<p:outputLabel value="#{obj.inwardNo}" style="width:80px;margin-left:40px"></p:outputLabel>
+<h:inputHidden value="#{obj.inwardNo}" id="dcNo" />
+</p:column>
+<p:column headerText="Date" width="5%">
+<p:outputLabel value="#{obj.date}" style="margin-left:30px">
+<f:convertDateTime pattern="dd/MM/YY" timeZone="IST" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Supplier" width="25%">
+<p:outputLabel value="#{obj.supCodeTrans}" style="width:30px;margin-left:60px" ></p:outputLabel>
+</p:column>
+</p:dataTable>
+<p:commandButton value="New Inward" oncomplete="PF('dlg1').show()" action="#{sukiJMSProductMBean.newInward}" update=":datalist" ></p:commandButton>
+<div>
+<p:commandButton value="Edit" oncomplete="PF('dlg1').show()" actionListener="#{sukiJMSProductMBean.inwardEdit}" update=":datalist" />
+</div>
+</h:form>
+<p:dialog header="New Inward" widgetVar="dlg1" height="550" width="1150" modal="true" >
+<h:form id="datalist">
+<p:growl id="messages" showDetail="true"  ></p:growl>
+<h:panelGrid columns="4" cellpadding="10">
+<h:panelGrid columns="2">
+<h:outputLabel value="Supplier Name"  />
+<p:selectOneMenu value="#{sukiJMSProductMBean.inwardMaster.supCodeTrans}" filterMatchMode="startsWith" filter="true"  style="height:25px;width:250px;border:1px solid #607D8B">
+<p:ajax event="change" listener="#{sukiJMSProductMBean.inwardSupplierSelect}" update="form:messages,datatable2" />
+<f:selectItem itemValue="-Select-" itemLabel="-Select-"></f:selectItem>
+<f:selectItems value="#{sukiJMSProductMBean.supplierDropDownList}"></f:selectItems>
+</p:selectOneMenu>
+</h:panelGrid>
+<h:panelGrid columns="2">
+<h:outputLabel value="Date"  />
+<p:calendar value="#{sukiJMSProductMBean.inwardMaster.dateUtil}" >
+</p:calendar>
+</h:panelGrid>
+<h:panelGrid columns="2">
+<h:outputLabel value="PO No"  />
+<p:inputText  value="#{sukiJMSProductMBean.inwardMaster.inwardNo}" >
+</p:inputText>
+</h:panelGrid>
+<h:panelGrid columns="2">
+<h:outputLabel value="Dc No"  />
+<p:inputText  value="#{sukiJMSProductMBean.inwardMaster.dcNo}" >
+</p:inputText>
+</h:panelGrid>
+<h:panelGrid columns="2">
+<h:outputLabel value="Inc Bill"  />
+<p:selectOneMenu value="#{sukiJMSProductMBean.inwardMaster.billRender}" style="height:25px;width:250px;border:1px solid #607D8B">
+<f:selectItem itemValue="-Select-" itemLabel="-Select-"></f:selectItem>
+<p:ajax event="change" listener="#{sukiJMSProductMBean.inwardBillChange}" update="datatable3,billno" />
+<f:selectItem itemValue="Yes" itemLabel="Yes"></f:selectItem>
+<f:selectItem itemValue="No" itemLabel="No"></f:selectItem>
+</p:selectOneMenu>
+</h:panelGrid>
+<h:panelGrid id="billno" columns="2">
+<h:outputLabel value="Bill No" rendered="#{sukiJMSProductMBean.inwardBillRender}"  />
+<p:inputText  value="#{sukiJMSProductMBean.poBillMaster.billNo}" rendered="#{sukiJMSProductMBean.inwardBillRender}" />
+</h:panelGrid>
+</h:panelGrid>
+<div align="center"  >
+<p:selectBooleanCheckbox value="#{sukiJMSProductMBean.poMaster.selectAll}" style="position:relative;right:300px;top:15px;">
+<p:ajax listener="#{sukiJMSProductMBean.poMasterListSelect}" update="datatable2,datatable3" />
+</p:selectBooleanCheckbox>
+<p:dataTable  rowIndexVar="rowId" var="obj" style="margin-top:-5px;width:60%" rowKey="#{obj.poNo}" selectionMode="multiple"   value="#{sukiJMSProductMBean.poMasterList}" selection="#{sukiJMSProductMBean.selectedPoMasterList}"  id="datatable2" >
+<p:column  width="3%" >
+<p:selectBooleanCheckbox>
+</p:selectBooleanCheckbox>
+</p:column>
+<p:ajax  event="rowSelect" listener="#{sukiJMSProductMBean.poRowSelect}"  update="datalist:datatable3"  />
+<p:column headerText="IN.No" width="7%">
+<p:outputLabel value="#{obj.poNo}" ></p:outputLabel>
+<h:inputHidden value="#{obj.poNo}" id="dcNo" />
+</p:column>
+<p:column  headerText="Date" width="8%">
+<p:outputLabel value="#{obj.date}" >
+<f:convertDateTime pattern="dd/MM/YY" timeZone="IST" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Supplier" width="25%">
+<p:outputLabel value="#{obj.supCodeTrans}"  ></p:outputLabel>
+</p:column>
+<p:column headerText="Total" width="8%">
+<p:outputLabel value="#{obj.status}" styleClass="#{obj.statusColor}"  ></p:outputLabel>
+</p:column>
+</p:dataTable>
+</div>
+<div style="overflow:scroll;height:450px">
+<p:dataTable rowIndexVar="rowId" var="obj" style="margin-top:5px" value="#{sukiJMSProductMBean.poTransList}" selection="#{sukiJMSProductMBean.selectedPoTransList}" rowKey="#{obj.rowId}" id="datatable3" >
+<p:column selectionMode="multiple" width="3%" />
+<p:column headerText="Sl.No" width="15%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+<h:inputHidden value="#{obj.slNo}" id="slNo" />
+</p:column>
+<p:column headerText="Description" width="50%">
+<p:outputLabel value="#{obj.productTrans}" style="width:30px" ></p:outputLabel>
+</p:column>
+<p:column headerText="Quantiy" width="15%">
+<p:outputLabel value="#{obj.nosTrans}" style="width:30px" ></p:outputLabel>
+</p:column>
+<p:column headerText="UOM" width="15%">
+<p:outputLabel value="#{obj.uom}" style="width:30px" ></p:outputLabel>
+</p:column>
+<p:column headerText="Received" width="15%">
+<p:inputText value="#{obj.receivedTrans}" style="width:30px" ></p:inputText>
+</p:column>
+<p:column rendered="#{sukiJMSProductMBean.inwardBillRender}" headerText="Rate" width="15%">
+<p:inputText value="#{obj.rate}" style="width:30px" >
+<p:ajax event="blur" listener="#{sukiJMSProductMBean.purchaseBillRate}" update="amount,datalist:gstvalue,datalist:totalamt,datalist:nettamt" />
+</p:inputText>
+</p:column>
+<p:column rendered="#{sukiJMSProductMBean.inwardBillRender}" headerText="Cgst" width="15%">
+<p:outputLabel value="#{obj.gst}" style="width:30px" ></p:outputLabel>
+</p:column>
+<p:column rendered="#{sukiJMSProductMBean.inwardBillRender}" headerText="Sgst" width="15%">
+<p:outputLabel value="#{obj.gst}" style="width:30px" ></p:outputLabel>
+</p:column>
+<p:column rendered="#{sukiJMSProductMBean.inwardBillRender}" headerText="Amount" width="15%">
+<p:outputLabel id="amount" value="#{obj.amount}" style="width:30px" ></p:outputLabel>
+</p:column>
+</p:dataTable>
+
+<div align="right">
+<p:commandButton value="Receive All" action="#{sukiJMSProductMBean.receiveAll}" update="datatable3" ></p:commandButton>
+<h:panelGrid columns="2">
+<p:outputLabel value="Nett Amt" style="width:30px" ></p:outputLabel>
+<p:outputLabel id="nettamt" value="#{sukiJMSProductMBean.nettAmountPO}" style="width:30px" ></p:outputLabel>
+</h:panelGrid>
+</div>
+</div>
+<p:panel  id="gstvalue" >
+<h:panelGrid  columns="4" cellpadding="5">
+<h:outputLabel value="CGST 2.5%" />
+<h:outputLabel id="cgst25" value="#{sukiJMSProductMBean.gst5}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 2.5%" />
+<h:outputLabel id="sgst25" value="#{sukiJMSProductMBean.gst5}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 6%" />
+<h:outputLabel id="cgst6" value="#{sukiJMSProductMBean.gst12}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 6%" />
+<h:outputLabel id="sgst6" value="#{sukiJMSProductMBean.gst12}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 9%" />
+<h:outputLabel id="cgst9" value="#{sukiJMSProductMBean.gst18}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 9%" />
+<h:outputLabel id="sgst9" value="#{sukiJMSProductMBean.gst18}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 14%" />
+<h:outputLabel id="cgst14" value="#{sukiJMSProductMBean.gst28}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 14%" />
+<h:outputLabel id="sgst14" value="#{sukiJMSProductMBean.gst28}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+</p:panel>
+<div align="right">
+<h:panelGrid columns="2">
+<p:outputLabel value="TOTAL Amt" style="width:30px" ></p:outputLabel>
+<p:outputLabel id="totalamt" value="#{sukiJMSProductMBean.totalAmountPO}" style="width:30px" ></p:outputLabel>
+</h:panelGrid>
+</div>
+<div align="center" style="margin-top:10px;">
+<p:commandButton value="Save" action="#{sukiJMSProductMBean.saveInwardMaster}" update="messages,form:datatable" ></p:commandButton>
+</div>
+</h:form>
+</p:dialog>
+<p:dialog header="Inward" widgetVar="dlg2" height="550" width="950" modal="true" >
+<h:form id="showList">
+<p:growl id="messages" showDetail="true"  ></p:growl>
+<div style="overflow:scroll;height:450px">
+<p:dataTable rowIndexVar="rowId" var="obj" style="margin-top:5px" value="#{sukiJMSProductMBean.inwardTransList}"  id="datatable3" >
+<p:column headerText="Sl.No" width="15%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+<h:inputHidden value="#{obj.rowId}" id="slNo" />
+</p:column>
+<p:column headerText="Description" width="50%">
+<p:outputLabel value="#{obj.productTrans}" style="width:30px" ></p:outputLabel>
+</p:column>
+<p:column headerText="Received" width="15%">
+<p:outputLabel value="#{obj.received}" style="width:30px" ></p:outputLabel>
+</p:column>
+<p:column headerText="UOM" width="15%">
+<p:outputLabel value="#{obj.uom}" style="width:30px" ></p:outputLabel>
+</p:column>
+</p:dataTable>
+</div>
+</h:form>
+</p:dialog>
+</ui:define>
+</ui:composition>

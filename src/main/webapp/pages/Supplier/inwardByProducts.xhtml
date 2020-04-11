@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+.layout-wrapper .topbar{
+height:25px;
+}
+body .ui-datatable thead tr th {
+border:0px solid white;
+}
+body .ui-datatable tbody tr td {
+border:0px solid white;
+}
+body.layout-compact .ui-datatable thead th {
+background-color:#CBCBCB;
+}
+body.layout-compact .ui-datatable thead th {
+font-size:12px;
+	background-color:#CBCBCB;
+}
+body .ui-scrollpanel .ui-scrollpanel-drag {
+background-color:		#CDCDCD;
+}
+body .ui-dialog .ui-dialog-titlebar{
+background-color:#607D8B;
+}
+.buttonColor{
+background-color:yellow;
+}
+ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover{
+background-color:yellow;
+}
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	background-color: #CBCBCB;
+}
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+.statusColor{
+color:red;
+font-weight:bold;
+}
+.statusColorGreen{
+color:green;
+font-weight:bold;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="form">
+<p:growl id="messages" showDetail="true"></p:growl>
+<p:dataTable rowIndexVar="rowId" var="obj" style="margin-top:-5px;" rowKey="#{obj.inwardNo}" scrollRows="15" liveScroll="true" scrollable="true" scrollHeight="470" value="#{sukiJMSProductMBean.inwardTransListByProducts}" id="datatable" >
+<p:column headerText="Sl.No" width="5%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="Date" width="10%">
+<p:outputLabel value="#{obj.date}" style="width:80px;margin-left:40px">
+<f:convertDateTime pattern="dd/MM/YY" timeZone="IST" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Product" width="25%">
+<p:outputLabel value="#{obj.productTrans}" style="width:80px;margin-left:40px"></p:outputLabel>
+</p:column>
+<p:column headerText="Quantity" width="5%">
+<p:outputLabel value="#{obj.received}" style="margin-left:30px">
+</p:outputLabel>
+</p:column>
+<p:column headerText="UOM" width="10%">
+<p:outputLabel value="#{obj.uom}" style="width:30px;" ></p:outputLabel>
+</p:column>
+<p:column headerText="PO NO" width="10%">
+<p:outputLabel value="#{obj.poNo}" style="width:30px;margin-left:60px" ></p:outputLabel>
+</p:column>
+</p:dataTable>
+</h:form>
+</ui:define>
+</ui:composition>

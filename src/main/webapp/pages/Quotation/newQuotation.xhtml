@@ -1,0 +1,118 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+	<ui:define name="title"></ui:define>
+	<ui:define name="head">
+		<style type="text/css">
+		.ui-panelgrid.form-group .ui-panelgrid-cell{padding:0px 16px;}
+</style>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="mainform">
+		<p:growl id="messages" showDetail="true" /> 
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h3>ADD QUOTATION</h3>
+							<p:panelGrid columns="6"
+								columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-2"
+								layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								
+<h:outputLabel value="Company Name"  />
+<p:autoComplete id="group" value="#{productMBean.quotationMaster.companyId}" completeMethod="#{productMBean.companyListAutoComplete}"
+                        var="obj" itemLabel="#{obj.compName}" itemValue="#{obj}" converter="pojoConverter" forceSelection="true"
+                        required="#{param['mainform:save']!=null}" requiredMessage="Enter Company Name"
+                        scrollHeight="250">
+                        <p:ajax event="itemSelect"
+        listener="#{purchaseOrderMBean.print}" />
+        </p:autoComplete>
+<h:outputLabel value="Date"  />
+<p:calendar value="#{productMBean.quotationMaster.dateUtil}" pattern="dd/MM/yyyy" >
+</p:calendar>
+<h:outputLabel value="Quot No"  />
+<p:inputText  value="#{productMBean.quotationMaster.quotationNo}" >
+<p:ajax event="blur" listener="#{productMBean.dcNoValidation}" update="messages" />
+</p:inputText>
+</p:panelGrid>
+<div style="overflow:scroll;height:480px">
+<p:dataTable id="sizetable" var="item" value="#{productMBean.quotationMaster.quotTransList}" scrollable="400" rowIndexVar="rowId"  reflow="true" >
+				<p:column style="width:2%;margin-left:80px" headerText="S.No">
+					<p:outputLabel value="#{rowId + 1}" />
+				</p:column>
+				<p:column style="width:14%;" headerText="Item">
+					<p:outputLabel value="#{item.productId.item}" />
+				</p:column>
+				<p:column style="width:14%;" headerText="Uom">
+				<p:repeat var="obj" value="#{item.quotUomList}">
+					<p:outputLabel value="#{obj.uomName}" />/
+				</p:repeat>
+				</p:column>
+				<p:column style="width:14%;" headerText="Price">
+				<p:repeat var="obj" value="#{item.quotUomList}">
+					<p:inputText validatorMessage="Enter Price" style="width:50px;" value="#{obj.price}" >
+					<f:validateDoubleRange disabled="#{param['mainform:save']==null}" minimum="1" />
+					</p:inputText>/
+				</p:repeat>
+				</p:column>
+			</p:dataTable>
+</div>
+<p:panelGrid columns="3" styleClass="ui-panelgrid-blank form-group"
+								columnClasses="ui-lg-2 ui-md-3,ui-lg-2 ui-md-3,ui-lg-2 ui-md-3"
+								layout="grid">
+<p:commandButton  value="ADD" oncomplete="PF('dlg1').show()" action="#{productMBean.productOverviewListForQuotation}" update="productTable" ></p:commandButton>
+<p:commandButton id="save"  value="SAVE" action="#{productMBean.quotationSave}" update="mainform" ></p:commandButton>
+<p:commandButton  value="PRINT" action="#{productMBean.print}" ></p:commandButton>
+</p:panelGrid>
+					</div>
+					</div>
+					</div>
+			</div>
+		</h:form>
+		<p:dialog modal="true" widgetVar="dlg1">
+		<h:form id="productTable">
+		<p:dataTable id="sizetable" var="item" value="#{productMBean.model1}" selection="#{productMBean.selectedProductList}" rowKey="#{item.prodCode}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="10"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+			<p:column selectionMode="multiple" style="width:2%;margin-left:80px" headerText="" />
+				<p:column style="width:2%;margin-left:80px" headerText="S.No">
+					<p:outputLabel value="#{rowId + 1}" />
+					<h:inputHidden id="slNo" value="#{item.prodCode}" />
+				</p:column>
+				<p:column style="width:4%;" headerText="HSNCode">
+
+					<p:outputLabel value="#{item.hsnCode}" />
+				</p:column>
+				<p:column style="width:14%;" filterBy="#{item.item}" filterMatchMode="contains" headerText="Item">
+					<p:outputLabel value="#{item.item}" />
+				</p:column>
+				<p:column style="width:5%;" headerText="UOM">
+					<p:outputLabel value="#{item.uom}" />
+				</p:column>
+				<p:column style="width:3%;" headerText="Sgst">
+					<p:outputLabel value="#{item.stock}" />
+				</p:column>
+				<p:column style="width:4%;" headerText="Opening Qty">
+					<p:outputLabel value="#{item.openingQty}" />
+				</p:column>
+				<p:column style="width:4%;" headerText="Rate">
+					<p:outputLabel value="#{item.rate}" />
+				</p:column>
+				<p:column style="width:3%;" headerText="Gst">
+					<p:outputLabel value="#{item.gst}" />
+				</p:column>
+			</p:dataTable>
+			<div align="center">
+			<p:commandButton value="ADD" actionListener="#{productMBean.getQuotList}" update="mainform:sizetable,mainform:messages" ></p:commandButton>
+			</div>
+		</h:form>
+		</p:dialog>
+		</ui:define>
+	</ui:composition>
+		

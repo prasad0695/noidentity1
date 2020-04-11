@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="datalist3">
+<p:growl id="messages" showDetail="true"></p:growl>
+<p:dataTable id="sizetable" var="item" value="#{purchaseInvoiceMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="10"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+<p:column headerText="Sl.No" width="6%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+<h:inputHidden id="slNo" value="#{item.rowId}" />
+</p:column>
+<p:column sortBy="#{item.date}" filterBy="#{item.date}" headerText="Date" width="12%">
+<p:outputLabel  value="#{item.date}"  style="margin-left:20px" >
+<f:convertDateTime timeZone="IST" pattern="dd/MM/yy" />
+</p:outputLabel>
+</p:column>
+<p:column sortBy="#{item.billNo}" filterBy="#{item.billNo}" headerText="Invoice No" width="9%">
+<p:outputLabel value="#{item.billNo}" style="margin-left:20px;font-weight:bold" ></p:outputLabel>
+</p:column>
+<p:column filterBy="#{item.supplier}" headerText="Supplier" width="35%">
+<p:outputLabel value="#{item.supplier}" style="margin-left:10px" ></p:outputLabel>
+</p:column>
+<p:column headerText="Amount" width="10%">
+<p:outputLabel value="#{item.totalAmount}" >
+<f:convertNumber pattern="#0.00"  />
+</p:outputLabel>
+</p:column>
+<p:column headerText="" width="12%">
+<h:panelGrid columns="3" cellspacing="5" >
+<p:commandLink actionListener="#{purchaseInvoiceMBean.duplicateBillprint}"><i class="material-icons">print</i></p:commandLink>
+<p:commandLink actionListener="#{purchaseInvoiceMBean.getInvObjActionEvent}" ><i class="material-icons">edit</i></p:commandLink>
+<p:commandLink actionListener="#{purchaseInvoiceMBean.getDeleteActionEvent}" onclick="if(!confirm('Are u want to delete?')) return false" style="text-decoration:underline;"><i class="material-icons">delete</i></p:commandLink>
+</h:panelGrid>
+</p:column>
+</p:dataTable>
+<div align="right">
+<p:commandButton value="New Invoice" actionListener="#{purchaseInvoiceMBean.newInvoice}" ></p:commandButton>
+</div>
+</h:form>
+</ui:define>
+</ui:composition>

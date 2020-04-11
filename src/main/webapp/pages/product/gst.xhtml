@@ -1,0 +1,126 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+.layout-wrapper .topbar{
+height:25px;
+}
+body .ui-datatable thead tr th {
+border:0px solid white;
+}
+body .ui-datatable tbody tr td {
+border:0px solid white;
+}
+body.layout-compact .ui-datatable thead th {
+background-color:#CBCBCB;
+}
+body .ui-inputfield {border-width:0px;}
+body.layout-compact .ui-datatable thead th {
+font-size:12px;
+	background-color:#CBCBCB;
+}
+body .ui-scrollpanel .ui-scrollpanel-drag {
+background-color:		#CDCDCD;
+}
+.statusColor{
+color:red;
+font-weight:bold;
+}
+.statusColorGreen{
+color:green;
+font-weight:green;
+}
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	background-color: #CBCBCB;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="datalist3">
+<div align="left" style="margin-top:-25px;">
+<h:panelGrid columns="2" style="width:20%">
+<p:outputLabel value="Taxable" style="font-size:20px;font-weight:bold;color:green;" ></p:outputLabel>
+<p:outputLabel id="totalTax" value="#{sukiJMSProductMBean.totalTax}" style="font-size:20px;font-weight:bold;color:green;">
+<f:convertNumber pattern="#0.00"  />
+</p:outputLabel>
+</h:panelGrid>
+</div>
+<div align="right" style="margin-top: -31px;">
+<h:panelGrid columns="3">
+<h:selectOneMenu id="month" value="#{sukiJMSProductMBean.reportKey.lotGroup}" style="height:25px;width:110px" >
+<f:selectItem itemLabel="Select" itemValue="Select"/>
+<f:selectItems value="#{sukiJMSProductMBean.monthList}"></f:selectItems>
+<p:ajax event="change" listener="#{sukiJMSProductMBean.getbillListByMonth}" update="datatable1,totalTax" />
+</h:selectOneMenu>
+<h:selectOneMenu style="border-radius:10px;border-width:1px 1px 1px 1px;border-color:darkgrey;height:26px;background-color:white;" value="#{sukiJMSProductMBean.reportKey.colName}">
+<p:ajax event="change" listener="#{sukiJMSProductMBean.billMasterSearchListMethod}" update="datatable1" />
+<f:selectItems value="#{sukiJMSProductMBean.billMasterSearchList}" />
+</h:selectOneMenu>
+				<p:inputText id="txt" icon="ui-icon-disk"
+					style="border-radius:10px;border-width:1px 1px 1px 1px;border-color:darkgrey; width:100%;height:22px;background-color:white;"
+					value="#{sukiJMSProductMBean.reportKey.colValue}">
+					<p:ajax event="keyup"
+						listener="#{sukiJMSProductMBean.billMasterSearchListMethod}"
+						update="datatable1" />
+				</p:inputText>
+				<p:watermark for="txt" value="Search" />
+				</h:panelGrid>
+			</div>
+<p:dataTable rowIndexVar="rowId" var="obj" style="margin-top:-4px;" value="#{sukiJMSProductMBean.billMasterList}" scrollable="true" scrollHeight="495" scrollRows="25" liveScroll="true" id="datatable1" >
+<p:column headerText="Sl.No" width="6%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="Date" width="12%">
+<p:outputLabel  value="#{obj.date}"  style="margin-left:20px" >
+<f:convertDateTime timeZone="IST" pattern="dd/MM/YY" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Inv No" width="9%">
+<p:outputLabel value="#{obj.billNo}" style="margin-left:20px;font-weight:bold" ></p:outputLabel>
+</p:column>
+<p:column headerText="Company" width="35%">
+<p:outputLabel value="#{obj.companyName}" style="margin-left:10px" ></p:outputLabel>
+</p:column>
+<p:column headerText="Gst5%" width="10%">
+<p:outputLabel value="#{obj.totalGst25}"  >
+<f:convertNumber pattern="#0.00" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Gst12%" width="9%">
+<p:outputLabel value="#{obj.totalGst6}"  >
+<f:convertNumber pattern="#0.00" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Gst18%" width="12%">
+<p:outputLabel value="#{obj.totalGst9}" style="margin-left:20px" >
+<f:convertNumber pattern="#0.00" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Gst28%" width="12%">
+<p:outputLabel value="#{obj.totalGst14}" style="margin-left:20px" >
+<f:convertNumber pattern="#0.00" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Taxable" width="12%">
+<p:outputLabel value="#{obj.taxable}" style="margin-left:20px" >
+<f:convertNumber pattern="#0.00" />
+</p:outputLabel>
+</p:column>
+</p:dataTable>
+        <p:commandButton value="Excel" actionListener="#{sukiJMSProductMBean.exportGstExcel}" ></p:commandButton>
+</h:form>
+</ui:define>
+</ui:composition>

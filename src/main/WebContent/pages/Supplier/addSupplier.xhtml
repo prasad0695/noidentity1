@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+	<ui:define name="title"></ui:define>
+	<ui:define name="head">
+		<style type="text/css">
+.ui-paginator .ui-paginator-top {
+	height: 2px;
+}
+</style>
+<script TYPE="text/javascript">  
+function onReset(form) { 
+     form["mainform:supplierName"].required=false;
+     var idstr=form["mainform:supplierName"].required;
+} 
+function onSave(form) { 
+    form["mainform:supplierName"].required=true;
+    var idstr=form["mainform:supplierName"].required;
+}  
+</script>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="mainform">
+		<p:growl id="message" showDetail="true" />
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h3>ADD SUPPLIER</h3>
+								<p:panelGrid columns="2" id="grid"
+									columnClasses="ui-grid-col-2,ui-grid-col-4"
+									layout="grid" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;">
+									<h:outputLabel value="Supplier Name *" />
+<p:inputText value="#{supplierMBean.supplier.name}" id="supplierName" required="#{param['mainform:save']!=null}" requiredMessage="Enter Supplier Name" label="Supplier Name" >
+</p:inputText>
+<h:outputLabel value="GST No" />
+<p:inputText value="#{supplierMBean.supplier.gstIn}"  />
+<h:outputLabel value="Opening Balance" />
+<p:inputText value="#{supplierMBean.supplier.openingbal}"  >
+<f:convertNumber pattern="#0.00" />
+</p:inputText>
+
+<h:outputLabel value="Area 1" />
+<p:inputText value="#{supplierMBean.supplier.area1}"  />
+<h:outputLabel value="Area 2" />
+<p:inputText value="#{supplierMBean.supplier.area2}"  />
+<h:outputLabel value="Area 3" />
+<p:inputText value="#{supplierMBean.supplier.area3}"  />
+<h:outputLabel value="City" />
+<p:inputText value="#{supplierMBean.supplier.city}"  />
+								</p:panelGrid>
+							<div align="center">
+							<p:panelGrid columns="3" styleClass="ui-panelgrid-blank form-group"
+								columnClasses="ui-lg-3 ui-md-4,ui-lg-3 ui-md-4,ui-lg-3 ui-md-4"
+								layout="grid">
+								<p:commandButton id="save"
+									action="#{supplierMBean.saveSupplier}" value="SAVE"
+									update="mainform" />
+								<p:commandButton
+									action="#{supplierMBean.reset}" value="NEW/RESET"
+									update="grid" />
+								<p:commandButton disabled="#{supplierMBean.buttonDisable(supplierMBean.supplier.supCode)}"
+									action="#{supplierMBean.dialogShow(supplierMBean.supplier.supCode)}" value="DELETE"
+									update="mainform" >
+									</p:commandButton>
+									</p:panelGrid>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</h:form>
+		<p:dialog widgetVar="confirmDialog" modal="true" global="true" showEffect="fade" hideEffect="fade">
+		<h:form>
+        <h:outputLabel value="Are You Sure want to Delete?" style="font-weight:bold;" />
+        <div align="center" >
+        <h:panelGrid columns="2" >
+        <p:commandButton value="Yes" action="#{supplierMBean.delete}" update="mainform"  />
+        <p:commandButton value="No"  action="#{supplierMBean.dialogHide}" />
+        </h:panelGrid>
+        </div>
+        </h:form>
+    </p:dialog> 
+	</ui:define>
+</ui:composition>

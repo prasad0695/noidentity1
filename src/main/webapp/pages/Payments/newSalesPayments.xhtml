@@ -1,0 +1,141 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+	<ui:define name="title"></ui:define>
+	<ui:define name="head">
+		<style type="text/css">
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td {
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+</style>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="pay">
+			<p:growl id="messages" showDetail="true"></p:growl>
+			<h:panelGrid columns="6" cellpadding="5" style="width:100%">
+				<h:outputLabel value="Company Name" />
+				<p:autoComplete id="group"
+					value="#{salesPaymentMBean.salesPayment.companyId}"
+					completeMethod="#{sukiBaseBean.companyListAutoComplete}"
+					var="obj" itemLabel="#{obj.compName}" itemValue="#{obj}"
+					required="#{param['pay:save']!=null}" requiredMessage="Enter Company Name"
+					converter="pojoConverter" forceSelection="true" scrollHeight="250">
+					<p:ajax event="itemSelect"
+						listener="#{salesPaymentMBean.getPendingSalesBill}"
+						update="pendingBillList" />
+				</p:autoComplete>
+				<p:outputLabel value="Date" style="font-weight:bold;" />
+				<p:calendar value="#{salesPaymentMBean.salesPayment.paymentDate}"
+					style="border:1px solid grey">
+				</p:calendar>
+				<p:outputLabel value="No" style="font-weight:bold;" />
+				<p:inputText value="#{salesPaymentMBean.salesPayment.paymentNo}" />
+
+
+			</h:panelGrid>
+
+			<p:outputLabel value="Outstanding Bills" style="font-weight:bold;" />
+
+			<p:dataTable
+				rendered="#{!salesPaymentMBean.salesPayment.editBoolean}"
+				rowIndexVar="row" var="obj1" rowKey="#{obj1.billNo}"
+				value="#{salesPaymentMBean.billListForPayment}"
+				selection="#{salesPaymentMBean.selectedBillListForPayment}"
+				id="pendingBillList">
+				<p:column selectionMode="multiple" width="5%"></p:column>
+				<p:ajax event="rowSelect"
+					listener="#{salesPaymentMBean.getAmtFromList}" update="pay:amountToPay,pay:amount,pendingBillList" />
+				<p:ajax event="rowUnselect"
+					listener="#{salesPaymentMBean.getAmtFromList}" update="pay:amountToPay,pay:amount,pendingBillList" />
+				<p:ajax event="rowSelectCheckbox"
+					listener="#{salesPaymentMBean.getAmtFromList}" update="pay:amountToPay,pay:amount,pendingBillList" />
+				<p:ajax event="rowUnselectCheckbox"
+					listener="#{salesPaymentMBean.getAmtFromList}" update="pay:amountToPay,pay:amount,pendingBillList" />
+				<p:ajax event="toggleSelect"
+					listener="#{salesPaymentMBean.getAmtFromList}" update="pay:amountToPay,pay:amount,pendingBillList" />
+				<p:column headerText="Date" width="15%">
+					<p:outputLabel value="#{obj1.date}" style="margin-left:20px">
+						<f:convertDateTime pattern="dd-MM-YYYY" timeZone="IST" />
+					</p:outputLabel>
+				</p:column>
+				<p:column headerText="Bill.No" width="10%">
+					<p:outputLabel value="#{obj1.billNo}" style="margin-left:20px"></p:outputLabel>
+				</p:column>
+				<p:column headerText="Balance" width="10%">
+					<p:outputLabel value="#{obj1.totalAmount-obj1.paidAmt}" style="margin-left:20px">
+						<f:convertNumber pattern="#0.00" />
+					</p:outputLabel>
+				</p:column>
+				<p:column headerText="Paying Amt" width="10%">
+					<p:inputText value="#{obj1.paidAmt}" style="margin-left:20px">
+					<p:ajax event="blur" listener="#{salesPaymentMBean.getTotalAmt}" update="pay" />
+						<f:convertNumber pattern="#0.00" />
+					</p:inputText>
+				</p:column>
+			</p:dataTable>
+
+			<p:dataTable rendered="#{salesPaymentMBean.salesPayment.editBoolean}"
+				rowIndexVar="row" var="obj1"
+				value="#{salesPaymentMBean.salesPayment.billMasterList}"
+				id="datatable2">
+				<p:column headerText="Date" width="15%">
+					<p:outputLabel value="#{obj1.date}" style="margin-left:20px">
+						<f:convertDateTime pattern="dd-MM-YYYY" timeZone="IST" />
+					</p:outputLabel>
+				</p:column>
+				<p:column headerText="Bill.No" width="10%">
+					<p:outputLabel value="#{obj1.billNo}" style="margin-left:20px"></p:outputLabel>
+				</p:column>
+				<p:column headerText="Amount" width="10%">
+					<p:outputLabel value="#{obj1.totalAmount}" style="margin-left:20px">
+						<f:convertNumber pattern="#0.00" />
+					</p:outputLabel>
+				</p:column>
+			</p:dataTable>
+
+			<h:panelGrid columns="2" cellpadding="5"
+				style="margin-top:20px;width:90%">
+				<p:outputLabel value="Payment Mode" style="font-weight:bold;" />
+				<p:selectOneMenu
+					value="#{salesPaymentMBean.salesPayment.paymentmode}"
+					style="height:23px;width:160px">
+					<f:selectItem itemValue="-Select-" itemLabel="-Select-" />
+					<p:ajax event="change" update="cheq,cheqNo" />
+					<f:selectItem itemValue="Cash" itemLabel="Cash" />
+					<f:selectItem itemValue="Cheque" itemLabel="Cheque" />
+					<f:selectItem itemValue="NEFT" itemLabel="NEFT" />
+				</p:selectOneMenu>
+				<p:outputLabel id="cheq"
+					rendered="#{salesPaymentMBean.salesPayment.paymentmode=='Cheque'}"
+					value="Cheque No" />
+				<p:inputText id="cheqNo"
+					rendered="#{salesPaymentMBean.salesPayment.paymentmode=='Cheque'}"
+					value="#{salesPaymentMBean.salesPayment.chequeNo}"></p:inputText>
+				<p:outputLabel value="Amount To Pay" style="font-weight:bold;" />
+				<p:inputText id="amountToPay"
+					value="#{salesPaymentMBean.salesPayment.amountToPay}">
+					<f:convertNumber pattern="#0.00" />
+				</p:inputText>
+				<p:outputLabel value="Amount" style="font-weight:bold;" />
+				<p:inputText id="amount" validatorMessage="Enter payment amount"
+					value="#{salesPaymentMBean.salesPayment.totalAmount}">
+					<f:convertNumber pattern="#0.00" />
+					<f:validateDoubleRange minimum="1" ></f:validateDoubleRange>
+				</p:inputText>
+			</h:panelGrid>
+			<p:commandButton id="save" value="Save"
+				action="#{salesPaymentMBean.savePayment}" update="messages"></p:commandButton>
+		</h:form>
+	</ui:define>
+</ui:composition>

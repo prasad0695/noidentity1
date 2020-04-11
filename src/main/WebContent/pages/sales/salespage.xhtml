@@ -1,0 +1,327 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="head"> 
+<style type="text/css">
+
+.panelCustomerDetail{
+height:200px;
+}
+
+.panelRate{
+text-align:right;
+height:200px;
+display:block;
+margin-left:-50px;
+}
+
+.LabelCustomer{
+color:#687abc;
+}
+
+.calendarCustomer{
+display:block;
+width:200px;
+}
+.labelRate{
+color:#6181C2;
+font-weight:bold;
+font-size:14px;
+}
+.dataTableFontSize{
+font-size:12px;
+}
+.ui-datatable.myTable th{ 
+    background-color:#607D8B;
+    color: white !important;
+    font-size:12px !important;
+    }
+    
+.productDetailsLabelBox{
+color:#687abc;
+margin-left:30px;
+}
+
+.productDetailsHeader {
+margin-top:3px;
+}
+
+.totalCalcPanel{
+width:100%; 
+height:60px;
+}
+.totalCalculation {
+width:100%;
+}
+
+.totalCalcLabel1{
+color:#6181C2;
+font-size:12px;
+}
+
+.totalCalcLabel2{
+color:#F6953D;
+font-weight:bold;
+}
+   
+    
+</style>
+</ui:define>
+
+<ui:define name="content" >
+<h:form id="salesfrm">
+ 	<p:messages />
+ 	<p:growl id="message" sticky="true" showDetails="true" />
+ 	<p:tabView style="background:#c7d0e2;">
+ 	<p:tab  title="B235671" >	
+   	<h:panelGrid columns="2" style="width:100%;">
+   	<p:panel id="horizondal1" style="width:94%;" header="Customer Details" styleClass="panelCustomerDetail" >
+   	<h:panelGrid columns="5" style="width:100%;">
+   	
+   	
+   	<h:panelGrid columns="2" cellspacing="5" cellpadding="3" style="font-size:12px;">
+   	
+   	   <p:outputLabel for="mobile" value="Mobile" styleClass="LabelCustomer" />
+    	<h:panelGrid columns="2" width="150px">
+    	  <p:inputText id="mobile" value="#{sukiJMSSalesBean.customer.mobile1}"/>  
+     	  <p:commandButton value="..." action="#{sukiJMSSalesBean.getCustomerDetailsByPhone}" ajax="false"></p:commandButton>
+	 	</h:panelGrid>
+	 	
+	 	<p:outputLabel value="Name" styleClass="LabelCustomer" />
+       <p:outputLabel value="#{sukiJMSSalesBean.customer.custName}"  />
+       
+       <p:outputLabel value="Area1" styleClass="LabelCustomer" />
+       <p:outputLabel value="#{sukiJMSSalesBean.customer.area1}"   />
+       
+       <p:outputLabel value="Area2" styleClass="LabelCustomer" />
+       <p:outputLabel value="#{sukiJMSSalesBean.customer.area2}"  />
+       
+       </h:panelGrid>
+       
+       <h:panelGrid columns="2" cellspacing="5" cellpadding="3" style="font-size:12px;">
+       
+       <p:outputLabel value="City" styleClass="LabelCustomer" />  
+       <p:outputLabel value="#{sukiJMSSalesBean.customer.city}"  /> 
+       
+       <p:outputLabel value="Pincode" styleClass="LabelCustomer" /> 
+       <p:outputLabel value="#{sukiJMSSalesBean.customer.pin}"  />  
+       
+       <p:outputLabel value="District" styleClass="LabelCustomer" />   
+       <p:outputLabel value="#{sukiJMSSalesBean.customer.dist} "  />
+       
+       <p:outputLabel value="Supervisor" styleClass="LabelCustomer" />
+       <h:selectOneMenu id="console"  style="border-width:0px 0px 0px 0px;">
+            <f:selectItem itemLabel="Incharge Code "  itemValue="ram" />
+            <f:selectItem itemLabel="GRT001" itemValue="ram" />
+            <f:selectItem itemLabel="GRT002" itemValue="Xbox One" />
+            <f:selectItem itemLabel="GRT003" itemValue="PS4" />
+            <f:selectItem itemLabel="GRT004" itemValue="Wii U" />
+        </h:selectOneMenu>  
+        </h:panelGrid>
+       
+       <h:panelGrid columns="2" cellspacing="5" cellpadding="3" style="font-size:12px;">
+       
+       <p:outputLabel value="Pan" styleClass="LabelCustomer" />
+       <p:outputLabel value="#{sukiJMSSalesBean.customer.panNo}"  />
+       
+       <p:outputLabel value="Aadhar" styleClass="LabelCustomer" />
+       <p:outputLabel value="#{sukiJMSSalesBean.customer.aadhaar}"  />
+       
+       <p:outputLabel value="Tin" styleClass="LabelCustomer" />
+       <p:outputLabel value=""  />
+       
+        <p:outputLabel value=""  />
+  		<p:inputText value="" styleClass="DummyLabel" style="border-width:0px 0px 0px 0px;display:block;width:80px;" disabled="true" /> 
+       </h:panelGrid>
+       
+      <h:panelGrid columns="2" cellspacing="5" cellpadding="3" style="font-size:12px;">
+       
+       <p:outputLabel value="Bill No" styleClass="LabelCustomer" />  
+       <p:inputText value="" readonly="true" /> 
+       
+       <p:outputLabel value="Bill Date" styleClass="LabelCustomer" />
+       <p:calendar id="button" value="#{sukiJMSSalesBean.billDate}" pattern="dd MMM yyyy" styleClass="calendarCustomer" >
+       </p:calendar>
+       
+       <p:outputLabel value="Chit Value" styleClass="LabelCustomer" style="display:block;width:70px;" />
+       <p:outputLabel value="#{sukiJMSSalesBean.invoicemaster.chitValue}"  />  
+       
+       <p:outputLabel value="Rewards Pts" styleClass="LabelCustomer" />
+       <p:outputLabel value="#{sukiJMSSalesBean.invoicemaster.rewardsPts}"  />
+       </h:panelGrid>
+ 	</h:panelGrid>
+	</p:panel>
+	
+	<p:panel id="horizondal2" header="Rate" styleClass="panelRate" >
+	<h:panelGrid style="font-size:12px;" >
+	        <p:outputLabel>Gold 24C/g</p:outputLabel>
+	      	<p:outputLabel value="&#8377; &#x20b9; INR.3200.50" styleClass="labelRate" />
+	      	<p:outputLabel>Gold 22C/g</p:outputLabel>
+	      	<p:outputLabel value="INR.2900.50" styleClass="labelRate" />
+	      	<p:outputLabel>Silver/g</p:outputLabel>
+	      	<p:outputLabel value="INR.45.50" styleClass="labelRate" />
+	</h:panelGrid>
+	</p:panel>
+	</h:panelGrid>
+	
+		<p:dataTable var="obj" id="datatable" table-style="width:auto" value="#{sukiJMSProductMBean.invoiceItemTransList}" rows="20" style="margin-top:20px;text-align:center;width:100%;" scrollable="true" scrollHeight="200" styleClass="myTable" >
+	
+      	<p:column headerText="#" style="width:4%;" styleClass="dataTableFontSize" >
+          	<p:outputLabel value="#{sukiJMSProductMBean.prodmaster.rowId}" />
+       	</p:column>
+       	
+        <p:column headerText="Code" sortBy="#{sukiJMSProductMBean.prodmaster.productCode}" style="width:6%;" styleClass="dataTableFontSize">
+            <p:inputText value="#{sukiJMSProductMBean.prodmaster.productCode}" style="border-width:0px 0px 0px 0px" styleClass="dataTableFontSize" />
+            <h:inputHidden value="#{obj.productCode}" />
+            	  <p:commandButton value="..."  actionListener="#{sukiJMSProductMBean.getProductMasterDetails}" ajax="false" update="datatable"></p:commandButton>
+        </p:column>
+        
+        <p:column headerText="Image" sortBy="" style="width:6%;" styleClass="dataTableFontSize">
+            <p:graphicImage url="/resources/images/user_icon.png" style="width:20px;height:20px;"/>
+        </p:column>
+        
+        <p:column headerText="Description" sortBy="#{sukiJMSProductMBean.prodmaster.description}" style="width:18%;" styleClass="dataTableFontSize">
+            <p:outputLabel  value="#{sukiJMSProductMBean.prodmaster.description}" />
+        </p:column>
+        
+        <p:column headerText="Grs.Wt" sortBy="#{sukiJMSProductMBean.prodmaster.grassWt}" style="width:7%;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{sukiJMSProductMBean.prodmaster.grassWt}" />
+ 	    </p:column>
+        <p:column headerText="Stn.Wt" sortBy="#{sukiJMSProductMBean.prodmaster.stoneWt}" style="width:7%;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{sukiJMSProductMBean.prodmaster.stoneWt}" />
+        </p:column>
+        
+        <p:column headerText="Nett.Wt" sortBy="#{sukiJMSProductMBean.prodmaster.netWt}" style="width:7%;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{sukiJMSProductMBean.prodmaster.netWt}" />
+        </p:column>
+        
+        <p:column headerText=" Waste " sortBy="#{sukiJMSProductMBean.prodmaster.waste}" style="width:7%;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{sukiJMSProductMBean.prodmaster.waste}" />
+        </p:column>
+        
+         <p:column headerText="Making" sortBy="#{sukiJMSProductMBean.prodmaster.making}" style="width:6%;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{sukiJMSProductMBean.prodmaster.making}" />
+        </p:column>
+        
+        <p:column headerText="Stn.Ct" sortBy="#{sukiJMSProductMBean.prodmaster.stoneCt}" style="width:6%;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{sukiJMSProductMBean.prodmaster.stoneCt}" />
+        </p:column>
+        
+        <p:column headerText="H.Mark" sortBy="#{sukiJMSProductMBean.prodmaster.hallMark}" style="width:6%;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{sukiJMSProductMBean.prodmaster.hallMark}" />
+        </p:column>
+        
+        <p:column headerText="U.Price" sortBy="#{sukiJMSProductMBean.prodmaster.unitPrice}" style="width:7%;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{sukiJMSProductMBean.prodmaster.unitPrice}" />
+        </p:column>
+        
+        <p:column headerText="Qty" sortBy="#{sukiJMSProductMBean.prodmaster.qty}" style="width:6%;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{sukiJMSProductMBean.prodmaster.qty}" />
+        </p:column>
+        
+        <p:column headerText="Amount" sortBy="#{sukiJMSProductMBean.prodmaster.amount}" style="width:7%;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{sukiJMSProductMBean.prodmaster.amount}" />
+        </p:column>
+        
+        <p:column headerText="Staff" sortBy="#{sukiJMSProductMBean.prodmaster.staff}" style="width:9%;" >
+        <h:selectOneMenu id="console" style="border-width:0px 0px 0px 0px;" styleClass="dataTableFontSize">
+            <f:selectItem for="console" itemLabel="Staff Code"  itemValue="ram" />
+            <f:selectItem itemLabel="S112" itemValue="Ram" />
+            <f:selectItem itemLabel="S113" itemValue="Raja" />
+            <f:selectItem itemLabel="S205" itemValue="Krish" />
+            <f:selectItem itemLabel="S209" itemValue="Kanna" />
+        </h:selectOneMenu>  
+        </p:column>
+        
+	</p:dataTable>
+	
+ 	<p:panel id="horizondal" header="Product Details" styleClass="productDetailsHeader" >
+  	<h:panelGrid class="b1" columns="8" cellspacing="5" cellpadding="5" style="font-size:12px;" >
+  		<p:outputLabel for="stock" styleClass="productDetailsLabelBox" >Stock</p:outputLabel> 
+  		<p:outputLabel id="stock" value="108/5367.000/SIL"  />
+  		<p:outputLabel for="design" styleClass="productDetailsLabelBox" >Design </p:outputLabel>
+  		<p:outputLabel id="design" value="Sachin Style"  />
+    	<p:outputLabel for="stone" styleClass="productDetailsLabelBox" >Stone</p:outputLabel>
+  		<p:outputLabel id="stone" value="Indian Diamond" />
+   		<p:outputLabel for="piece" styleClass="productDetailsLabelBox" >Piece</p:outputLabel>
+  		<p:outputLabel id="piece" value="36" />
+  		<p:outputLabel for="wastage" styleClass="productDetailsLabelBox" >Wastage</p:outputLabel>
+  		<p:outputLabel id="wastage" value="5-12% / 0.350-0.500G" />
+   		<p:outputLabel styleClass="productDetailsLabelBox">Size</p:outputLabel>
+  		<p:outputLabel value="XL"  />
+    	<p:outputLabel styleClass="productDetailsLabelBox">carat</p:outputLabel>
+  		<p:outputLabel value="1222.235" />
+    	<p:outputLabel styleClass="productDetailsLabelBox">Stn.Amount</p:outputLabel>
+    	<p:outputLabel value="2100/-"   />
+  		<p:outputLabel styleClass="productDetailsLabelBox">Making</p:outputLabel>
+    	<p:outputLabel value="15-20 Pgm / 60-80/-"  />
+    	<p:outputLabel styleClass="productDetailsLabelBox">Purity</p:outputLabel>
+    	<p:outputLabel value="92%"  />
+    	<p:outputLabel styleClass="productDetailsLabelBox">Weight</p:outputLabel>
+    	<p:outputLabel value="0.800G"  />
+    	<p:outputLabel styleClass="productDetailsLabelBox">CD Limit</p:outputLabel>
+    	<p:outputLabel value="1% / 4509/-"  />
+  		<p:outputLabel styleClass="productDetailsLabelBox" >Supplier</p:outputLabel>
+  		<p:outputLabel value="GRT Jewellers"  />
+   		<p:outputLabel styleClass="productDetailsLabelBox">Grade</p:outputLabel>
+  		<p:outputLabel value="A"  />
+   		<p:outputLabel styleClass="productDetailsLabelBox">Rate</p:outputLabel>
+  		<p:outputLabel value="500/- Per Stone"  />
+   		<p:outputLabel styleClass="productDetailsLabelBox">Min-Max</p:outputLabel>
+  		<p:outputLabel value="60-80/-"  />
+  		<p:outputLabel value=""  styleClass="DummyLabel" />
+  		<p:outputLabel value="" styleClass="DummyLabel" />
+  		<p:outputLabel value="Cost Value"  styleClass="productDetailsLabelBox"/>
+  		<p:outputLabel value="2550/- Per Piece" Class="otb1" />
+  		<p:outputLabel value=""  styleClass="DummyLabel" />
+  		<p:outputLabel value="" styleClass="DummyLabel" />
+  		<p:outputLabel styleClass="productDetailsLabelBox">Rate/Gm</p:outputLabel>
+  		<p:outputLabel value="3000/-"  />
+	</h:panelGrid>
+	</p:panel>
+
+	<h:panelGrid columns="2" styleClass="totalCalculation">
+ 	<p:panel styleClass="totalCalcPanel" style="width:100%;" >
+    <h:panelGrid columns="5" cellpadding="2"   style="width:100%;" >
+    
+    <p:row >
+    <p:column style="text-aling:left;" styleClass="panelgrid-dotted-border">
+        <h:graphicImage library="images" name="Capture1.PNG" />
+        </p:column>
+    </p:row>
+   <p:column>
+         <p:outputLabel value="GrossWeight" styleClass="totalCalcLabel1"  ></p:outputLabel><br></br>
+	     <p:outputLabel value="2354.123" styleClass="totalCalcLabel2"  />
+        </p:column>
+    
+    <p:column>
+         <p:outputLabel value="Nett Weight" styleClass="totalCalcLabel1"></p:outputLabel><br></br>
+	     <p:outputLabel value="2854.123" styleClass="totalCalcLabel2" />
+        </p:column>
+  
+    <p:column>
+         <p:outputLabel  value="Total Items" styleClass="totalCalcLabel1"></p:outputLabel><br></br>
+	     <p:outputLabel value="305" styleClass="totalCalcLabel2" />
+        </p:column>
+   
+    <p:column>
+         <p:outputLabel value="Total Amount" styleClass="totalCalcLabel1"></p:outputLabel><br></br>
+	     <p:outputLabel value="INR.11,31,000" styleClass="totalCalcLabel2" />
+        </p:column>
+    	
+	</h:panelGrid>  
+	</p:panel>
+	    
+			<p:commandButton value="MAKE PAYMENT" style="font-size:14px;height:60px;color:white; background:#f18732;text-align:center;width:100%;" /> 
+	
+	</h:panelGrid>
+	</p:tab>
+	<p:tab  title="+BILL">
+      	<h1>welcome to second page</h1> 
+	</p:tab>
+</p:tabView>
+</h:form>
+</ui:define></ui:composition>

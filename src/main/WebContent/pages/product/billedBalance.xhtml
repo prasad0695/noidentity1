@@ -1,0 +1,390 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+.layout-wrapper .topbar{
+height:25px;
+}
+body .ui-datatable thead tr th {
+border:0px solid white;
+}
+body .ui-datatable tbody tr td {
+border:0px solid white;
+}
+body.layout-compact .ui-datatable thead th {
+background-color:#CBCBCB;
+}
+body .ui-inputfield {border-width:0px;}
+body.layout-compact .ui-datatable thead th {
+font-size:12px;
+	background-color:#CBCBCB;
+}
+body .ui-scrollpanel .ui-scrollpanel-drag {
+background-color:		#CDCDCD;
+}
+.statusColor{
+color:red;
+font-weight:bold;
+}
+.statusColorGreen{
+color:green;
+font-weight:bold;
+}
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	background-color: #CBCBCB;
+}
+body .ui-dialog .ui-dialog-titlebar{
+background-color: #607D8B;
+color:white;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="datalist3">
+<p:growl id="messages" showDetail="true"></p:growl>
+<div align="left" style="margin-top:-25px;">
+<p:commandButton value="Direct Invoice" oncomplete="PF('dlg1').show()" action="#{sukiJMSProductMBean.newDirectInvoice}" update=":datalist,messages" ></p:commandButton>
+</div>
+<div align="center" style="margin-top:-18px">
+<h:panelGrid columns="2" style="width:20%">
+<p:outputLabel value="Balance" style="font-size:20px;font-weight:bold;color:red;" ></p:outputLabel>
+<p:outputLabel id="totalBal" value="#{sukiJMSProductMBean.totalBalance}" style="font-size:20px;font-weight:bold;color:red;">
+<f:convertNumber pattern="#0.00"  />
+</p:outputLabel>
+</h:panelGrid>
+</div>
+<div align="right" style="margin-top: -35px;">
+<h:panelGrid columns="3">
+<h:selectOneMenu id="month" value="#{sukiJMSProductMBean.reportKey.lotGroup}" style="height:25px;width:110px" >
+<f:selectItem itemLabel="Select" itemValue="Select"/>
+<f:selectItems value="#{sukiJMSProductMBean.monthList}"></f:selectItems>
+<p:ajax event="change" listener="#{sukiJMSProductMBean.getbillListByMonth}" update="datatable1,totalBal" />
+</h:selectOneMenu>
+<h:selectOneMenu style="border-radius:10px;border-width:1px 1px 1px 1px;border-color:darkgrey;height:26px;background-color:white;" value="#{sukiJMSProductMBean.reportKey.colName}">
+<p:ajax event="change" listener="#{sukiJMSProductMBean.billMasterSearchListMethod}" update="datatable1" />
+<f:selectItems value="#{sukiJMSProductMBean.billMasterSearchList}" />
+</h:selectOneMenu>
+				<p:inputText id="txt" icon="ui-icon-disk"
+					style="border-radius:10px;border-width:1px 1px 1px 1px;border-color:darkgrey; width:100%;height:22px;background-color:white;"
+					value="#{sukiJMSProductMBean.reportKey.colValue}">
+					<p:ajax event="keyup"
+						listener="#{sukiJMSProductMBean.billMasterSearchListMethod}"
+						update="datatable1" />
+				</p:inputText>
+				<p:watermark for="txt" value="Search" />
+				</h:panelGrid>
+			</div>
+<p:dataTable rowIndexVar="rowId" var="obj" style="margin-top:-1px;" value="#{sukiJMSProductMBean.billMasterList}" scrollable="true" scrollHeight="480" scrollRows="20" liveScroll="true" id="datatable1" >
+<p:column headerText="Sl.No" width="6%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+<h:inputHidden id="invoiceno" value="#{obj.billNo}" />
+</p:column>
+<p:column headerText="Date" width="12%">
+<p:outputLabel  value="#{obj.date}"  style="margin-left:20px" >
+<f:convertDateTime timeZone="IST" pattern="dd/MM/YY" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Invoice No" width="9%">
+<p:outputLabel value="#{obj.billNo}" style="margin-left:20px;font-weight:bold" ></p:outputLabel>
+<h:inputHidden value="#{obj.billNo}" id="invNo" />
+</p:column>
+<p:column headerText="Company" width="35%">
+<p:outputLabel value="#{obj.companyName}" style="margin-left:10px" ></p:outputLabel>
+</p:column>
+<p:column headerText="Amount" width="10%">
+<p:outputLabel value="#{obj.totalAmount}" >
+<f:convertNumber pattern="#0.00"  />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Status" width="9%">
+<p:outputLabel value="#{obj.status}" styleClass="#{obj.statusColor}" ></p:outputLabel>
+</p:column>
+<p:column headerText="Paid On" width="12%">
+<p:outputLabel value="#{obj.paidOn}" style="margin-left:20px;font-weight:bold;" >
+<f:convertDateTime pattern="dd/MM/YYYY" timeZone="IST" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="" width="22%">
+<p:commandButton value="Print" actionListener="#{sukiJMSProductMBean.duplicateBillprint}" />
+<p:commandButton value="Edit" actionListener="#{sukiJMSProductMBean.billEdit}" oncomplete="PF('dlg3').show()" update="datalist4" />
+<p:commandLink value="Cancel" actionListener="#{sukiJMSProductMBean.billDelete}" onclick="if(!confirm('Are u want to delete?')) return false" update="datalist3:datatable1" style="text-decoration:underline;" ></p:commandLink>
+</p:column>
+</p:dataTable>
+</h:form>
+<p:dialog header="New Bill" widgetVar="dlg1" height="550" width="*%" modal="true" >
+<h:form id="datalist">
+<h:panelGrid columns="8" cellpadding="10">
+<h:outputLabel value="Company Name"  />
+<p:selectOneMenu value="#{sukiJMSProductMBean.billMaster.companyName}" filterMatchMode="startsWith" filter="true"  style="height:25px;width:20%;border:1px solid #607D8B">
+<p:ajax event="change" listener="#{sukiJMSProductMBean.directBill}"  />
+<f:selectItem itemValue="Select" itemLabel="Select"></f:selectItem>
+<f:selectItems value="#{sukiJMSProductMBean.gradeColList}"></f:selectItems>
+</p:selectOneMenu>
+<h:outputLabel value="Date"  />
+<p:calendar value="#{sukiJMSProductMBean.billMaster.dateUtil}" style="border:1px solid black;" >
+</p:calendar>
+<h:outputLabel value="Dc No"  />
+<p:inputText  value="#{sukiJMSProductMBean.billMaster.dcNos}" style="font-weight:bold;" >
+</p:inputText>
+<h:outputLabel value="Inv No"  />
+<p:inputText  value="#{sukiJMSProductMBean.billMaster.billNo}" style="font-weight:bold;border:1px solid black;" >
+</p:inputText>
+<h:outputLabel value="PO No"  />
+<p:inputText  value="#{sukiJMSProductMBean.billMaster.poNo}" style="font-weight:bold;border:1px solid black;" >
+</p:inputText>
+</h:panelGrid>
+<p:dataTable rowIndexVar="rowId" var="obj" style="margin-top:5px" scrollable="true" scrollHeight="250" value="#{sukiJMSProductMBean.billTransList}" id="datatable" >
+<p:column headerText="Sl.No" width="15%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+<h:inputHidden value="#{obj.slNo}" id="slNo" />
+</p:column>
+<p:column headerText="Description" width="50%">
+<h:panelGrid columns="2" style="width:100%" cellpadding="5">
+<p:selectOneMenu id="prod" style="width:70%" value="#{obj.products}" filterMatchMode="startsWith" filter="true">
+<f:selectItem itemValue="Select" itemLabel="Select"></f:selectItem>
+<p:ajax event="change" listener="#{sukiJMSProductMBean.billDirectInvList}" update="datatable" />
+<f:selectItems value="#{sukiJMSProductMBean.productList}" />
+</p:selectOneMenu>
+<p:commandButton value="Add" style="margin-left:40px" update=":subform"  oncomplete="PF('dlg4').show()"  actionListener="#{sukiJMSProductMBean.productAddBill}"></p:commandButton>
+</h:panelGrid>
+</p:column>
+<p:column headerText="UOM" width="15%">
+<h:selectOneMenu value="#{obj.uom}" style="width:80px" >
+<f:selectItem itemValue="Pkt" itemLabel="Pkt"/>
+		<f:selectItem itemValue="Box" itemLabel="Box"/>
+		<f:selectItem itemValue="Roll" itemLabel="Roll"/>
+		<f:selectItem itemValue="Nos" itemLabel="Nos"/>
+		<f:selectItem itemValue="Cotton" itemLabel="Cotton"/>
+		<f:selectItem itemValue="Cane" itemLabel="Cane"/>
+		<f:selectItem itemValue="Sets" itemLabel="Sets"/>
+		<f:selectItem itemValue="Kgs" itemLabel="Kgs"/>
+</h:selectOneMenu>
+</p:column>
+<p:column headerText="Quantiy" width="15%">
+<p:inputText value="#{obj.qty}" style="width:60%;margin-left:30px;" >
+<p:ajax event="blur" listener="#{sukiJMSProductMBean.billDirectInvQty}" update="datatable:amount" />
+</p:inputText>
+</p:column>
+<p:column headerText="Rate" width="15%">
+<p:inputText value="#{obj.rate}" style="width:60%;margin-left:30px;" >
+<p:ajax event="blur" listener="#{sukiJMSProductMBean.billDirectRateEdit}" update="datalist:total,datalist:gstvalue,datatable:amount" />
+<f:convertNumber pattern="#0.00"/>
+</p:inputText>
+</p:column>
+<p:column headerText="Cgst" width="15%">
+<p:outputLabel value="#{obj.cgst}" style="width:30px;margin-left:30px;" ></p:outputLabel>
+</p:column>
+<p:column headerText="Sgst" width="15%">
+<p:outputLabel value="#{obj.sgst}" style="width:30px;margin-left:30px;" ></p:outputLabel>
+</p:column>
+<p:column headerText="Amount" width="15%">
+<p:outputLabel id="amount" value="#{obj.amount}" style="width:30px;margin-left:30px;" >
+<f:convertNumber pattern="#0.00"/>
+</p:outputLabel>
+</p:column>
+<p:column headerText="" width="15%">
+<p:commandButton value="Delete" actionListener="#{sukiJMSProductMBean.deleteDcTable}" update="datatable"></p:commandButton>
+</p:column>
+</p:dataTable>
+<p:commandButton value="+" action="#{sukiJMSProductMBean.addRowBillTrans}" update="datatable"></p:commandButton>
+
+<div align="right" style="margin-top:-25px">
+<h:panelGrid  columns="4" id="total" cellpadding="5">
+<h:outputLabel value="TOTAL" style="font-weight:bold;font-size:18px" />
+<h:outputLabel id="totalamt" value="#{sukiJMSProductMBean.newBill.totalAmount}"  style="font-weight:bold;font-size:18px">
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+</div>
+<p:panel >
+<h:panelGrid id="gstvalue"  columns="4" cellpadding="5">
+<h:outputLabel value="CGST 2.5%" />
+<h:outputLabel id="cgst25" value="#{sukiJMSProductMBean.newBill.totalCgst25}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 2.5%" />
+<h:outputLabel id="sgst25" value="#{sukiJMSProductMBean.newBill.totalSgst25}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 6%" />
+<h:outputLabel id="cgst6" value="#{sukiJMSProductMBean.newBill.totalCgst6}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 6%" />
+<h:outputLabel id="sgst6" value="#{sukiJMSProductMBean.newBill.totalSgst6}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 9%" />
+<h:outputLabel id="cgst9" value="#{sukiJMSProductMBean.newBill.totalCgst9}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 9%" />
+<h:outputLabel id="sgst9" value="#{sukiJMSProductMBean.newBill.totalSgst9}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 14%" />
+<h:outputLabel id="cgst14" value="#{sukiJMSProductMBean.newBill.totalCgst14}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 14%" />
+<h:outputLabel id="sgst14" value="#{sukiJMSProductMBean.newBill.totalSgst14}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+</p:panel>
+<div align="center" style="margin-top:15px">
+<p:commandButton value="Save" style="width:10%" action="#{sukiJMSProductMBean.billSave}"  ></p:commandButton>
+</div>
+</h:form>
+</p:dialog>
+<p:dialog  widgetVar="dlg4" header="Add Product" modal="true" height="330"  width="460" style="align:center">
+	<h:form id="subform">
+	<p:growl id="messages1" showDetail="true" />
+	<h:panelGrid columns="2" cellpadding="5" style="margin-left:10%;margin-top:20px">
+		<p:outputLabel value="HSNCode"/>
+		<p:inputText style="width:120%" value="#{sukiJMSProductMBean.size.hsnCode}" />
+		<p:outputLabel value="ItemName" />
+		<p:inputText style="width:120%" value="#{sukiJMSProductMBean.size.item}"  >
+		<p:ajax event="blur" listener="#{sukiJMSProductMBean.productSearch}" update="messages1" />
+		 </p:inputText>
+		<p:outputLabel value="UOM"/>
+		<h:selectOneMenu value="#{sukiJMSProductMBean.size.uom}" style="width:123%;height:23px" >
+		<f:selectItem itemValue="Pkt" itemLabel="pkt"/>
+		<f:selectItem itemValue="Box" itemLabel="Box"/>
+		<f:selectItem itemValue="Roll" itemLabel="Roll"/>
+		<f:selectItem itemValue="Nos" itemLabel="Nos"/>
+		<f:selectItem itemValue="Cotton" itemLabel="Cotton"/>
+		<f:selectItem itemValue="Cane" itemLabel="Cane"/>
+		<f:selectItem itemValue="Sets" itemLabel="Sets"/>
+		<f:selectItem itemValue="Kgs" itemLabel="Kgs"/>
+		</h:selectOneMenu>
+		<p:outputLabel value="Rate"/>
+		<p:inputText style="width:120%" value="#{sukiJMSProductMBean.size.rate}"  />
+		<p:outputLabel value="Cgst"/>
+		<p:inputText style="width:120%" value="#{sukiJMSProductMBean.size.cgst}" />
+		<p:outputLabel value="Sgst"/>
+		<p:inputText style="width:120%" value="#{sukiJMSProductMBean.size.sgst}" />
+		<p:outputLabel value="Stationary/House Keeping" />
+		<h:selectOneMenu value="#{sukiJMSProductMBean.size.stationOrHouse}"
+							style="width:123%;height:23px">
+		<f:selectItem itemValue="-select-" itemLabel="-select-" />
+		<f:selectItem itemValue="stationary" itemLabel="stationary" />
+		<f:selectItem itemValue="House keeping" itemLabel="House keeping" />
+		</h:selectOneMenu>
+	</h:panelGrid>
+	<div  align="center">
+	<p:commandButton style="margin-left:30px" action="#{sukiJMSProductMBean.billproductSave}"  value="Save" update="datalist:datatable" />
+	</div>
+	</h:form>	
+	</p:dialog>
+<p:dialog widgetVar="dlg3" height="550" width="1200" modal="true" >
+<h:form id="datalist4">
+<h:panelGrid columns="4">
+<p:outputLabel value="Date"></p:outputLabel>
+<p:calendar value="#{sukiJMSProductMBean.billMasterEdit.dateUtil}"></p:calendar>
+<p:outputLabel value="Invoice No:"></p:outputLabel>
+<h:inputText value="#{sukiJMSProductMBean.billMasterEdit.billNo}" />
+</h:panelGrid>
+<p:dataTable rowIndexVar="rowId" var="obj" value="#{sukiJMSProductMBean.billTransListEdit}" id="datatable1" >
+<p:column headerText="Sl.No" width="10%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="Description" width="20%">
+<p:outputLabel  value="#{obj.products}" style="margin-left:20px" />
+<h:inputHidden value="#{obj.slNo}" id="item" />
+</p:column>
+<p:column headerText="Quantiy" width="12%">
+<p:outputLabel value="#{obj.qty}" style="margin-left:20px" >
+</p:outputLabel>
+</p:column>
+<p:column headerText="UOM" width="15%">
+<p:outputLabel value="#{obj.uom}" style="margin-left:20px" >
+<f:convertNumber pattern="0.00"/>
+</p:outputLabel>
+</p:column>
+<p:column headerText="Rate" width="15%">
+<p:inputText value="#{obj.rate}" >
+<p:ajax event="blur" listener="#{sukiJMSProductMBean.printBillActionEdit}" update="amount,datalist4:total,datalist4:gstvalue" />
+<f:convertNumber pattern="0.00"/>
+</p:inputText>
+</p:column>
+<p:column headerText="CGST%" width="12%">
+<p:outputLabel value="#{obj.cgst}" style="margin-left:20px" >
+<f:convertNumber pattern="0.0"/>
+</p:outputLabel>
+</p:column>
+<p:column headerText="SGST%" width="12%">
+<p:outputLabel value="#{obj.sgst}" style="margin-left:20px" >
+<f:convertNumber pattern="0.0"/>
+</p:outputLabel>
+</p:column>
+<p:column headerText="Amount" width="14%">
+<p:outputLabel value="#{obj.amount}" id="amount" style="margin-left:20px">
+<f:convertNumber pattern="0.00"/>
+</p:outputLabel>
+</p:column>
+</p:dataTable>
+<div align="right">
+<h:panelGrid  columns="4" id="total" cellpadding="5">
+<h:outputLabel value="TOTAL" style="font-weight:bold;font-size:18px" />
+<h:outputLabel id="totalamt" value="#{sukiJMSProductMBean.newBill.totalAmount}"  style="font-weight:bold;font-size:18px">
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+</div>
+<p:panel >
+<h:panelGrid id="gstvalue" columns="4" cellpadding="5">
+<h:outputLabel value="CGST 2.5%" />
+<h:outputLabel id="cgst25" value="#{sukiJMSProductMBean.newBill.totalCgst25}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 2.5%" />
+<h:outputLabel id="sgst25" value="#{sukiJMSProductMBean.newBill.totalSgst25}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 6%" />
+<h:outputLabel id="cgst6" value="#{sukiJMSProductMBean.newBill.totalCgst6}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 6%" />
+<h:outputLabel id="sgst6" value="#{sukiJMSProductMBean.newBill.totalSgst6}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 9%" />
+<h:outputLabel id="cgst9" value="#{sukiJMSProductMBean.newBill.totalCgst9}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 9%" />
+<h:outputLabel id="sgst9" value="#{sukiJMSProductMBean.newBill.totalSgst9}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 14%" />
+<h:outputLabel id="cgst14" value="#{sukiJMSProductMBean.newBill.totalCgst14}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 14%" />
+<h:outputLabel id="sgst14" value="#{sukiJMSProductMBean.newBill.totalSgst14}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+</p:panel>
+<p:commandButton value="Print Bill" action="#{sukiJMSProductMBean.billPrintPage}" >
+</p:commandButton>
+<p:commandButton value="Save" action="#{sukiJMSProductMBean.billSaveEdit}" ></p:commandButton>
+</h:form>
+</p:dialog>
+</ui:define>
+</ui:composition>

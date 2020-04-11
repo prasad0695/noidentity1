@@ -1,0 +1,160 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pu="http://primefaces.org/ultima">
+    <h:form id="menuform1"> 
+        <div class="layout-menu #{guestPreferences.menuClass}">
+            <div class="nano">
+                <div class="nano-content menu-scroll-content">
+                    <ui:fragment rendered="#{guestPreferences.profileMode == 'inline' and guestPreferences.menuLayout != 'menu-layout-static menu-layout-horizontal'}">
+                        <div class="profile">
+                            
+                            <a id="profile-options" href="#">
+                                
+                            </a>
+                        </div>
+                    
+                        <ul id="profile-menu" class="ultima-menu">
+                            
+                        </ul>
+                    </ui:fragment>
+                    <pu:menu>
+                    <p:menuitem id="um_dashboard" value="Dashboard" actionListener="#{dashBoardReportMBean.dashboard}" icon="&#xE871;"/>
+                           <p:submenu id="settings" label="Settings" icon="&#xE40A;">
+                        <p:submenu id="themes" label="Themes" icon="&#xE40A;">
+                            <p:menuitem id="theme1" value="Indigo - Pink" icon="&#xE3AE;" actionListener="#{guestPreferences.setTheme('indigo')}" ajax="false" />
+                            <p:menuitem id="theme2" value="Brown - Green" icon="&#xE3AE;" actionListener="#{guestPreferences.setTheme('brown')}" ajax="false" />
+                            <p:menuitem id="theme3" value="Blue - Amber" icon="&#xE3AE;" actionListener="#{guestPreferences.setTheme('blue')}" ajax="false" />
+                            <p:menuitem id="theme4" value="Blue Grey - Green" icon="&#xE3AE;" actionListener="#{guestPreferences.setTheme('blue-grey')}" ajax="false" />
+                            <p:menuitem id="theme5" value="Dark - Blue" icon="&#xE3AE;" actionListener="#{guestPreferences.setTheme('dark-blue')}" ajax="false" />
+                            <p:menuitem id="theme6" value="Dark - Green" icon="&#xE3AE;" actionListener="#{guestPreferences.setTheme('dark-green')}" ajax="false" />
+                            <p:menuitem id="theme7" value="Green - Yellow" icon="&#xE3AE;" actionListener="#{guestPreferences.setTheme('green')}" ajax="false" />
+                            <p:menuitem id="theme8" value="Purple - Cyan" icon="&#xE3AE;" actionListener="#{guestPreferences.setTheme('purple-cyan')}" ajax="false" />
+                            <p:menuitem id="theme9" value="Purple - Amber" icon="&#xE3AE;" actionListener="#{guestPreferences.setTheme('purple-amber')}" ajax="false" />
+                            <p:menuitem id="theme10" value="Teal - Lime" icon="&#xE3AE;" actionListener="#{guestPreferences.setTheme('teal')}" ajax="false" />
+                            <p:menuitem id="theme11" value="Cyan - Amber" icon="&#xE3AE;" actionListener="#{guestPreferences.setTheme('cyan')}" ajax="false" />
+                            <p:menuitem id="theme12" value="Grey - Deep Orange" icon="&#xE3AE;" actionListener="#{guestPreferences.setTheme('grey')}" ajax="false" />
+                        </p:submenu>
+                        <p:submenu id="um_customization" label="Customization" icon="&#xE8B8;">
+                            <p:menuitem id="custom1" value="Compact Size" icon="&#xE061;" actionListener="#{guestPreferences.setCompact(true)}" ajax="false"/>
+                            <p:menuitem id="custom2" value="Material Size" icon="&#xE062;" actionListener="#{guestPreferences.setCompact(false)}" ajax="false"/>
+                            <p:menuitem id="custom3" value="Static Menu" icon="&#xE5D2;" actionListener="#{guestPreferences.setMenuLayout('static')}" ajax="false"/>
+                            <p:menuitem id="custom4" value="Overlay Menu" icon="&#xE879;" actionListener="#{guestPreferences.setMenuLayout('overlay')}" ajax="false"/>
+                            <p:menuitem id="custom5" value="Horizontal Menu" icon="&#xE22C;" actionListener="#{guestPreferences.setMenuLayout('horizontal')}" ajax="false"/>
+                            <p:menuitem id="custom6" value="Light Menu" icon="&#xE893;" actionListener="#{guestPreferences.setLightMenu}" ajax="false" />
+                            <p:menuitem id="custom7" value="Dark Menu" icon="&#xE892;" actionListener="#{guestPreferences.setDarkMenu}" ajax="false"/>
+                            <p:menuitem id="custom8" value="Inline Profile" icon="&#xE0BA;" actionListener="#{guestPreferences.setProfileMode('inline')}" ajax="false" />
+                            <p:menuitem id="custom9" value="Top Profile" icon="&#xE55A;" actionListener="#{guestPreferences.setProfileMode('overlay')}" ajax="false"/>
+                        </p:submenu>
+                         <p:submenu id="um_orientation" label="Orientation" icon="&#xE237;">
+                            <p:menuitem id="um_ltr" value="LTR" icon="&#xE236;" actionListener="#{guestPreferences.setOrientationRTL(false)}" ajax="false" />
+                            <p:menuitem id="um_rtl" value="RTL" icon="&#xE237;" actionListener="#{guestPreferences.setOrientationRTL(true)}" ajax="false" />
+                        </p:submenu>
+                        <p:submenu id="um_components" label="Components" icon="&#xE896;">
+                            <p:menuitem id="um_sample" value="Sample Page" icon="&#xE30B;" outcome="/sample" />
+                            <p:menuitem id="um_forms" value="Forms" icon="&#xE890;" outcome="/forms" />
+                            <p:menuitem id="um_data" value="Data" icon="&#xE3EC;" outcome="/data" />
+                            <p:menuitem id="um_panels" value="Panels" icon="&#xE14F;" outcome="/panel" />
+                            <p:menuitem id="um_overlays" value="Overlays" icon="&#xE14D;" outcome="/overlay" />
+                            <p:menuitem id="um_menus" value="Menus" icon="&#xE5D2;" outcome="/menu" />
+                            <p:menuitem id="um_messages" value="Messages" icon="&#xE0C9;" outcome="/messages" />
+                            <p:menuitem id="um_charts" value="Charts" icon="&#xE24B;" outcome="/charts" />
+                            <p:menuitem id="um_file" value="File" icon="&#xE226;" outcome="/file" />
+                            <p:menuitem id="um_misc" value="Misc" icon="&#xE332;" outcome="/misc" />
+                        </p:submenu>
+                        <p:submenu id="um_default" label="Template Pages" icon="&#xE884;">
+                            <p:menuitem id="um_db_landing" value="Landing" icon="&#xE904;" outcome="/landing"/>
+                            <p:menuitem id="um_empty" value="Empty Page" icon="&#xE88B;" outcome="/empty" />
+                            <p:menuitem id="um_login" value="Login Page" icon="&#xE8E8;" outcome="/login" />
+                            <p:menuitem id="um_error" value="Error Page" icon="&#xE000;" outcome="/error" />
+                            <p:menuitem id="um_404" value="404 Page" icon="&#xE001;" outcome="/404" />
+                            <p:menuitem id="um_access" value="Access Denied Page" icon="&#xE32A;" outcome="/access" />
+                        </p:submenu>
+                        <p:submenu id="um_hierarchy" label="Menu Hierarchy" icon="&#xE5D2;">
+                            <p:submenu id="um_sm1" label="Submenu 1" icon="&#xE8D2;">
+                                <p:submenu id="um_sm11" label="Submenu 1.1" icon="&#xE8D2;">
+                                    <p:menuitem id="um_lnk111" value="Link 1.1.1" icon="&#xE8D2;" url="#" />
+                                    <p:menuitem id="um_lnk112" value="Link 1.1.2" icon="&#xE8D2;" url="#" />
+                                    <p:menuitem id="um_lnk113" value="Link 1.1.3" icon="&#xE8D2;" url="#" />
+                                </p:submenu>
+                                <p:submenu id="um_sm12" label="Submenu 1.2" icon="&#xE8D2;">
+                                    <p:menuitem id="um_lnk121" value="Link 1.2.1" icon="&#xE8D2;" url="#" />
+                                </p:submenu>
+                            </p:submenu>
+                            <p:submenu id="um_sm2" label="Submenu 2" icon="&#xE8D2;">
+                                <p:submenu id="um_sm21" label="Submenu 2.1" icon="&#xE8D2;">
+                                    <p:menuitem id="um_lnk211" value="Link 2.1.1" icon="&#xE8D2;" url="#" />
+                                    <p:menuitem id="um_lnk212" value="Link 2.1.2" icon="&#xE8D2;" url="#" />
+                                </p:submenu>
+                                <p:submenu id="um_sm22" label="Submenu 2.2" icon="&#xE8D2;">
+                                    <p:menuitem id="um_lnk221" value="Link 2.2.1" icon="&#xE8D2;" url="#" />
+                                </p:submenu>
+                            </p:submenu>
+                        </p:submenu>
+                        <p:menuitem id="um_utils" value="Utils" icon="&#xE869;" outcome="/utils"/>
+                        <p:menuitem id="um_doc" value="Documentation" icon="&#xE880;" outcome="/docs"/>
+                        </p:submenu>
+                        <p:submenu id="master" label="MASTER" icon="&#xE8B8;">
+                            <p:menuitem id="addSupplier" value="NEW SUPPLIER" icon="&#xE8B8;"  actionListener="#{supplierMBean.newSupplier}" />
+                            <p:menuitem id="addCompany" value="NEW COMPANY" icon="&#xE8B8;"  actionListener="#{companyMBean.newCompany}" />
+                            <p:menuitem id="products" value="NEW PRODUCT" icon="&#xE8B8;" action="#{productMBean.newProduct}" />
+                            <p:menuitem value="UNIT MASTER" icon="&#xE8B8;"  actionListener ="#{productMBean.unitMasterOverview}" />
+                           </p:submenu>
+                           <p:submenu id="masterOverview" label="MASTER OVERVIEW" icon="&#xE8B8;">
+                           <p:menuitem id="company" value="COMPANY" icon="&#xE8B8;" actionListener="#{companyMBean.OverviewListFromMenu}"  />
+                           <p:menuitem  value="PRODUCTS" icon="&#xE8B8;" actionListener="#{productMBean.productOverview}"  />
+                           <p:menuitem id="supplieroverview" value="SUPPLIER" icon="&#xE8B8;"  actionListener="#{supplierMBean.OverviewListFromMenu}" />
+                           </p:submenu>
+                           <p:submenu label="SALES" icon="&#xE8B8;">
+                            <p:submenu label="ADD NEW" icon="&#xE8B8;">
+                           <p:menuitem id="dc" value="NEW DELIVERY CHALAN" icon="&#xE8B8;" actionListener="#{deliveryChallanMBean.newDeliveryChalan}" />
+                           <p:menuitem id="invoice" value="NEW INVOICE" icon="&#xE8B8;" actionListener="#{invoiceMBean.newInvoice}"  />
+                           <p:menuitem id="payments" value="NEW PAYMENT" icon="&#xE8B8;" actionListener="#{salesPaymentMBean.newPayment}"  />
+                           <p:menuitem value="NEW QUOTATION" icon="&#xE8B8;" actionListener="#{productMBean.newQuotation}" />
+                           </p:submenu>
+                           <p:submenu label="SALES OVERVIEW" icon="&#xE8B8;">
+                           <p:menuitem value="DELIVERY CHALLAN" icon="&#xE8B8;" actionListener="#{deliveryChallanMBean.OverviewListFromMenu}" />
+                           <p:menuitem value="INVOICE" icon="&#xE8B8;" actionListener="#{invoiceMBean.OverviewListFromMenu}"  />
+                           <p:menuitem value="PAYMENTS" icon="&#xE8B8;" actionListener="#{salesPaymentMBean.OverviewListFromMenu}"  />
+                           <p:menuitem value="QUOTATION" icon="&#xE8B8;" actionListener="#{productMBean.getQuotMasterList}" />
+                           </p:submenu>
+                           <p:submenu label="SALES REPORT" icon="&#xE8B8;">
+                           <p:menuitem value="SALES" icon="&#xE8B8;"  actionListener="#{dashBoardReportMBean.sales}" />
+                           <p:menuitem value="SALES OUTSTANDING" icon="&#xE8B8;"  actionListener="#{dashBoardReportMBean.outStandingSalesAmt}" />
+                           <p:menuitem value="SALES PAYMENT" icon="&#xE8B8;"  actionListener="#{dashBoardReportMBean.salesPayment}" />
+                           </p:submenu>
+                           </p:submenu>
+                           <p:submenu label="PURCHASE" icon="&#xE8B8;">
+                           <p:submenu label="ADD NEW" icon="&#xE8B8;">
+                           <p:menuitem id="newpo" value="NEW PURCHASE ORDER" icon="&#xE8B8;" action="#{purchaseOrderMBean.newPo}" />
+                           <p:menuitem id="newInward" value="NEW INWARD" icon="&#xE8B8;" action="#{inwardMBean.newInward}" />
+                           <p:menuitem id="newPObill" value="NEW INVOICE" icon="&#xE8B8;" actionListener="#{purchaseInvoiceMBean.newInvoice}" />
+                           <p:menuitem id="purchasePayment" value="NEW PAYMENT" icon="&#xE8B8;" action="#{purchasePaymentMBean.newPayment}" />
+                           </p:submenu>
+                           <p:submenu label="PURCHASE OVERVIEW" icon="&#xE8B8;">
+                           <p:menuitem id="po" value="PURCHASE ORDER" icon="&#xE8B8;" action="#{purchaseOrderMBean.OverviewListFromMenu}"  />
+                           <p:menuitem id="inward" value="INWARD" icon="&#xE8B8;" action="#{inwardMBean.OverviewListFromMenu}" />
+                           <p:menuitem id="PObill" value="INVOICE" icon="&#xE8B8;" actionListener="#{purchaseInvoiceMBean.OverviewListFromMenu}" />
+                           <p:menuitem id="purchasePaymentOverview" value="PAYMENT" icon="&#xE8B8;" action="#{purchasePaymentMBean.OverviewListFromMenu}" />
+                           </p:submenu>
+                           <p:submenu label="PURCHASE REPORT" icon="&#xE8B8;">  
+                             <p:menuitem value="PURCHASE" icon="&#xE8B8;"  actionListener="#{dashBoardReportMBean.purchase}" />
+                             <p:menuitem value="PURCHASE OUTSTANDING" icon="&#xE8B8;"  actionListener="#{dashBoardReportMBean.outStandingPurchaseAmt}" />
+                             <p:menuitem value="SUPPLIER PAYMENT" icon="&#xE8B8;"  actionListener="#{dashBoardReportMBean.purchasePayment}" />
+                           </p:submenu>
+                           </p:submenu>
+                           <p:menuitem value="GST" icon="&#xE8B8;"  actionListener="#{dashBoardReportMBean.getGstReport}" />
+                           <p:menuitem id="commonReport" value="COMMON REPORT" icon="&#xE8B8;" action="#{dashBoardReportMBean.commonReportRoute}" />
+                           <p:submenu label="PRODUCT REPORT" icon="&#xE8B8;">  
+                             <p:menuitem value="PRODUCT SALES" icon="&#xE8B8;"  actionListener="#{dashBoardReportMBean.productSales}" />
+                             <p:menuitem value="PRODUCT PURCHASE" icon="&#xE8B8;"  actionListener="#{dashBoardReportMBean.productPurchase}" />
+                           </p:submenu>                                                          
+                    </pu:menu>
+                </div>
+            </div>
+        </div>
+    </h:form>
+</ui:composition>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+      
+
+<h:head>
+
+<style type="text/css">
+#p1
+{
+width:1250px; 
+height:1800px;
+background:#C5CEDF;
+margin-top:-8px;
+margin-left:10px;
+font-family:Calibri Bold;
+}
+#p2
+{
+width:600px; 
+height:420px;
+margin-top:-8px;
+margin-right:850px;
+font-family:Calibri Bold;
+}
+.p2
+{
+width:400px; 
+height:400px;
+}
+#p3
+{
+width:600px; 
+height:400px;
+margin-top:3px;
+margin-right:800px;
+font-family:Calibri Bold;
+}
+#p4
+{
+width:600px; 
+height:450px;
+margin-top:3px;
+margin-right:840px;
+font-family:Calibri Bold;
+}
+#p5
+{
+width:600px; 
+height:550px;
+margin-top:-1282px;
+margin-right:-600px;
+font-family:Calibri Bold;
+}
+#p6
+{
+width:600px; 
+height:725px;
+margin-top:3px;
+margin-right:-600px;
+font-family:Calibri Bold;
+}
+
+.onoffswitch {
+	    position: relative; width:30px;
+	    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+	}
+
+	.onoffswitch-checkbox {
+	    display: none;
+	}
+
+	.onoffswitch-label {
+	    display: block; overflow: hidden; cursor: pointer;
+	    border: 2px solid #999999; border-radius: 20px;
+	}
+
+	.onoffswitch-inner {
+	      width: 200%; margin-left: -100%;
+	    -moz-transition: margin 0.3s ease-in 0s; -webkit-transition: margin 0.3s ease-in 0s;
+	    -o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s;
+	}
+
+	.onoffswitch-inner:before, .onoffswitch-inner:after {
+	    float: left; width: -10%; height: 0px; padding: 0; line-height: 10px;
+	    font-size: 12px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+	    -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+	}
+
+	.onoffswitch-inner:before {
+		content: "ON";
+	    padding-left: 10px;
+	    background-color: #C5CEDF; color: #C5CEDF;
+	}
+
+	.onoffswitch-inner:after {
+		content: "OFF";
+	    padding-right: 5px;
+	    background-color: #C5CEDF; color: #C5CEDF;
+	    text-align: right;
+	}
+
+	.onoffswitch-switch {
+	    width: 15px; margin: -7px;
+	    background: #EE9445;
+	    border: 1px solid #EE9445; border-radius: 20px;
+	    position: absolute; top: 0; bottom: 0; right: 20px;
+	    -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
+	    -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s;
+	}
+
+	.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+	    margin-left: 0;
+	}
+
+	.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+	    right: 0px;
+	}
+	
+</style>
+</h:head>
+
+
+	<body>
+<!-- 	 <h:outputStylesheet name="css/style.css" library="css" />  -->
+	
+	<ui:composition template="/pages/dailyact/dailyacttemplate.xhtml">
+	<ui:define name="content">
+	
+	
+	
+		<p:panel header="ORNAMENT DETAILS" id="p1" styleClass="titlepanell" toggleable="true">
+		
+		<div class="ui-g ui-fluid" >
+		<div class="ui-g-9 ui-lg-6">
+		<div class="card card-w-title" >
+		<p:panel header="ORNAMENT DETAILS" id="p2" cellpadding="5px" cellspacing="5px" styleClass="titlepanell" toggleable="true">
+		
+<!--        		<h4 id="h1" style="color:#5E83C5; font-weight:bold;font-family:Arial; margin-top:5px; font-size:18px;"> ORNAMENT DETAILS</h4> -->
+      
+	<h:panelGrid columns="2" cellpadding="4px" cellspacing="5px" style="text-align:right;">
+
+        <p:outputLabel  class="p2" value="Ornament Condition" style="color:#5E83C5; margin-left:50px; margin-top:5px; font-size:18px;"/>
+           <h:selectOneMenu id="a1" value="ornament"  style="width:250px; height:30px;border:1px solid #597BB8;">
+         
+           		<f:selectItem itemLabel="-Select- "  icon="&#xE3AE;" itemValue="" />  
+            	<f:selectItem itemLabel="Ornamet1 " itemValue="" />
+            	<f:selectItem itemLabel="Ornamet2" itemValue="" />
+        	</h:selectOneMenu>
+        <p:outputLabel  value="Ornament Type" style="color:#5E83C5; font-size:18px;"/>
+           <h:selectOneMenu id="a2" value="type" style="width:250px; height:30px; border:1px solid #597BB8;">
+           		<f:selectItem itemLabel="-Select- " itemValue="" />
+            	<f:selectItem itemLabel="Type1 " itemValue="" />
+            	<f:selectItem itemLabel="Type2" itemValue="" />
+        	</h:selectOneMenu>
+        <p:outputLabel  value="Product Head" style="color:#5E83C5;font-size:18px;"/>
+           <h:selectOneMenu id="a4" value="head" style="width:250px;height:30px; height:25px; border:1px solid #597BB8;">
+           		<f:selectItem itemLabel="-Select- " itemValue="" />
+            	<f:selectItem itemLabel="Head1 " itemValue="" />
+            	<f:selectItem itemLabel="Head2" itemValue="" />
+        	</h:selectOneMenu>
+        <p:outputLabel  value="Product Group" style="color:#5E83C5;font-size:18px;"/>
+           <h:selectOneMenu id="a5" value="group" style="width:250px; height:30px; border:1px solid #597BB8;">
+           		<f:selectItem itemLabel="-Select- " itemValue="" />
+            	<f:selectItem itemLabel="Group1 " itemValue="" />
+            	<f:selectItem itemLabel="Group2" itemValue="" />
+        	</h:selectOneMenu>
+        <p:outputLabel  value="Stone" style="color:#5E83C5;font-size:18px;"/>
+           <h:selectOneMenu id="a6" value="stone" style="width:250px; height:30px; border:1px solid #597BB8;">
+           		<f:selectItem itemLabel="None " itemValue="" />
+            	<f:selectItem itemLabel="Stone1 " itemValue="" />
+            	<f:selectItem itemLabel="Stone2" itemValue="" />
+        	</h:selectOneMenu>
+        <p:outputLabel  value="Piece In Sales" style="color:#5E83C5;font-size:18px;"/>
+           <h:selectOneMenu id="a7" value="sale" style="width:250px; height:30px; border:1px solid #597BB8;">
+           		<f:selectItem itemLabel="-Select- " itemValue="" />
+            	<f:selectItem itemLabel="Sale1 " itemValue="" />
+            	<f:selectItem itemLabel="Sale2" itemValue="" />
+           </h:selectOneMenu>
+        <p:outputLabel  value="Display Place" style="color:#5E83C5;font-size:18px;"/>
+        	<h:inputText value="" style="border:1px solid #5E83C5; height:28px; width:248px;"/>
+        	
+        <p:outputLabel  value="Size" style="color:#5E83C5;font-size:18px;"/>
+           	<h:selectOneMenu id="a8" value="size" style="width:250px; height:30px; border:1px solid #597BB8;">
+           		<f:selectItem itemLabel="No " itemValue="" />
+            	<f:selectItem itemLabel="Size1 " itemValue="" />
+            	<f:selectItem itemLabel="Size2" itemValue="" />
+        	</h:selectOneMenu>
+        	
+        	<p:outputLabel style="font-weight:bold; width:50%"  value="DOB" />
+				<p:calendar  id="calendarbutton" style="height:21px;" showOn="button" value="#{sukiVendorMBean.customer.utilDateOfBirth}"  />
+				
+      </h:panelGrid>
+    </p:panel> 
+    </div>	
+		<div>
+        <p:panel id="p3" cellpadding="15px" cellspacing="15px"> 
+        	<div align="center"> 	
+       		<h5 style="color:#5E83C5; font-weight: bold;font-family:Arial; margin-top:5px; font-size:18px;">QUALITY DETAILS</h5> 
+       		</div>
+       <h:panelGrid columns="2" cellpadding="5px" cellspacing="5px" style="text-align:right; margin-left:50px;">
+        
+       <p:outputLabel  value="Purity" style="color:#5E83C5;font-size:18px;"/>
+           	<h:selectOneMenu id="b1" value="purity" style="width:250px; height:30px; border:1px solid #597BB8;">
+           		<f:selectItem itemLabel="-Select- " itemValue="" />
+            	<f:selectItem itemLabel=" " itemValue="" />
+            	<f:selectItem itemLabel=" " itemValue="" />
+        	</h:selectOneMenu>
+       <p:outputLabel  value="Making Charge For" style="color:#5E83C5;font-size:18px;"/>
+           	<h:selectOneMenu id="b2" value="making" style="width:250px;height:30px; border:1px solid #597BB8;">
+           		<f:selectItem itemLabel="-Select- " itemValue="" />
+            	<f:selectItem itemLabel=" " itemValue="" />
+            	<f:selectItem itemLabel=" " itemValue="" />
+        	</h:selectOneMenu>
+       <p:outputLabel  value="Making Charge In" style="color:#5E83C5;font-size:18px;"/>
+           	<h:selectOneMenu id="b3" value="change" style="width:250px;height:30px; border:1px solid #597BB8;">
+           		<f:selectItem itemLabel="-Select- " itemValue="" />
+            	<f:selectItem itemLabel="" itemValue="" />
+            	<f:selectItem itemLabel="" itemValue="" />
+        	</h:selectOneMenu>
+        	</h:panelGrid>
+ 			<h:panelGrid columns="4" cellpadding="6px" cellspacing="3px" style="text-align:right; margin-left:50px;">
+       <p:outputLabel  value="Hall Mark Charge" style="color:#5E83C5; margin-left:10px;font-size:18px;"/> 
+        	<h:inputText value="" style="width:90px; height:30px; text-align:left; margin-left:4px; border:1px solid #597BB8;"/>Per 
+        	<h:selectOneMenu id="b4" value="piece" style="width:106px;height:30px; margin-top:-10px; margin-left:1px; text-align:left; border:1px solid #597BB8;">
+        		<f:selectItem itemLabel="Piece " itemValue="" />
+            	<f:selectItem itemLabel="" itemValue="" />
+            	<f:selectItem itemLabel="" itemValue="" />
+        	</h:selectOneMenu>
+        </h:panelGrid>	
+        <h:panelGrid columns="6" cellpadding="2px" cellspacing="1px" style="text-align:right; margin-left:78px;">							
+      <p:outputLabel  value="Wastage %" style="color:#5E83C5; margin-left:42px;font-size:18px;"/> 
+      	<h:inputText value="" style="width:30px;height:30px; margin-left:7px; text-align:left; border:1px solid #597BB8;"/>To  
+      	<h:inputText value="" style="width:30px;height:30px; text-align:left;  border:1px solid #597BB8;"/>Per 
+      		<h:selectOneMenu id="b5" value="gram" style="width:108px;height:30px; margin-top:-10px; margin-left:20px;text-align:left;border:1px solid #597BB8;">
+        		<f:selectItem itemLabel="Gram" itemValue="" />
+            	<f:selectItem itemLabel="" itemValue="" />
+            	<f:selectItem itemLabel="" itemValue="" />
+        	</h:selectOneMenu>  
+      <p:outputLabel  value="Making Charge" style="color:#5E83C5; font-size:18px;"/> 
+      	<h:inputText value="" style="width:30px;height:30px; text-align:left;  border:1px solid #597BB8;"/>To 
+      	<h:inputText value="" style="width:30px;height:30px; text-align:left;  border:1px solid #597BB8;"/>Per 
+      		<h:selectOneMenu id="b6" value="gram" style="width:108px; height:30px; margin-top:-10px; margin-left:15px;text-align:left;border:1px solid #597BB8;">
+        		<f:selectItem itemLabel="Gram" itemValue="" />
+            	<f:selectItem itemLabel="" itemValue="" />
+            	<f:selectItem itemLabel="" itemValue="" />
+        	</h:selectOneMenu>   
+        </h:panelGrid>																
+     </p:panel> 
+     </div> 
+   
+   <div>
+    <p:panel id="p4" cellpadding="5px" cellspacing="5px">
+    	<div align="center">
+    	<h5 style="color:#5E83C5; font-weight: bold;font-family:Arial; margin-top:5px; font-size:18px;">COST DETAILS</h5> 
+    	</div>
+    <h:panelGrid columns="4" cellpadding="5px" cellspacing="5px" style="text-align:right; margin-left:50px;">
+      <p:outputLabel  value="Rate" style="color:#5E83C5;font-size:18px;margin-left:110px; width:250px; height:30px; "/> 
+        <h:inputText value="" style="width:95px ;height:30px; text-align:left;  border:1px solid #597BB8;"/>Per 
+         	<h:selectOneMenu id="b7" value="piece" style="width:100px;height:32px; margin-top:-10px; margin-left:1px; text-align:left; border:1px solid #597BB8;">
+        		<f:selectItem itemLabel="Piece " itemValue="" />
+            	<f:selectItem itemLabel="" itemValue="" />
+            	<f:selectItem itemLabel="" itemValue="" />
+        	</h:selectOneMenu>
+    </h:panelGrid>
+    <h:panelGrid columns="2" cellpadding="5px" cellspacing="5px" style="text-align:right; margin-left:5px;">
+      <p:outputLabel  value="Sale Discount Max.%" style="color:#5E83C5;font-size:18px;"/> 
+        <h:inputText value="" style="width:250px;height:30px; text-align:left;  border:1px solid #597BB8;"/>     
+  	  <p:outputLabel  value="Discount Scheme Items" style="color:#5E83C5;font-size:18px;"/>
+           	<h:selectOneMenu id="b8" value="change" style="width:253px; height:32px; border:1px solid #597BB8;">
+           		<f:selectItem itemLabel="-Select- " itemValue="" />
+            	<f:selectItem itemLabel="" itemValue="" />
+            	<f:selectItem itemLabel="" itemValue="" />
+            </h:selectOneMenu>
+   	  <p:outputLabel  value="Purity On Value %" style="color:#5E83C5;font-size:18px;"/> 
+        <h:inputText value="" style="width:250px;height:30px; text-align:left;  border:1px solid #597BB8;"/> 
+    </h:panelGrid> 
+      <h:panelGrid columns="4" cellpadding="5px" cellspacing="5px" style="text-align:right; margin-left:65px;">  	   
+      <p:outputLabel  value="Exchange Rate" style="color:#5E83C5;;font-size:18px;margin-left:8px;"/> 
+        <h:inputText value="" style="width:100px;height:30px; text-align:left;  border:1px solid #597BB8;"/> To 
+		<h:inputText value="" style="width:100px;height:30px; text-align:left;  border:1px solid #597BB8;"/>  
+      <p:outputLabel  value="Cash Rate" style="color:#5E83C5;font-size:18px;"/> 
+        <h:inputText value="" style="width:100px;height:30px; text-align:left;  border:1px solid #597BB8;"/> To  
+        <h:inputText value="" style="width:100px;height:30px; text-align:left;  border:1px solid #597BB8;"/> 
+      </h:panelGrid>
+       <h:panelGrid columns="6" cellpadding="3px" cellspacing="7px" style="text-align:right; margin-left:63px;">     				
+      <p:outputLabel  value="Wastage Rate%" style="color:#5E83C5;font-size:18px;margin-left:7px;"/> 
+        <h:inputText value="" style="width:30px;height:30px; text-align:left;  border:1px solid #597BB8;"/> To  
+        <h:inputText value="" style="width:30px;height:30px; text-align:left;  border:1px solid #597BB8;"/>  In 
+        	<h:selectOneMenu id="b9" value="wastage" style="width:102px;height:30px;border:1px solid #597BB8;">
+        		<f:selectItem itemLabel="100%" itemValue="" />
+            	<f:selectItem itemLabel="" itemValue="" />
+            	<f:selectItem itemLabel="" itemValue="" />
+        	</h:selectOneMenu>
+
+</h:panelGrid>
+
+</p:panel>
+</div>
+</div>
+
+	<div class="ui-g-9 ui-lg-6">
+	<div align="center">
+		<p:panel id="p5" cellpadding="5px" cellspacing="5px">
+		
+			<h5 style="color:#5E83C5; font-weight: bold;font-family:Arial; margin-top:5px; font-size:18px;"> TAG &#38; LOT DETAILS</h5>
+		
+	<h:panelGrid  columns="2" cellspacing="5" cellpadding="5" style="text-align:right; margin-left:5px;" > 
+	  <p:outputLabel  value="Lot Group" style="color:#5E83C5;font-size:18px;"/> 
+  		 <h:selectOneMenu id="c1" value="group" style="width:250px; height:30px; border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="-Select- " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+         </h:selectOneMenu>
+ 	  <p:outputLabel  value="Display Counter" style="color:#5E83C5;font-size:18px;"/> 
+  		 <h:selectOneMenu id="c2" value="display" style="width:250px; height:30px; border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="-Select- " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+         </h:selectOneMenu>
+      <p:outputLabel  value="Box Counter" style="color:#5E83C5;font-size:18px;"/> 
+  		 <h:selectOneMenu id="c3" value="box" style="width:250px; height:30px; border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="-Select- " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+         </h:selectOneMenu>            
+      <p:outputLabel  value="Saft Counter" style="color:#5E83C5;font-size:18px;"/> 
+  		  <h:selectOneMenu id="c4" value="saft" style="width:250px; height:30px; border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="-Select- " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+         </h:selectOneMenu>
+      <p:outputLabel  value="Tag Type" style="color:#5E83C5;font-size:18px;"/> 
+  		 <h:selectOneMenu id="c5" value="tag" style="width:250px; height:30px; border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="-Select- " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+         </h:selectOneMenu>
+      <p:outputLabel  value="Weight Group" style="color:#5E83C5;font-size:18px;"/> 
+  		<h:selectOneMenu id="c6" value="weight" style="width:250px; height:30px; border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="-Select- " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+       </h:selectOneMenu>  
+   </h:panelGrid> 
+  <h:panelGrid columns="4" cellpadding="5px" cellspacing="3px" style="text-align:right; margin-left:5px;">
+      <p:outputLabel  value="Validation Weight" style="color:#5E83C5;margin-left:-6px;font-size:18px;"/> 
+        <h:inputText value="" style="width:100px; height:30px; border:1px solid #597BB8;"/> To  
+        <h:inputText value="" style="width:100px; height:30px; border:1px solid #597BB8;"/> 
+   </h:panelGrid>  
+    <h:panelGrid columns="2" cellpadding="5px" cellspacing="5px" style="text-align:right;margin-left:-20px;">  
+      <p:outputLabel  value="Product Code" style="color:#5E83C5;font-size:18px;margin-left:-5px;"/> 
+        <h:inputText value="" style="width:250px; height:30px; border:1px solid #597BB8;"/>    
+      <p:outputLabel  value="Product Description" style="color:#5E83C5;font-size:18px;"/> 
+        <h:inputText value="" style="width:250px; height:50px; border:1px solid #597BB8;"/>       
+  </h:panelGrid>
+</p:panel>
+</div>
+	<div align="center">
+	<p:panel id="p6" cellpadding="4px" cellspacing="5px">
+			<h5 style="color:#5E83C5; font-weight: bold;font-family:Arial; margin-top:5px; font-size:18px;">LEDGER DETAILS</h5>
+	<h:panelGrid  columns="2" cellpadding="6px" cellspacing="3px" style="text-align:right; margin-left:-30px;">
+			 
+	  <p:outputLabel  value="Sales Ledger" style="color:#5E83C5;font-size:18px;text-align:right;"/> 
+  		<h:selectOneMenu id="c7" value="ledger" style="width:250px;height:30px;border:1px solid #597BB8;">
+           <f:selectItem itemLabel="-Select- " itemValue="" />
+           <f:selectItem itemLabel="" itemValue="" />
+           <f:selectItem itemLabel="" itemValue="" />
+       	</h:selectOneMenu>  
+ 	  <p:outputLabel  value="Sales Tax Ledger" style="color:#5E83C5;font-size:18px;"/> 
+  		<h:selectOneMenu id="c8" value="tax" style="width:250px;height:30px;border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="-Select- " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+       	</h:selectOneMenu>       
+	  <p:outputLabel  value="Purchase Ledger" style="color:#5E83C5;font-size:18px;"/> 
+  		<h:selectOneMenu id="c9" value="weight" style="width:250px;height:30px;border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="-Select- " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+       	</h:selectOneMenu>  
+	  <p:outputLabel  value="Purchase Tax Ledger" style="color:#5E83C5;font-size:18px;"/> 
+  		<h:selectOneMenu id="c10" value="weight" style="width:250px;height:30px;border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="-Select- " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+        </h:selectOneMenu>  
+	  <p:outputLabel  value="Taxable" style="color:#5E83C5;font-size:18px;"/> 
+  		<h:selectOneMenu id="c11" value="weight" style="width:250px;height:30px;border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="-Select- " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+       	</h:selectOneMenu>  
+  	  <p:outputLabel  value="Additional Tax" style="color:#5E83C5;font-size:18px;"/> 
+  		<h:selectOneMenu id="c12" value="tax" style="width:250px;height:30px;border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="GST " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+       	</h:selectOneMenu> 
+      <p:outputLabel  value="Tax Type" style="color:#5E83C5;font-size:18px;"/> 
+  		<h:selectOneMenu id="c13" value="weight" style="width:250px;height:30px;border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="-Select- " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+       	</h:selectOneMenu>       
+  	  <p:outputLabel  value="Stock Code" style="color:#5E83C5;font-size:18px;"/> 
+  		<h:selectOneMenu id="c14" value="weight" style="width:250px;height:30px;border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="-Select- " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+       	</h:selectOneMenu>       
+      <p:outputLabel  value="Sales Ledger Posting" style="color:#5E83C5;font-size:18px;"/> 
+  		<h:selectOneMenu id="c15" value="weight" style="width:250px;height:30px;border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="-Select- " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+       	</h:selectOneMenu>       
+      <p:outputLabel  value="Tax Ledger Posting" style="color:#5E83C5;font-size:18px;"/> 
+  		<h:selectOneMenu id="c16" value="weight" style="width:250px;height:30px;border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="-Select- " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+       	</h:selectOneMenu>        
+  	  <p:outputLabel  value="Account Posting" style="color:#5E83C5;font-size:18px;"/> 
+  		<h:selectOneMenu id="c17" value="weight" style="width:250px;height:30px;border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="Optional " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+       	</h:selectOneMenu>       
+  	  <p:outputLabel  value="Posting Path" style="color:#5E83C5;font-size:18px;"/> 
+  		<h:selectOneMenu id="c18" value="weight" style="width:250px;height:30px;border:1px solid #597BB8;">
+           	<f:selectItem itemLabel="-Select- " itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+            <f:selectItem itemLabel="" itemValue="" />
+       	</h:selectOneMenu>   
+  </h:panelGrid>
+    </p:panel>
+    </div>
+    </div>
+    </div>
+   <br></br><br></br><br></br>
+   
+  <div style="font-size:13px; color:#5E83C5;font-weight: bold; margin-top:5px;font-family:Arial;margin-left:480px;">
+  <label>Product Listing</label></div>
+    <div class="property" style="font-size:12px; color:#5E83C5;margin-top:-10px;" >	
+    	<div align="center">
+			<div class="onoffswitch">
+				<input type="checkbox" name="switch-default-state" id="switch-default-state" class="onoffswitch-checkbox"/>
+				<label class="onoffswitch-label" for="switch-default-state">
+					<div class="onoffswitch-inner" ></div>
+					<div class="onoffswitch-switch" ></div>
+				</label>
+			</div>
+		</div>
+	</div>
+<div style="font-size:14px; margin-top:-10px;margin-left:640px;">ON</div>
+
+      <div align="center">
+       <p:commandButton value="SAVE"  style="font-weight:bold;font-size:18px;font-family:Arial;height:45px;color:white; background:#F6953D; text-align:center; width:300px; margin-top:25px;" /> 
+       
+        </div>
+    
+    </p:panel>
+    </ui:define>
+    </ui:composition>
+    
+    </body>
+    
+    </html>
+    

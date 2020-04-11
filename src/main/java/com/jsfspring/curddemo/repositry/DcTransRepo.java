@@ -1,0 +1,9 @@
+package com.jsfspring.curddemo.repositry;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.jsfspring.curddemo.entity.DeliveryChalanDomain;
+
+public interface DcTransRepo extends JpaRepository<DeliveryChalanDomain, Integer>{
+
+}

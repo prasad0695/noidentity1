@@ -1,0 +1,129 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+	<ui:define name="title"></ui:define>
+	<ui:define name="head">
+		<style type="text/css">
+.ui-paginator .ui-paginator-top {
+	height: 2px;
+}
+.inputInvalid {
+   border: 2px solid red;
+}
+</style>
+
+<script TYPE="text/javascript">  
+function onSave(form) { 
+     if(form["mainform:productName"].value == null)
+     document.getElementById("mainform:productName").style.borderColor='#e52213';
+     var alert=form["mainform:productName"].style
+     console.log(alert);
+} 
+</script>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="mainform">
+			<p:growl id="message" showDetail="true" ></p:growl>
+			<div class="ui-fluid">
+				<div class="ui-g ui-fluid">
+					<div class="ui-g-12 card card-w-title">
+						<div>
+							<h3>ADD PRODUCT</h3>
+							<div class="ui-g-12 ui-lg-5">
+								<p:panelGrid columns="2" id="grid"
+									columnClasses="ui-grid-col-3,ui-grid-col-9"
+									layout="grid" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;">
+									<p:outputLabel value="HSNCode" />
+									<p:inputText required="true" onkeypress="if ( isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;" validatorMessage="HSN Code" value="#{productMBean.product.hsnCode}" label="HSN Code" />
+									<p:outputLabel value="PRODUCT *" />
+									<p:inputText id="productName"
+									required="#{param['mainform:save']!=null}" requiredMessage="Enter Product Name"
+									value="#{productMBean.product.item}" label="Product Name" >
+										<p:ajax event="change"
+											listener="#{productMBean.productSearch}" />
+									</p:inputText>
+									<p:outputLabel value="GST" />
+									<p:inputText id="gst"  onkeypress="if ( isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;" value="#{productMBean.product.gst}">
+									</p:inputText>
+									<p:outputLabel value="TYPE" />
+									<p:selectOneMenu value="#{productMBean.product.stationOrHouse}">
+										<f:selectItem itemValue="-select-" itemLabel="-select-" />
+										<f:selectItem itemValue="stationary" itemLabel="stationary" />
+										<f:selectItem itemValue="House keeping"
+											itemLabel="House keeping" />
+									</p:selectOneMenu>
+									<p:outputLabel rendered="false" value="Opening Stock" />
+									<p:inputText rendered="false" value="#{productMBean.product.openingQty}" />
+								</p:panelGrid>
+							</div>
+							<div class="ui-g-12 ui-lg-7">
+							<p:dataTable var="val" rowIndexVar="rowId" id="uomList" value="#{productMBean.product.prodUomTransList}">
+							<p:column headerText="UOM" >
+							<h:inputHidden id="slNo" value="#{rowId}" />
+							<p:outputLabel rendered="#{val.rowId > 0}" value="#{val.uomId.unitName}" />
+							<p:autoComplete rendered="#{val.rowId == 0}" id="dd" dropdown="true" value="#{val.uomId}" var="obj" completeMethod="#{sukiBaseBean.uomListAutoComplete}"
+												required="#{param['mainform:save']!=null || param['mainform:hotkey']!=null}" requiredMessage="Enter UOM" itemLabel="#{obj.unitName}" itemValue="#{obj}" converter="pojoConverter" forceSelection="true" >
+												<p:ajax event="itemSelect" update="uomList" />
+												</p:autoComplete>
+							</p:column>
+							<p:column headerText="PRICE" >
+							<p:outputLabel rendered="#{!val.editBoolean}" value="#{val.price}" />
+							<p:inputText rendered="#{val.editBoolean}" validatorMessage="Enter Price" value="#{val.price}">
+							<f:validateDoubleRange disabled="#{param['mainform:save']==null}" minimum="1"></f:validateDoubleRange>
+							</p:inputText>
+							</p:column>
+							<p:column headerText="STOCK">
+							<p:outputLabel rendered="#{val.rowId > 0}" value="#{val.stock}" />
+							<p:inputText rendered="#{val.rowId ==0}" value="#{val.stock}">
+							</p:inputText>
+							</p:column>
+							<p:column headerText="OPENING">
+							<p:outputLabel rendered="#{val.rowId > 0}" value="#{val.opening}" />
+							<p:inputText rendered="#{val.rowId ==0}" value="#{val.opening}"></p:inputText>
+							</p:column>
+							<p:column>
+							<p:commandLink rendered="#{!val.editBoolean}" actionListener="#{productMBean.getProductUomActionEvent}" update="uomList" ><i class="material-icons">edit</i></p:commandLink>
+							<p:commandLink rendered="#{val.editBoolean and !sukiBaseBean.buttonDisable(productMBean.product.prodCode)}" actionListener="#{productMBean.updateProductUom}" update="uomList,mainform:message" ><i class="material-icons">save</i></p:commandLink>
+                            <p:commandLink style="margin-left:5px;" onclick="if(!confirm('Are u want to delete?')) return false" actionListener="#{productMBean.getProductUomDelete}" update="uomList,mainform:message" >
+                            <i style="color: black;" class="material-icons">delete</i></p:commandLink>
+							</p:column>
+							</p:dataTable>
+							<p:hotkey id="hotkey" bind="down" actionListener="#{productMBean.addNewUom}" update="uomList" />
+							</div>
+							<p:panelGrid columns="3" styleClass="ui-panelgrid-blank form-group"
+								columnClasses="ui-lg-3 ui-md-4,ui-lg-3 ui-md-4,ui-lg-3 ui-md-4"
+								layout="grid">
+							<p:commandButton id="save"
+									action="#{productMBean.saveProduct}"
+									value="SAVE"
+									update="mainform" />
+							<p:commandButton 
+									action="#{productMBean.resetProduct}" value="NEW/RESET"
+									update="mainform" />
+							<p:commandButton 		
+									disabled="#{sukiBaseBean.buttonDisable(productMBean.product.prodCode)}" 
+									action="#{sukiBaseBean.dialogShow(productMBean.product.prodCode)}" value="DELETE"
+									update="mainform" />		
+							</p:panelGrid>
+							</div>
+					</div>
+				</div>
+			</div>
+		</h:form>
+		<p:dialog widgetVar="confirmDialog" modal="true" global="true" showEffect="fade" hideEffect="fade">
+		<h:form>
+        <h:outputLabel value="Are You Sure want to Delete?" style="font-weight:bold;" />
+        <div align="center" >
+        <h:panelGrid columns="2" >
+        <p:commandButton value="Yes" action="#{productMBean.delete}" update="mainform"  />
+        <p:commandButton value="No"  action="#{sukiBaseBean.dialogHide}" />
+        </h:panelGrid>
+        </div>
+        </h:form>
+    </p:dialog> 
+	</ui:define>
+</ui:composition>

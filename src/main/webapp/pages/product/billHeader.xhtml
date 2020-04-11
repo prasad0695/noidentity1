@@ -1,0 +1,28 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+ <div align="left">
+<p:graphicImage style="width:100%" url="/resources/images/WOSlogo.PNG"></p:graphicImage>
+</div>
+    <p:panel style="height:150px;">
+<p:outputLabel value="To"></p:outputLabel>
+<br></br>
+<h:panelGrid columns="1" style="margin-left:40px;">
+ <p:row>
+            <p:column style="font-size:12px;" colspan="10">
+<p:outputLabel value="#{sukiJMSProductMBean.company.compName}" style="font-size:18px;font-weight:bold"></p:outputLabel>
+<p:outputLabel value="#{sukiJMSProductMBean.company.area1}"></p:outputLabel>
+<p:outputLabel value="#{sukiJMSProductMBean.company.area2}"></p:outputLabel>
+<p:outputLabel value="#{sukiJMSProductMBean.company.city}"></p:outputLabel>
+<p:outputLabel value="GSTIN- #{sukiJMSProductMBean.company.gst}"></p:outputLabel>
+</p:column>
+</p:row>
+</h:panelGrid>
+</p:panel>
+
+   
+
+</ui:composition>

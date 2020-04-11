@@ -1,0 +1,228 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="datalist3">
+<p:growl id="messages" showDetail="true"></p:growl>
+<h:panelGrid columns="8" cellpadding="10">
+<h:outputLabel value="Supplier Name"  />
+<p:autoComplete id="group" value="#{purchaseInvoiceMBean.purchaseBillMaster.supId}" completeMethod="#{sukiBaseBean.supplierListAutoComplete}"
+                        var="obj" itemLabel="#{obj.name}" itemValue="#{obj}" converter="pojoConverter" forceSelection="true"
+                        scrollHeight="250">
+        </p:autoComplete>
+<h:outputLabel value="Date"  />
+<p:calendar value="#{purchaseInvoiceMBean.purchaseBillMaster.dateUtil}" style="border:1px solid black;" >
+</p:calendar>
+<p:outputLabel value="Inv. Type"  />
+<p:selectOneMenu value="#{purchaseInvoiceMBean.purchaseBillMaster.invoiceType}"  >
+<f:selectItem itemValue="-Select-" itemLabel="-Select-" />
+<f:selectItem itemValue="Direct" itemLabel="Direct" />
+<f:selectItem itemValue="DC" itemLabel="DC" />
+<f:selectItem itemValue="PO" itemLabel="PO" />
+<p:ajax event="change" update="datalist3" process="datalist3" />
+</p:selectOneMenu>
+<h:outputLabel value="#{purchaseInvoiceMBean.purchaseBillMaster.invoiceType} No" rendered="#{purchaseInvoiceMBean.purchaseBillMaster.invoiceType=='PO' or purchaseInvoiceMBean.purchaseBillMaster.invoiceType=='DC'}" />
+<h:panelGrid columns="2" rendered="#{purchaseInvoiceMBean.purchaseBillMaster.invoiceType=='PO' or purchaseInvoiceMBean.purchaseBillMaster.invoiceType=='DC'}" >
+<p:inputText  value="#{purchaseInvoiceMBean.purchaseBillMaster.poNos}" style="font-weight:bold;" ></p:inputText>
+<p:commandButton value="->" action="#{purchaseInvoiceMBean.getPOList}" oncomplete="PF('dlg2').show()" update="datalist1" ></p:commandButton>
+</h:panelGrid>
+<h:outputLabel value="Bill No"  />
+<p:inputText  value="#{purchaseInvoiceMBean.purchaseBillMaster.billNo}" style="font-weight:bold;border:1px solid black;" >
+</p:inputText>
+</h:panelGrid>
+<p:dataTable rowIndexVar="rowId" var="obj" rendered="#{purchaseInvoiceMBean.purchaseBillMaster.invoiceType=='PO' or purchaseInvoiceMBean.purchaseBillMaster.invoiceType=='DC'}" value="#{purchaseInvoiceMBean.purchaseBillMaster.purchaseBillTransList}" id="datatable1" >
+<p:column headerText="Sl.No" width="10%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="Description" width="20%">
+<p:outputLabel  value="#{obj.productTrans}" style="margin-left:20px" />
+<h:inputHidden value="#{rowId}" id="slNo" />
+</p:column>
+<p:column headerText="Quantiy" width="12%">
+<p:outputLabel value="#{obj.qty}" style="margin-left:20px" >
+<f:convertNumber pattern="#{sukiBaseBean.decimalPattern(obj.uom.uomId.decPattern)}" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="UOM" width="15%">
+<p:outputLabel value="#{obj.uom.uomId.unitName}" style="margin-left:20px" >
+</p:outputLabel>
+</p:column>
+<p:column headerText="Rate" width="15%">
+<p:inputText rendered="#{obj.editBoolean}" value="#{obj.rate}" >
+<p:ajax event="blur" listener="#{purchaseInvoiceMBean.billItemRateEdit}" update="amount,datalist3:subTotal,datalist3:gstvalue,datalist3:total" />
+<f:convertNumber pattern="0.00" />
+</p:inputText>
+<p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.rate}" />
+</p:column>
+<p:column headerText="GST%" width="12%">
+<p:outputLabel value="#{obj.gst}" style="margin-left:20px" >
+<f:convertNumber pattern="0.0"/>
+</p:outputLabel>
+</p:column>
+<p:column headerText="Amount" width="14%">
+<p:outputLabel value="#{obj.amount}" id="amount" style="margin-left:20px">
+<f:convertNumber pattern="0.00"/>
+</p:outputLabel>
+</p:column>
+<p:column headerText="" width="10%">
+<p:commandLink rendered="#{purchaseInvoiceMBean.purchaseBillMaster.editBoolean and !obj.editBoolean}" actionListener="#{purchaseInvoiceMBean.invItemEdit}" update="datatable1" ><i class="material-icons">edit</i></p:commandLink>
+<p:commandLink style="margin-left:10px;"  onclick="if(!confirm('Are u want to delete?')) return false" actionListener="#{purchaseInvoiceMBean.deleteBillItem}" update="datatable1" ><i class="material-icons">delete</i></p:commandLink>
+<p:commandLink rendered="#{purchaseInvoiceMBean.purchaseBillMaster.editBoolean and obj.editBoolean}" style="margin-left:10px;" actionListener="#{purchaseInvoiceMBean.saveInvItem}" update="datatable1" ><i class="material-icons">save</i></p:commandLink>
+</p:column>
+</p:dataTable>
+
+<p:dataTable rowIndexVar="rowId" var="obj" rendered="#{purchaseInvoiceMBean.purchaseBillMaster.invoiceType=='Direct'}" value="#{purchaseInvoiceMBean.purchaseBillMaster.purchaseBillTransList}" id="datatable2" >
+<p:column headerText="Sl.No" width="10%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="Description" width="20%">
+<p:autoComplete id="group" rendered="#{obj.editBoolean}" value="#{obj.productId}" completeMethod="#{sukiBaseBean.productListAutoComplete}"
+                        var="item" itemLabel="#{item.item}" itemValue="#{item}" converter="pojoConverter" forceSelection="true"
+                        scrollHeight="250">
+                        <p:ajax event="itemSelect" listener="#{purchaseInvoiceMBean.billTransDetailsFromProduct}" update="datatable2" />
+                        </p:autoComplete>
+<p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.productTrans}" style="margin-left:20px" />
+<h:inputHidden value="#{rowId}" id="slNo" />
+</p:column>
+<p:column headerText="Quantiy" width="12%">
+<p:inputText rendered="#{obj.editBoolean}" value="#{obj.qty}" >
+<p:ajax event="blur" listener="#{purchaseInvoiceMBean.billItemRateEdit}" update="amount,datalist3:subTotal,datalist3:gstvalue,datalist3:total" />
+<f:convertNumber pattern="#{sukiBaseBean.decimalPattern(obj.uom.uomId.decPattern)}" />
+</p:inputText>
+<p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.qty}" />
+</p:column>
+<p:column headerText="UOM" width="25%">
+<p:autoComplete id="dd" dropdown="true" rendered="#{obj.editBoolean}" value="#{obj.uom}" var="item" completeMethod="#{obj.getProdUomList}"
+												itemLabel="#{item.uomId.unitName}" itemValue="#{item}" converter="pojoConverter" forceSelection="true" >
+												<p:ajax event="itemSelect" listener="#{purchaseInvoiceMBean.billTransDetailsFromUom}" update="datatable2" />
+												</p:autoComplete>
+<p:outputLabel value="#{obj.uom.uomId.unitName}" rendered="#{!obj.editBoolean}" style="margin-left:20px" >
+<f:convertNumber pattern="0.00"/>
+</p:outputLabel>
+</p:column>
+<p:column headerText="Rate" width="15%">
+<p:inputText rendered="#{obj.editBoolean}" value="#{obj.rate}" >
+<p:ajax event="blur" listener="#{purchaseInvoiceMBean.billItemRateEdit}" update="amount,datalist3:subTotal,datalist3:gstvalue,datalist3:total" />
+<f:convertNumber pattern="0.00"/>
+</p:inputText>
+<p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.rate}" />
+</p:column>
+<p:column headerText="GST%" width="12%">
+<p:inputText rendered="#{obj.editBoolean}" value="#{obj.gst}"  >
+<f:convertNumber pattern="0.0"/>
+</p:inputText>
+<p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.gst}" />
+</p:column>
+<p:column headerText="Amount" width="14%">
+<p:outputLabel value="#{obj.amount}" id="amount" style="margin-left:20px">
+<f:convertNumber pattern="0.00"/>
+</p:outputLabel>
+</p:column>
+<p:column headerText="" width="10%">
+<p:commandLink rendered="#{purchaseInvoiceMBean.purchaseBillMaster.editBoolean and !obj.editBoolean}" actionListener="#{purchaseInvoiceMBean.invItemEdit}" update="datatable2" ><i class="material-icons">edit</i></p:commandLink>
+<p:commandLink style="margin-left:10px;" actionListener="#{purchaseInvoiceMBean.deleteBillItem}" update="datatable2" ><i class="material-icons">delete</i></p:commandLink>
+<p:commandLink rendered="#{purchaseInvoiceMBean.purchaseBillMaster.editBoolean and obj.editBoolean}" style="margin-left:10px;" actionListener="#{purchaseInvoiceMBean.saveInvItem}" update="datatable2" ><i class="material-icons">save</i></p:commandLink>
+</p:column>
+</p:dataTable>
+<p:hotkey bind="down" rendered="#{purchaseInvoiceMBean.purchaseBillMaster.invoiceType=='Direct'}" action="#{purchaseInvoiceMBean.addRowBillTrans}" update="datatable2" />
+<div align="right">
+<h:panelGrid  columns="4" id="subTotal" cellpadding="5">
+<h:outputLabel value="Sub-Total" style="font-weight:bold;font-size:18px" />
+<h:outputLabel  value="#{purchaseInvoiceMBean.purchaseBillMaster.totalWithoutTax}"  style="font-weight:bold;font-size:18px">
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+</div>
+<p:panel id="gstvalue" >
+<div align="right" >
+<p:repeat value="#{purchaseInvoiceMBean.purchaseBillMaster.mapList}" var="obj" >
+<h:panelGrid columns="3" width="50%">
+<h:panelGrid columns="2" width="100%">
+<h:outputLabel value="CGST #{obj.key/2}" />
+<h:outputLabel value="#{obj.value/2}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+<h:panelGrid columns="2" width="100%">
+<h:outputLabel value="SGST #{obj.key/2}" />
+<h:outputLabel value="#{obj.value/2}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+<h:panelGrid columns="2" width="100%">
+<h:outputLabel value="GST #{obj.key}" />
+<h:outputLabel value="#{obj.value}" style="font-weight:bold;" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+</h:panelGrid>
+</p:repeat>
+</div>
+</p:panel>
+<div align="right">
+<h:panelGrid  columns="4" id="total" cellpadding="5">
+<h:outputLabel value="Total" style="font-weight:bold;font-size:18px" />
+<h:outputLabel id="totalamt" value="#{purchaseInvoiceMBean.purchaseBillMaster.totalAmount}"  style="font-weight:bold;font-size:18px">
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+</div>
+<p:commandButton value="Print Bill" action="#{purchaseInvoiceMBean.billPrintPage}" >
+</p:commandButton>
+<p:commandButton value="Save" action="#{purchaseInvoiceMBean.saveBill}" update="messages" ></p:commandButton>
+</h:form>
+
+<p:dialog widgetVar="dlg2" height="550" width="900" modal="true" >
+<h:form id="datalist1">
+<p:dataTable rendered="#{purchaseInvoiceMBean.purchaseBillMaster.invoiceType=='PO'}" rowIndexVar="rowId" var="obj" style="margin-top:15px" value="#{purchaseInvoiceMBean.poMasterList}" rowKey="#{obj.poNo}" selection="#{purchaseInvoiceMBean.selectedPoMasterList}" id="datatable" >
+<p:column headerText="select" selectionMode="multiple" width="5%"> 
+</p:column>
+<p:column headerText="PO.No" width="3%">
+<p:outputLabel value="#{obj.poNo}" style="width:80px;margin-left:40px"></p:outputLabel>
+<h:inputHidden value="#{obj.poNo}" id="slNo" />
+</p:column>
+<p:column headerText="Date" width="7%">
+<p:outputLabel value="#{obj.date}" style="margin-left:40px"></p:outputLabel>
+</p:column>
+<p:column headerText="Supplier" width="10%">
+<p:outputLabel value="#{obj.supplier}" style="width:30px;margin-left:60px" ></p:outputLabel>
+</p:column>
+</p:dataTable>
+<p:dataTable rendered="#{purchaseInvoiceMBean.purchaseBillMaster.invoiceType=='DC'}" rowIndexVar="rowId" var="obj" style="margin-top:15px" value="#{purchaseInvoiceMBean.inwardMasterList}" rowKey="#{obj.dcNo}" selection="#{purchaseInvoiceMBean.selectedInwardMasterList}" id="datatable1" >
+<p:column headerText="select" selectionMode="multiple" width="5%"> 
+</p:column>
+<p:column headerText="DC.No" width="3%">
+<p:outputLabel value="#{obj.dcNo}" style="width:80px;margin-left:40px"></p:outputLabel>
+<h:inputHidden value="#{obj.dcNo}" id="slNo" />
+</p:column>
+<p:column headerText="Date" width="7%">
+<p:outputLabel value="#{obj.date}" style="margin-left:40px"></p:outputLabel>
+</p:column>
+<p:column headerText="Supplier" width="10%">
+<p:outputLabel value="#{obj.supplier}" style="width:30px;margin-left:60px" ></p:outputLabel>
+</p:column>
+</p:dataTable>
+<p:commandButton value="Next" actionListener="#{purchaseInvoiceMBean.getBillTranslistForInw}" update="datalist3:datatable1,datalist3:subTotal,datalist3:subTotal" />
+</h:form>
+</p:dialog>
+</ui:define>
+</ui:composition>

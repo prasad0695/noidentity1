@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="form">
+<p:growl id="messages" showDetail="true"></p:growl>
+<div class="ui-g-6">
+<p:selectOneMenu value="#{dashBoardReportMBean.currentYear}">
+      <f:selectItems value="#{dashBoardReportMBean.getYearList()}"></f:selectItems>
+      <p:ajax event="change" listener="#{dashBoardReportMBean.getGstReport}" update="form" />
+</p:selectOneMenu>
+<p:selectOneMenu value="#{dashBoardReportMBean.currentMonth}">
+      <f:selectItems value="#{dashBoardReportMBean.getMonthList()}"></f:selectItems>
+      <p:ajax event="change" listener="#{dashBoardReportMBean.getGstReport}" update="form" />
+      </p:selectOneMenu>
+
+<p:dataTable id="sizetable1" var="item" value="#{dashBoardReportMBean.model1}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="10"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+<p:column headerText="Sl.No" width="40">
+<p:outputLabel value="#{rowId+1}" ></p:outputLabel>
+<h:inputHidden id="slNo" value="#{item.rowId}" />
+</p:column>
+<p:column sortBy="#{item.date}" filterBy="#{item.date}" headerText="Date" width="60">
+<p:outputLabel  value="#{item.date}" >
+<f:convertDateTime timeZone="IST" pattern="dd/MM/yy" />
+</p:outputLabel>
+</p:column>
+<p:column sortBy="#{item.billNo}" filterBy="#{item.billNo}" headerText="Invoice No" width="100">
+<p:outputLabel value="#{item.billNo}" style="font-weight:bold" ></p:outputLabel>
+</p:column>
+<p:column filterBy="#{item.supplier}" headerText="Supplier" width="150">
+<p:outputLabel value="#{item.supplier}" ></p:outputLabel>
+</p:column>
+<p:column headerText="Amount" width="100">
+<p:outputLabel value="#{item.totalAmount}" >
+<f:convertNumber pattern="#0.00"  />
+</p:outputLabel>
+</p:column>
+</p:dataTable>
+<p:outputLabel value="#{dashBoardReportMBean.gstReportDomain.totalPurchaseAmount}" ></p:outputLabel>
+</div>
+<div class="ui-g-6">
+<p:dataTable id="sizetable" var="item" value="#{dashBoardReportMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink} {Exporters}"
+                             tableStyleClass="pdatatable-table" rows="10"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+<p:column headerText="Sl.No" width="50">
+<p:outputLabel value="#{rowId+1}"></p:outputLabel>
+<h:inputHidden id="invoiceno" value="#{item.billNo}" />
+</p:column>
+<p:column sortBy="#{item.date}" filterBy="#{item.date}" width="85" headerText="Date">
+<p:outputLabel  value="#{item.date}">
+<f:convertDateTime timeZone="IST" pattern="dd/MM/YY" />
+</p:outputLabel>
+</p:column>
+<p:column sortBy="#{item.billNo}" width="70" filterBy="#{item.billNo}" filterMatchMode="contains" headerText="Invoice No">
+<p:outputLabel value="#{item.billNo}" style="font-weight:bold" ></p:outputLabel>
+<h:inputHidden value="#{item.billNo}" id="slNo" />
+</p:column>
+<p:column headerText="GST 5">
+<p:outputLabel value="#{dashBoardReportMBean.getGstValue(item.billNo,5)}" ></p:outputLabel>
+</p:column>
+<p:column headerText="GST 12">
+<p:outputLabel value="#{dashBoardReportMBean.getGstValue(item.billNo,12)}"  ></p:outputLabel>
+</p:column>
+<p:column headerText="GST 18">
+<p:outputLabel value="#{dashBoardReportMBean.getGstValue(item.billNo,18)}"  ></p:outputLabel>
+</p:column>
+<p:column headerText="GST 28">
+<p:outputLabel value="#{dashBoardReportMBean.getGstValue(item.billNo,28)}" ></p:outputLabel>
+</p:column>
+<p:column headerText="TOTAL">
+<p:outputLabel value="#{dashBoardReportMBean.getTotalGstAmount(item.billNo)}" ></p:outputLabel>
+</p:column>
+</p:dataTable>
+<p:outputLabel value="#{dashBoardReportMBean.gstReportDomain.totalGstAmount}" ></p:outputLabel>
+<p:commandButton>
+     <p:dataExporter type="xls" target="sizetable" fileName="gst" />
+</p:commandButton>
+</div>
+</h:form>
+</ui:define>
+</ui:composition>

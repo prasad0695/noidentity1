@@ -1,0 +1,96 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+
+body .ui-datatable thead tr th {
+border:0px solid white;
+}
+body .ui-datatable tbody tr td {
+border:0px solid white;
+}
+body.layout-compact .ui-datatable thead th {
+background-color:#CBCBCB;
+}
+body .ui-inputfield {border-width:0px;}
+body.layout-compact .ui-datatable thead th {
+font-size:12px;
+	background-color:#CBCBCB;
+}
+body .ui-scrollpanel .ui-scrollpanel-drag {
+background-color:		#CDCDCD;
+}
+element.style {
+min-width:0px;
+}
+body .ui-dialog .ui-dialog-titlebar{
+background-color: #607D8B;
+color:white;
+}
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:3px;
+padding-bottom:3px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	background-color: #CBCBCB;
+}
+body .ui-datatable tfoot td{
+border:1px solid white;
+font-weight:bold;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="datalist3">
+<div align="right" style="margin-top:-20px" >
+<h:panelGrid columns="3">
+<h:selectOneMenu id="month" value="#{sukiJMSProductMBean.reportKey.lotGroup}" style="height:25px;width:110px" >
+<f:selectItem itemLabel="Select" itemValue="Select"/>
+<f:selectItems value="#{sukiJMSProductMBean.monthList}"></f:selectItems>
+<p:ajax event="change" listener="#{sukiJMSProductMBean.getCompanyLedgerSearchList}" update="datatable1,balance" />
+</h:selectOneMenu>
+				</h:panelGrid>
+			</div>
+<p:dataTable rowIndexVar="rowId" var="obj"  id="datatable1" value="#{sukiJMSProductMBean.companyLedgerList}"  scrollHeight="450" scrollable="true" >
+<p:column headerText="Sl.No" width="5%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="Date" width="10%">
+<p:outputLabel  value="#{obj.date}" style="margin-left:20px" >
+<f:convertDateTime pattern="dd/MM/YYYY" timeZone="IST" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Description" width="25%">
+<p:outputLabel value="#{obj.description}" style="margin-left:20px" ></p:outputLabel>
+</p:column>
+<p:column headerText="Payment Amt" footerText="#{sukiJMSProductMBean.companyPayAmt}" width="10%">
+<p:outputLabel value="#{obj.paymentAmt}"  style="margin-left:20px" >
+<f:convertNumber pattern="#0.00" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Bill Amt" footerText="#{sukiJMSProductMBean.companyBillAmt}" width="15%">
+<p:outputLabel  value="#{obj.billAmt}" style="margin-left:50px" >
+<f:convertNumber pattern="#0.00" />
+</p:outputLabel>
+</p:column>
+</p:dataTable>
+<div align="right">
+<h:panelGrid columns="2">
+<p:outputLabel value="Balance" style="color:#607D8B;font-size:18px;font-weight:bold;" />
+<p:outputLabel id="balance" value="#{sukiJMSProductMBean.companyBalAmt}" style="font-size:18px;font-weight:bold;" >
+<f:convertNumber pattern="#0.00" />
+</p:outputLabel>
+</h:panelGrid>
+</div>
+</h:form>
+</ui:define>
+</ui:composition>

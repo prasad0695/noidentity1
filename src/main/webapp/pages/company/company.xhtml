@@ -1,0 +1,53 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="form">
+<p:growl id="messages" showDetail="true"></p:growl>
+<p:dataTable id="datatable" var="item" value="#{companyMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="10"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+<p:column width="15" headerText="Sl.No">
+<p:outputLabel  value="#{rowId+1}"  />
+<h:inputHidden id="slNo" value="#{item.compId}"> </h:inputHidden>
+</p:column>
+<p:column width="90" filterBy="#{item.compName}" sortBy="#{item.compName}" headerText="COMPANY">
+<p:outputLabel  value="#{item.compName}"  />
+</p:column>
+<p:column width="180" filterMatchMode="contains" headerText="ADDRESS">
+	<p:outputLabel value="#{item.address}" />
+</p:column>
+<p:column width="35">
+<h:panelGrid columns="3" cellspacing="5" >
+<p:commandLink   actionListener="#{companyMBean.getCompanyObjActionEvent}" ><i class="material-icons">edit</i></p:commandLink>
+<p:commandLink  onclick="if(!confirm('Are u want to delete?')) return false"  actionListener="#{companyMBean.getDeleteActionEvent}" update="datatable,form:messages"  ><i class="material-icons">delete</i></p:commandLink>
+</h:panelGrid>
+</p:column>
+</p:dataTable> 
+<div align="right" style="margin-top:10px;" >
+<p:commandButton   value="New Company" action="#{companyMBean.newCompany}" />
+</div>
+</h:form>
+	</ui:define>
+</ui:composition>
+		

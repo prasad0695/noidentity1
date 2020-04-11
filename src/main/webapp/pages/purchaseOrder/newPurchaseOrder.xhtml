@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="datalist">
+<p:growl id="messages" showDetail="true"  ></p:growl>
+<h:panelGrid columns="6" cellpadding="10">
+<h:outputLabel value="Supplier Name"  />
+ <p:autoComplete id="group" value="#{purchaseOrderMBean.poMaster.supId}" completeMethod="#{purchaseOrderMBean.supplierListAutoComplete}"
+                        var="obj" itemLabel="#{obj.name}" itemValue="#{obj}" converter="pojoConverter" forceSelection="true"
+                        scrollHeight="250">
+                        <p:ajax event="itemSelect" />
+                        </p:autoComplete>
+<h:outputLabel value="Date"  />
+<p:calendar value="#{purchaseOrderMBean.poMaster.dateUtil}" >
+</p:calendar>
+<h:outputLabel value="PO No"  />
+<p:inputText  value="#{purchaseOrderMBean.poMaster.poNo}" >
+</p:inputText>
+</h:panelGrid>
+<p:dataTable rowIndexVar="rowId" var="obj" style="margin-top:5px" value="#{purchaseOrderMBean.poMaster.purchaseOrderTransList}" id="datatable" >
+<p:column headerText="Sl.No" width="20">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+<h:inputHidden value="#{rowId}" id="slNo" />
+</p:column>
+<p:column headerText="DESCRIPTION" width="80">
+<p:panelGrid columns="2" columnClasses="ui-grid-col-11,ui-grid-col-1"
+								layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;" cellpadding="5">
+<p:autoComplete id="group" rendered="#{obj.editBoolean}" value="#{obj.items}" completeMethod="#{purchaseOrderMBean.productListAutoComplete}"
+                        var="item" itemLabel="#{item.item}" itemValue="#{item}" converter="pojoConverter" forceSelection="true"
+                        scrollHeight="250">
+                        <p:ajax event="itemSelect" update="dd" />
+                        </p:autoComplete>
+                        <p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.items.item}" ></p:outputLabel>
+<p:commandLink actionListener="#{deliveryChallanMBean.dcProductAdd}"><i class="material-icons">add</i></p:commandLink>
+</p:panelGrid>
+</p:column>
+<p:column headerText="QUANTITY" width="40">
+<p:inputText rendered="#{obj.editBoolean}" value="#{obj.nos}" ></p:inputText>
+<p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.nos}" ></p:outputLabel>
+</p:column>
+<p:column headerText="UOM" width="40">
+<p:autoComplete id="dd" rendered="#{obj.editBoolean}" dropdown="true" value="#{obj.uom}" var="item" completeMethod="#{obj.getProdUomList}"
+												itemLabel="#{item.uomId.unitName}" itemValue="#{item}" converter="pojoConverter" forceSelection="true" />
+<p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.uom.uomId.unitName}" ></p:outputLabel>
+</p:column>
+<p:column width="20">
+<p:panelGrid columns="3" cellspacing="5" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;" >
+<p:commandLink rendered="#{!obj.editBoolean and purchaseOrderMBean.poMaster.status=='Pending'}"  actionListener="#{purchaseOrderMBean.editPoItem}" update="datatable,datalist:messages"><i class="material-icons">edit</i></p:commandLink>
+<p:commandLink rendered="#{purchaseOrderMBean.poMaster.editBoolean and obj.editBoolean}" actionListener="#{purchaseOrderMBean.savePoItem}" update="datatable,datalist:messages"><i class="material-icons">save</i></p:commandLink>
+<p:commandLink onclick="if(!confirm('Are u want to delete?')) return false" actionListener="#{purchaseOrderMBean.deletePoTable}" update="datatable,datalist:messages"><i class="material-icons">delete</i></p:commandLink>
+</p:panelGrid>
+</p:column>
+</p:dataTable>
+<p:hotkey bind="down" action="#{purchaseOrderMBean.addRowPo}" update="datatable"></p:hotkey>
+<div align="center" style="margin-top:10px;">
+<p:commandButton value="SAVE" rendered="#{!purchaseOrderMBean.poMaster.editBoolean}"  action="#{purchaseOrderMBean.savePo}" update="datalist" ></p:commandButton>
+<p:commandButton value="UPDATE" rendered="#{purchaseOrderMBean.poMaster.editBoolean}" disabled="#{purchaseOrderMBean.poMaster.status=='Closed'}" action="#{purchaseOrderMBean.savePo}" update="datalist" ></p:commandButton>
+<p:commandButton value="DELETE" disabled="#{!purchaseOrderMBean.poMaster.editBoolean}" action="#{purchaseOrderMBean.deletePO}" update="datalist" ></p:commandButton>
+<p:commandButton value="PRINT" action="#{purchaseOrderMBean.print}"></p:commandButton>
+</div>
+</h:form>
+</ui:define>
+</ui:composition>

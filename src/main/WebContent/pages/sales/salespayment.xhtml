@@ -1,0 +1,225 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title">Dashboard</ui:define>
+<ui:define name="head">
+<style type="text/css">
+
+.paymentLabel{
+color:#5E83C5;
+font-size:14px;
+width:100%;
+display:block;
+text-align:right;
+position:relative;
+left:50px;
+}
+.paymentSelectOneMenu{
+font-size:14px;
+width:50%;
+text-align:left;
+}
+.paymentLabel1{
+color:#5E83C5;
+font-size:14px;
+font-weight:bold;
+width:50%;"
+}
+.paymentLabel2{
+font-size:14px;
+font-weight:bold;
+width:50%;"
+}
+.amtToPayLabel{
+font-size:16px;
+color:grey;
+position:relative;
+top:5px;
+}
+.amtToPayLabel1{
+font-size:32px; 
+font-weight:bold; 
+color:orange;
+position:relative;
+top:5px;
+}
+.amtToPayPanelGrid{
+float:right;
+}
+.paidByPanelGrid{
+width: 100%; 
+text-align:center; 
+display: table;
+}
+.panelGridCenter td,.panelGridCenter tr {
+    text-align: center;
+}
+.paymentInput{
+position:relative;
+left:50px;
+font-size:20px;
+font-weight:bold;
+}
+.inputSwitch{
+position:relative;
+top:370px;
+}
+
+
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form>
+
+<p:panel id="horizontal" header="Payment Details" toggleable="true" toggleOrientation="horizontal" style="width:100%">
+ 
+<div class="ui-g ui-fluid">
+<div class="ui-g-9 ui-lg-6">
+
+ 	<h:panelGrid  columns="1" style="text-align:right; width:50%">
+ 	<p:panelGrid  columns="3" style="text-align:right; width:150%">
+ 	
+     	<p:outputLabel value="Sub Total 1" styleClass="paymentLabel1" />
+    	<p:outputLabel value=""  />
+     	<p:outputLabel value="10000000.45" styleClass="paymentLabel2" />
+     	<p:outputLabel value="TDS" styleClass="paymentLabel1" />
+    	<p:outputLabel value="65498.65" />
+     	<p:outputLabel value="" styleClass="paymentLabel2" />
+     	<p:outputLabel value="Sub Total 2" styleClass="paymentLabel1" />
+    	<p:outputLabel value="" />
+     	<p:outputLabel value="10000000.45" style="font-size:15px; font-weight: bold;" />
+      	<p:outputLabel value="Discount" styleClass="paymentLabel1" />
+    	<p:outputLabel value="45498.65" />
+     	<p:outputLabel value="" styleClass="paymentLabel2" />
+      	<p:outputLabel value="Sub Total 3" styleClass="paymentLabel1" />
+    	<p:outputLabel value="" />
+    	<p:outputLabel value="10000000.45" style="font-size:15px; font-weight: bold;" />
+      	<p:outputLabel value="Central Ex. 5%" styleClass="paymentLabel1" />
+    	<p:outputLabel value="" />
+     	<p:outputLabel value="17154.65" styleClass="paymentLabel2" />
+      	<p:outputLabel value="Sub Total 4" styleClass="paymentLabel1" />
+    	<p:outputLabel value=""  />
+     	<p:outputLabel value="10000000.45" style="font-size:15px; font-weight: bold;" />
+      	<p:outputLabel value="VAT 2%" styleClass="paymentLabel1" />
+    	<p:outputLabel value=""  />
+     	<p:outputLabel value="17154.65" styleClass="paymentLabel2" />
+     	<p:outputLabel value="Sub Total 5" styleClass="paymentLabel1" />
+    	<p:outputLabel value="" />
+     	<p:outputLabel value="10000000.45" styleClass="paymentLabel2" />
+     	<p:outputLabel value="GST" styleClass="paymentLabel1" />
+    	<p:outputLabel value="" />
+     	<p:outputLabel value="17154.65" styleClass="paymentLabel2" />
+     	<p:outputLabel value="Nett Total" styleClass="paymentLabel1" />
+    	<p:outputLabel value="" />
+     	<p:outputLabel value="10000000.45" styleClass="paymentLabel2" />
+     	<p:outputLabel value="Advance" styleClass="paymentLabel1" />
+    	<p:outputLabel value="17154.65"  />
+     	<p:outputLabel value="" styleClass="paymentLabel2" />
+     	<p:outputLabel value="Chit Amount" styleClass="paymentLabel1" />
+    	<p:outputLabel value="17154.65" />
+     	<p:outputLabel value="" styleClass="paymentLabel2" />
+     	<p:outputLabel value="Chit Bonus and Deduct" styleClass="paymentLabel1" />
+    	<p:outputLabel value="6745498.65" />
+     	<p:outputLabel value="" styleClass="paymentLabel2"  />
+    	<p:outputLabel value="Old Exchange" styleClass="paymentLabel1" />
+    	<p:outputLabel value="6745498.65" />
+     	<p:outputLabel value="" styleClass="paymentLabel2" />
+    	<p:outputLabel value="Reward points Value" styleClass="paymentLabel1" />
+    	<p:outputLabel value="498.65" />
+     	<p:outputLabel value="" styleClass="paymentLabel2" />
+    	<p:outputLabel value="Gift Coupon" styleClass="paymentLabel1" />
+    	<p:outputLabel value="60000.00" />
+     	<p:outputLabel value="" styleClass="paymentLabel2" />
+    	<p:outputLabel value="Less" styleClass="paymentLabel1" />
+    	<p:outputLabel value="498.65" />
+     	<p:outputLabel value="" styleClass="paymentLabel2" />
+	</p:panelGrid>
+      
+<p:panel style="width:150%;height:70px;">
+
+	<h:panelGrid columns="1" styleClass="amtToPayPanelGrid">
+	
+	<p:outputLabel value="Amount to Pay"  styleClass="amtToPayLabel" />
+	<p:outputLabel value="RS 240,00,000.45" styleClass="amtToPayLabel1" />
+	
+	</h:panelGrid>
+	</p:panel>
+	</h:panelGrid>
+
+</div>
+
+<div class="ui-g-12 ui-lg-6">
+<!-- Right Side -->
+
+	<h:panelGrid  columns="1" style="width:50%;">
+	<p:tabView style="width:160%;height:280px">
+	<p:tab  title="+Paid By" >
+        <h:panelGrid  columns="2" cellpadding = "5"  styleClass="panelGridCenter" >
+        
+        <p:outputLabel value="Pay By" styleClass="paymentLabel"  />
+   			<p:selectOneMenu value="" style="width:50%;" >
+            <f:selectItem itemLabel="CREDIT CARD" itemValue="CREDIT CARD" />
+            <f:selectItem itemLabel=" DEBIT CARD" itemValue=" DEBIT CARD" />
+            <f:selectItem itemLabel="VISA CARD" itemValue="VISA CARD" />
+            <f:selectItem itemLabel="MASTER CARD" itemValue="MASTER CARD" />
+        	</p:selectOneMenu>
+ 
+        <p:outputLabel value="Bank " styleClass="paymentLabel" />
+   			<p:selectOneMenu  value="" 	style="width:50%;" >
+            <f:selectItem itemLabel="HDFC" itemValue="" />
+            <f:selectItem itemLabel="SBI" itemValue="Xbox One" />
+            <f:selectItem itemLabel=" INDIAN BANK" itemValue="PS4" />
+            <f:selectItem itemLabel="INDIAN OVERSEASE" itemValue="Wii U" />
+            <f:selectItem itemLabel="CANARA BANK" itemValue="Wii U" />
+            <f:selectItem itemLabel="ICICI BANK" itemValue="Wii U" />
+        	</p:selectOneMenu>
+        	
+       	<p:outputLabel value="CardType" styleClass="paymentLabel" />
+   		<p:selectOneMenu id="c3" value=" " style="width:50%;">
+            <f:selectItem itemLabel="VISA" itemValue="VISA" />
+            <f:selectItem itemLabel="MASTER" itemValue="MASTER" />
+            <f:selectItem itemLabel="INTERNATIONAL" itemValue="INTERNATIONAL" />
+            <f:selectItem itemLabel="NATIONAL" itemValue="NATIONAL" />
+        </p:selectOneMenu>
+        	
+    	<p:outputLabel value="CardNumber" styleClass="paymentLabel" />
+    	<p:panel style="border-color:white;">
+    	<h:panelGrid columns="4" style="width:100%;position:relative;left:50px;">
+    		<p:inputText value="1234" style="width:55%;"/> 
+    		<p:inputText value="1234" style="width:55%;position:relative;right:34px;"/> 
+    		<p:inputText value="1234" style="width:55%;position:relative;right:66px;" /> 
+    		<p:inputText value="1234" style="width:55%;position:relative;right:100px;" />
+    	</h:panelGrid>
+    	</p:panel>
+    		<p:outputLabel value="SwipeAmount" styleClass="paymentLabel" />
+    		<p:inputText value="489985.00" style="font-size:15px; font-weight: bold;width:50%;" />
+    	</h:panelGrid>
+	</p:tab>
+	<p:tab title="Cash" style="width:500px;text-align:right;display:block;">
+	<h:panelGrid columns="2">
+    		<p:outputLabel value="By Cash" styleClass="paymentLabel" />
+    		<p:inputText value="RS.200,00050.00" style="font-size:15px;font-weight:bold;" styleClass="paymentInput" />
+    </h:panelGrid>
+	</p:tab>
+	</p:tabView>
+	</h:panelGrid>
+
+<div align="center">
+		<h:panelGrid columns="3">
+			<p:outputLabel value="Print Bill" styleClass="inputSwitch" />
+ 			<p:inputSwitch styleClass="inputSwitch" /> 
+ 			<p:outputLabel value="ON" styleClass="inputSwitch" />	
+		</h:panelGrid>
+</div>
+			<h:commandButton  value="SAVE AND PRINT BILL"  style="font-size:22px;width:100%; height:70px; color:white;  background:#F6953D;position:relative;top:400px; " />
+</div></div>
+</p:panel>
+</h:form>
+</ui:define>
+</ui:composition>
+	
+						
+						

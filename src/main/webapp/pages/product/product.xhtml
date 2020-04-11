@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+	<ui:define name="title"></ui:define>
+	<ui:define name="head">
+		<style type="text/css">
+		body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+</style>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="mainform">
+		<p:growl id="messages" showDetail="true" ></p:growl>
+			<p:dataTable id="sizetable" var="item" value="#{productMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="10"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+				<p:column width="25" headerText="Sl.No">
+					<p:outputLabel value="#{rowId + 1}" />
+					<h:inputHidden id="slNo" value="#{item.prodCode}" />
+				</p:column>
+				<p:column width="60" filterBy="#{item.hsnCode}" filterMatchMode="contains" headerText="HSNCode">
+ 					<p:outputLabel value="#{item.hsnCode}" />
+				</p:column>
+				<p:column width="220" filterBy="#{item.item}" filterMatchMode="contains" headerText="PRODUCT NAME">
+					<p:outputLabel value="#{item.item}" />
+				</p:column>
+				<p:column width="100" filterBy="#{item.getproductUom(item)}" filterMatchMode="contains" headerText="UOM">
+					<p:outputLabel value="#{item.getproductUom()}" />
+				</p:column>
+				<p:column width="100" filterBy="#{item.item}" filterMatchMode="contains" headerText="STOCK">
+					<p:outputLabel value="#{item.getproductStock()}" />
+				</p:column>
+				<p:column width="100" filterBy="#{item.item}" filterMatchMode="contains" headerText="PRICE">
+					<p:outputLabel value="#{item.getproductRate()}" />
+				</p:column>
+				<p:column width="35" filterBy="#{item.gst}" filterMatchMode="contains" headerText="GST">
+					<p:outputLabel value="#{item.gst}" />
+				</p:column>
+				<p:column  width="60">
+				<p:panelGrid columns="2" cellspacing="5" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;" >
+<p:commandLink actionListener="#{productMBean.getProductObjActionEvent}" ><i class="material-icons">edit</i></p:commandLink>
+<p:commandLink  onclick="if(!confirm('Are u want to delete?')) return false" actionListener="#{productMBean.getProductDelete}" update="sizetable,mainform:messages" ><i style="color: black;" class="material-icons">delete</i></p:commandLink>
+</p:panelGrid>
+</p:column>
+			</p:dataTable>
+<div align="right" style="margin-top:10px;" >
+				<p:commandButton
+					value="Add Product " action="#{productMBean.newProduct}" />
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

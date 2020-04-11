@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="form">
+<div>
+<p:selectOneMenu value="#{dashBoardReportMBean.commonReport.type}">
+<f:selectItem itemValue="Company" itemLabel="Company" />
+<f:selectItem itemValue="Supplier" itemLabel="Supplier" />
+<f:selectItem itemValue="Product" itemLabel="Product" />
+<p:ajax event="change" listener="#{dashBoardReportMBean.commonReport.getList}" update="form" />
+</p:selectOneMenu>
+<p:autoComplete  rendered="#{dashBoardReportMBean.commonReport.type=='Company'}" value="#{dashBoardReportMBean.commonReport.company}" completeMethod="#{dashBoardReportMBean.companyListAutoComplete}"
+                        var="obj" itemLabel="#{obj.compName}" itemValue="#{obj}" converter="pojoConverter" forceSelection="true"
+                        scrollHeight="250">
+                        <p:ajax event="itemSelect" listener="#{dashBoardReportMBean.OnSelect}" update="form" />
+        </p:autoComplete>
+        <p:autoComplete  rendered="#{dashBoardReportMBean.commonReport.type=='Supplier'}" value="#{dashBoardReportMBean.commonReport.supplier}" completeMethod="#{dashBoardReportMBean.supplierListAutoComplete}"
+                        var="obj" itemLabel="#{obj.name}" itemValue="#{obj}" converter="pojoConverter" forceSelection="true"
+                        scrollHeight="250">
+                        <p:ajax event="itemSelect" listener="#{dashBoardReportMBean.OnSelect}" update="form" />
+        </p:autoComplete>
+        <p:autoComplete rendered="#{dashBoardReportMBean.commonReport.type=='Product'}" value="#{dashBoardReportMBean.commonReport.product}" completeMethod="#{dashBoardReportMBean.productListAutoComplete}"
+                        var="item" itemLabel="#{item.item}" itemValue="#{item}" converter="pojoConverter" forceSelection="true"
+                        scrollHeight="250">
+                        <p:ajax event="itemSelect" listener="#{dashBoardReportMBean.OnSelect}" update="form" />
+        </p:autoComplete>
+        <p:selectCheckboxMenu id="menu" value="#{dashBoardReportMBean.commonReport.selectedVariant}" label="Cities" multiple="true"
+                              filter="true" filterMatchMode="startsWith"
+                              panelStyle="width:250px">
+            <f:selectItems value="#{dashBoardReportMBean.commonReport.selectItemList}"  />
+        </p:selectCheckboxMenu>
+ 
+</div>
+<p:growl id="messages" showDetail="true"></p:growl>
+<div align="center">
+<p:dataTable id="sizetable" rendered="#{dashBoardReportMBean.commonReport.type=='Product'}" var="obj" value="#{dashBoardReportMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="10"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+<p:column headerText="Sl.No" width="20">
+<p:outputLabel value="#{rowId+1}" ></p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.date}" headerText="DATE" filterBy="#{obj.date}" width="30">
+<p:outputLabel value="#{obj.date}">
+<f:convertDateTime pattern="dd/MM/yy" timeZone="IST" />
+</p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.no}" headerText="NO" filterBy="#{obj.no}" width="30">
+<p:outputLabel value="#{obj.no}" ></p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.name}" headerText="COMPANY" filterBy="#{obj.name}" width="120">
+<p:outputLabel value="#{obj.name}"  ></p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.type}" headerText="TYPE" filterBy="#{obj.type}" width="30">
+<p:outputLabel value="#{obj.type}"  ></p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.nos}" headerText="NOS" filterBy="#{obj.nos}" width="30">
+<p:outputLabel value="#{obj.nos}"  ></p:outputLabel>
+</p:column>
+<p:column headerText="UOM"  width="30">
+<p:outputLabel value="#{obj.uomId}"  ></p:outputLabel>
+</p:column>
+<p:column headerText="AMOUNT" width="30">
+<p:outputLabel value="#{obj.amount}"  ></p:outputLabel>
+</p:column>
+</p:dataTable>
+<p:dataTable id="sizetable1" widgetVar="companyTable" rendered="#{dashBoardReportMBean.commonReport.type=='Company'}" var="obj" value="#{dashBoardReportMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="10"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+<p:column headerText="Sl.No" width="20">
+<p:outputLabel value="#{rowId+1}" ></p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.date}" headerText="Date" filterBy="#{obj.date}" width="30">
+<p:outputLabel value="#{obj.date}" style="margin-left:30px">
+<f:convertDateTime pattern="dd/MM/yy" timeZone="IST" />
+</p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.no}" headerText="No" filterBy="#{obj.no}" width="20">
+<p:outputLabel value="#{obj.no}" ></p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.name}" headerText="Company" filterBy="#{obj.name}" width="120">
+<p:outputLabel value="#{obj.name}"  ></p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.type}" headerText="Type" filterBy="#{obj.type}" footerText="in" filterMatchMode="in" width="30">
+<f:facet name="filter">
+                <p:selectCheckboxMenu label="Type" onchange="PF('companyTable').filter()" scrollHeight="150" styleClass="custom-filter">
+                    <f:selectItems value="#{dashBoardReportMBean.commonReport.selectItemList}" />
+                </p:selectCheckboxMenu>
+</f:facet>
+<p:outputLabel value="#{obj.type}"></p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.amount}" headerText="Amount" filterBy="#{obj.amount}" width="30">
+<p:outputLabel value="#{obj.amount}" ></p:outputLabel>
+</p:column>
+</p:dataTable>
+<p:dataTable id="sizetable2" rendered="#{dashBoardReportMBean.commonReport.type=='Supplier'}" var="obj" value="#{dashBoardReportMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="10"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+<p:column headerText="Sl.No" width="20">
+<p:outputLabel value="#{rowId+1}"></p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.date}" headerText="Date" filterBy="#{obj.date}" width="30">
+<p:outputLabel value="#{obj.date}" style="margin-left:30px">
+<f:convertDateTime pattern="dd/MM/yy" timeZone="IST" />
+</p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.no}" headerText="No" filterBy="#{obj.no}" width="20">
+<p:outputLabel value="#{obj.no}" ></p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.name}" headerText="Company" filterBy="#{obj.name}" width="120">
+<p:outputLabel value="#{obj.name}" ></p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.type}" headerText="Type" filterBy="#{obj.type}" width="30">
+<p:outputLabel value="#{obj.type}" ></p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.amount}" headerText="Amount" filterBy="#{obj.amount}" width="30">
+<p:outputLabel value="#{obj.amount}"  ></p:outputLabel>
+</p:column>
+</p:dataTable>
+</div>
+</h:form>
+</ui:define>
+</ui:composition>

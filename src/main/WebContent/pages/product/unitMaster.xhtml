@@ -1,0 +1,81 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+	<ui:define name="title"></ui:define>
+	<ui:define name="head">
+		<style type="text/css">
+		.ui-paginator .ui-paginator-top{
+			height:2px;
+		}
+body .ui-datalist .ui-datalist-header {
+    padding: 1px 1px; }
+    .ui-paginator .ui-paginator-top .ui-widget-header .ui-corner-top{
+    padding:1px;
+    height:1px;
+    }
+    .textalignCenter{text-align:center;}
+</style>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="mainform">
+		<p:growl id="messages" showDetail="true" ></p:growl>
+        <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h3>ADD UNIT</h3>
+                            <p:panelGrid id="content" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                               <p:outputLabel value="Unit Name" />
+						<p:inputText value="#{productMBean.unitMaster.unitName}" />
+						</p:panelGrid>
+						<p:panelGrid id="decimalPattern" columns="3" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+						<p:outputLabel value="Decimal Pattern" />
+						<p:selectOneMenu value="#{productMBean.unitMaster.decPattern}">
+						<p:ajax event="change" update="decPat" />
+							<f:selectItem itemValue="-Select-" itemLabel="-Select-"/>
+							<f:selectItem itemValue="0" itemLabel="0"/>
+							<f:selectItem itemValue="1" itemLabel="1" />
+							<f:selectItem itemValue="2" itemLabel="2"/>
+							<f:selectItem itemValue="3" itemLabel="3" />
+						</p:selectOneMenu>
+						<p:outputLabel id="decPat" value="#{productMBean.decimalPattern(productMBean.unitMaster.decPattern)}"  ></p:outputLabel>
+						</p:panelGrid>
+						<p:panelGrid columns="3" styleClass="ui-panelgrid-blank form-group"
+								columnClasses="ui-lg-3 ui-md-4,ui-lg-3 ui-md-4,ui-lg-3 ui-md-4"
+								layout="grid">
+						<p:commandButton
+					value="ADD NEW" action="#{productMBean.newUnitMaster}" update="content,decimalPattern,delete" />
+					<p:commandButton
+					value="SAVE" action="#{productMBean.saveUnitMaster}" validateClient="true" update="datatable,messages" />
+					<p:commandButton
+					value="DELETE" id="delete" action="#{productMBean.getUOMDelete}" disabled="#{productMBean.buttonDisable(productMBean.unitMaster.rowId)}" update="datatable,content,messages" />
+					</p:panelGrid>
+						</div>
+						</div>
+						</div>
+						</div>
+					<p:dataTable id="datatable" var="item" value="#{productMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="5"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+				<p:column  width="25" styleClass="textalignCenter" headerText="S.No">
+					<p:outputLabel value="#{rowId + 1}" />
+					<h:inputHidden id="slNo" value="#{item.rowId}" />
+				</p:column>
+				<p:column width="50" styleClass="textalignCenter" headerText="UOM">
+					<p:outputLabel value="#{item.unitName}" />
+				</p:column>
+				<p:column width="50" styleClass="textalignCenter" headerText="Pattern">
+					<p:outputLabel value="#{productMBean.decimalPattern(item.decPattern)}" />
+				</p:column>
+				<p:column width="50" styleClass="textalignCenter" >
+					<p:commandLink actionListener="#{productMBean.getUOMObjActionEvent}" update="mainform:content,mainform:decimalPattern,mainform:delete" ><i class="material-icons">edit</i></p:commandLink>		
+				</p:column>
+				</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>

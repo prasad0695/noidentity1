@@ -1,0 +1,177 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="datalist3">
+<p:growl id="messages" showDetail="true"></p:growl>
+<h:panelGrid columns="8" cellpadding="10">
+<h:outputLabel value="Supplier Name"  />
+<p:autoComplete id="group" value="#{inwardMBean.inwardMaster.supId}" completeMethod="#{inwardMBean.supplierListAutoComplete}"
+                        var="obj" itemLabel="#{obj.name}" itemValue="#{obj}" converter="pojoConverter" forceSelection="true"
+                        scrollHeight="250">
+        </p:autoComplete>
+<h:outputLabel value="Date"  />
+<p:calendar value="#{inwardMBean.inwardMaster.dateUtil}" style="border:1px solid black;" >
+</p:calendar>
+<p:outputLabel value="Inw. Type"  />
+<p:selectOneMenu value="#{inwardMBean.inwardMaster.inwardType}"  >
+<f:selectItem itemValue="-Select-" itemLabel="-Select-" />
+<f:selectItem itemValue="PO" itemLabel="PO" />
+<f:selectItem itemValue="Direct" itemLabel="Direct" />
+<p:ajax event="change" update="datalist3" process="datalist3" />
+</p:selectOneMenu>
+<h:outputLabel value="Po No" rendered="#{inwardMBean.inwardMaster.inwardType=='PO'}" />
+<h:panelGrid columns="2" rendered="#{inwardMBean.inwardMaster.inwardType=='PO'}" >
+<p:inputText  value="#{inwardMBean.inwardMaster.poNos}" style="font-weight:bold;" ></p:inputText>
+<p:commandButton value="->" action="#{inwardMBean.getPendingList}" oncomplete="PF('dlg2').show()" update="datalist1" ></p:commandButton>
+</h:panelGrid>
+<h:outputLabel value="Inw No"  />
+<p:inputText  value="#{inwardMBean.inwardMaster.inwardNo}" style="font-weight:bold;border:1px solid black;" >
+</p:inputText>
+<h:outputLabel value="Supplier DC No"  />
+<p:inputText  value="#{inwardMBean.inwardMaster.dcNo}" style="font-weight:bold;border:1px solid black;" >
+</p:inputText>
+</h:panelGrid>
+<p:dataTable rowIndexVar="rowId" var="obj" rendered="#{inwardMBean.inwardMaster.inwardType=='PO'}" value="#{inwardMBean.inwardMaster.inwardTransList}" id="datatable1" >
+<p:column headerText="Sl.No" width="10%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="Description" width="20%">
+<p:outputLabel  value="#{obj.productId.item}" style="margin-left:20px" />
+<h:inputHidden value="#{rowId}" id="slNo" />
+</p:column>
+<p:column headerText="Received" width="12%">
+<p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.received}" style="margin-left:20px" >
+<f:convertNumber pattern="#{inwardMBean.decimalPattern(obj.uom.uomId.decPattern)}" />
+</p:outputLabel>
+<p:inputText rendered="#{obj.editBoolean}" value="#{obj.received}" ></p:inputText>
+</p:column>
+<p:column headerText="UOM" width="15%">
+<p:outputLabel value="#{obj.uom.uomId.unitName}" style="margin-left:20px" >
+<f:convertNumber pattern="0.00"/>
+</p:outputLabel>
+</p:column>
+<p:column headerText="" width="10%">
+<p:commandLink rendered="#{!obj.editBoolean}" actionListener="#{inwardMBean.inwItemEdit}" update="datatable1," ><i class="material-icons">edit</i></p:commandLink>
+<p:commandLink style="margin-left:10px;" actionListener="#{inwardMBean.deleteInwardItem}" update="datatable1,datalist3:messages" ><i class="material-icons">delete</i></p:commandLink>
+<p:commandLink rendered="#{obj.editBoolean}" style="margin-left:10px;" actionListener="#{inwardMBean.saveInwItem}" update="datatable1,datalist3:messages" ><i class="material-icons">save</i></p:commandLink>
+</p:column>
+</p:dataTable>
+
+<p:dataTable rowIndexVar="rowId" var="obj" rendered="#{inwardMBean.inwardMaster.inwardType=='Direct'}" value="#{inwardMBean.inwardMaster.inwardTransList}" id="datatable2" >
+<p:column headerText="Sl.No" width="10%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="Description" width="20%">
+<p:autoComplete id="group" rendered="#{obj.editBoolean}" value="#{obj.productId}" completeMethod="#{inwardMBean.productListAutoComplete}"
+                        var="item" itemLabel="#{item.item}" itemValue="#{item}" converter="pojoConverter" forceSelection="true"
+                        scrollHeight="250">
+                        <p:ajax event="itemSelect" />
+                        </p:autoComplete>
+<p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.productTrans}" style="margin-left:20px" />
+<h:inputHidden value="#{rowId}" id="slNo" />
+</p:column>
+<p:column headerText="Received" width="12%">
+<p:inputText rendered="#{obj.editBoolean}" value="#{obj.received}" >
+<f:convertNumber pattern="#{inwardMBean.decimalPattern(obj.uom.uomId.decPattern)}" />
+</p:inputText>
+<p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.received}" />
+</p:column>
+<p:column headerText="UOM" width="25%">
+<p:autoComplete id="dd" dropdown="true" rendered="#{obj.editBoolean}" value="#{obj.uom}" var="item" completeMethod="#{obj.getProdUomList}"
+												itemLabel="#{item.uomId.unitName}" itemValue="#{item}" converter="pojoConverter" forceSelection="true" />
+<p:outputLabel value="#{obj.uom.uomId.unitName}" rendered="#{!obj.editBoolean}" style="margin-left:20px" >
+<f:convertNumber pattern="0.00"/>
+</p:outputLabel>
+</p:column>
+<p:column headerText="" width="10%">
+<p:commandLink rendered="#{!obj.editBoolean}" actionListener="#{inwardMBean.inwItemEdit}" update="datatable2" ><i class="material-icons">edit</i></p:commandLink>
+<p:commandLink style="margin-left:10px;" actionListener="#{inwardMBean.deleteInwardItem}" update="datatable2,datalist3:messages" ><i class="material-icons">delete</i></p:commandLink>
+<p:commandLink rendered="#{obj.editBoolean and inwardMBean.inwardMaster.editBoolean}" style="margin-left:10px;" actionListener="#{inwardMBean.saveInwItem}" update="datatable2,datalist3:messages" ><i class="material-icons">save</i></p:commandLink>
+</p:column>
+</p:dataTable>
+<p:hotkey bind="down" rendered="#{inwardMBean.inwardMaster.inwardType=='Direct'}" action="#{inwardMBean.addTrans}" update="datatable2" ></p:hotkey>
+<p:commandButton value="Save" action="#{inwardMBean.saveInward}" update="messages" ></p:commandButton>
+</h:form>
+
+<p:dialog widgetVar="dlg2" height="550" width="900" modal="true" >
+<h:form id="datalist1">
+
+<p:dataTable  rowIndexVar="rowId" var="obj" style="margin-top:-5px;width:60%" rowKey="#{obj.poNo}"   value="#{inwardMBean.poMasterList}" selection="#{inwardMBean.selectedPoMasterList}"  id="datatable" >
+<p:column selectionMode="multiple"  width="3%" >
+</p:column>
+<p:ajax  event="rowSelect" listener="#{inwardMBean.getPendingPoTransList}" update="datalist1"  />
+<p:ajax event="rowUnselect" listener="#{inwardMBean.getPendingPoTransList}" update="datalist1" />
+<p:ajax event="rowSelectCheckbox" listener="#{inwardMBean.getPendingPoTransList}" update="datalist1" />
+<p:ajax event="rowUnselectCheckbox" listener="#{inwardMBean.getPendingPoTransList}" update="datalist1" />
+<p:ajax event="toggleSelect" listener="#{inwardMBean.getPendingPoTransList}" update="datalist1" />
+<p:column headerText="IN.No" width="7%">
+<p:outputLabel value="#{obj.poNo}" ></p:outputLabel>
+<h:inputHidden value="#{obj.poNo}" id="dcNo" />
+</p:column>
+<p:column  headerText="Date" width="8%">
+<p:outputLabel value="#{obj.date}" >
+<f:convertDateTime pattern="dd/MM/YY" timeZone="IST" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Supplier" width="25%">
+<p:outputLabel value="#{obj.supplier}"  ></p:outputLabel>
+</p:column>
+<p:column headerText="Total" width="8%">
+<p:outputLabel value="#{obj.status}" styleClass="#{obj.statusColor}"  ></p:outputLabel>
+</p:column>
+</p:dataTable>
+
+<p:dataTable rowIndexVar="rowId" var="obj" style="margin-top:15px" value="#{inwardMBean.poTransList}" rowKey="#{obj.rowId}" selection="#{inwardMBean.selectedPoTransList}" id="poTransTable" >
+<p:column headerText="select" selectionMode="multiple" width="10%"> 
+</p:column>
+<p:column headerText="Sl.No" width="10%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="Description" width="20%">
+<p:outputLabel  value="#{obj.items.item}" style="margin-left:20px" />
+<h:inputHidden value="#{obj.rowId}" id="slNo" />
+</p:column>
+<p:column headerText="Quantiy" width="12%">
+<p:outputLabel value="#{obj.nos}" style="margin-left:20px" >
+<f:convertNumber pattern="#{inwardMBean.decimalPattern(obj.uom.uomId.decPattern)}" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="UOM" width="15%">
+<p:outputLabel value="#{obj.uom.uomId.unitName}" style="margin-left:20px" >
+<f:convertNumber pattern="0.00"/>
+</p:outputLabel>
+</p:column>
+<p:column headerText="Receiving" width="15%">
+<p:inputText value="#{obj.received}" style="margin-left:20px" >
+<f:convertNumber pattern="0.00"/>
+</p:inputText>
+</p:column>
+</p:dataTable>
+<div align="right">
+<p:commandButton value="Receive all" action="#{inwardMBean.receivingAll}" update="poTransTable,datalist3:datatable1" ></p:commandButton>
+<p:commandButton value="Add To Inward" action="#{inwardMBean.addToInwardTrans}" update="poTransTable,datalist3:datatable1" ></p:commandButton>
+</div>
+</h:form>
+</p:dialog>
+</ui:define>
+</ui:composition>

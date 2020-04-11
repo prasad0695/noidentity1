@@ -1,0 +1,1073 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="head"> 
+<style type="text/css">
+.ui-md-4{width:29%;}
+.panelCustomerDetail{height:180px;}
+.panelRate{width:66%;height:180px;display:block;margin-left:31%;}
+.LabelCustomer{color:#687abc;font-weight:bold;}
+.LabelCustomer1{color:#687abc;}
+.calendarCustomer{border:0px;display:block;width:100px;}
+.labelRate{color:#6181C2;font-weight:bold;font-size:14px;}
+.dataTableFontSize{font-size:12px;}
+.ui-datatable.myTable th{ background-color:#5475b8;color: black !important;font-size:12px !important;}   
+.productDetailsLabelBox{color:#687abc;margin-left:27px;font-weight:bold;}
+.productDetailsLabelBox1{color:#a3b6dc;font-weight:bold;}
+.productDetailsHeader {margin-top:5px;}
+.totalCalcPanel{width:100%; height:60px;}
+.totalCalculation {width:100%;}
+.totalCalcLabel1{color:#6181C2;font-size:12px;}
+.totalCalcLabel2{color:#F6953D;font-weight:bold;}
+.ui-datatable-header{background:#687baa;}
+.customTitleBar > .ui-panel-titlebar {background:#5475b8;color:white;text-align: left;}
+body .ui-inputfield1 {border-width: 0px;}
+body .ui-panel .ui-panel-titlebar { border-radius: 0px 0px 0px 0px;}
+.layout-wrapper .layout-main {padding: 40px 5px 5px 15px;background:#c7d0e2;}
+.coll1{width:25%;}.coll2{width:25%;}.coll3{width:25%;}.coll4{width:25%;}
+.colbut1{text-align: right;}
+.colbut2{text-align: left;padding-left: 10px;}
+.coll1{ width: 25%;}.coll2{width: 1%;}.coll3{width: 24%;}.coll4{width: 1%;}.coll5{width: 24%;}.coll6{width: 1%;}.coll7{width: 24%;}
+.colpan1{text-align: right;padding: 8px 10px;}
+.colpan2{text-align: left;}
+.ui-datatable.myTable1 th{text-align:left; background-color:#5475b8;color: #687abc !important;font-size:12px !important;}
+.ui-datatable-header{border-left: 1px solid black;border-right: 1px solid black;border-top: 1px solid black;border-bottom: 1px solid black; }
+.ui-datatable.myTable th{text-align:left; background-color:#5475b8;color: white !important;font-size:12px !important;}
+.ui-datatable.myTable1{background:#26395c;}body .ui-panel .ui-panel-titlebar {border: 0 none;border: 1px solid #000000;}
+.ui-scrollpanel-container {border: 1px solid black;}
+.labelInput{border-color:#5475b8;height:20px;}
+body.layout-compact .ui-chkbox .ui-chkbox-box {width: 12px;height: 12px;}
+body .ui-chkbox .ui-chkbox-box {border: 1px solid black;}
+body .ui-button .ui-icon {color: #212121;color:#f18732;}
+body .ui-button.ui-button-icon-only {border-radius:50%;width: 40px;height: 20px;background-color:white;font-size:1px;top:-5px;color:#f18732;} 
+body .ui-inputswitch {height: 1px;}
+body .ui-inputswitch .ui-inputswitch-handle {top: -8px;background-color:#F6953D;border-radius: 50%;width: 15px !important;height: 15px !important;}
+body .ui-corner-all {border-radius: 0px;}
+
+body.layout-compact .ui-button.ui-button-icon-only1  {width: 25px;height: 18px;top: 1px;border-radius: 10%;margin-left: -33px;
+background-color: white;background: transparent !important;}
+body.layout-compact .ui-calendar .ui-datepicker-trigger {top: 1px;right: 26px;height: 20px;height: 19px;}
+
+body.layout-compact .ui-dialog .ui-dialog-titlebar {background:#5475b8;color:white;text-align: center;}
+body .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon .ui-icon {color: #212121;}
+body .ui-button .ui-button-text1 {margin-top: -2px;}
+body .ui-button.externallinkicon .ui-icon {color: #5475b8;}
+ .amtToPayLabel{
+font-size:16px;
+color:grey;
+position:relative;
+top:5px;float:right;
+}
+.amtToPayLabel1{
+font-size:32px; 
+font-weight:bold; 
+color:#f18732;
+position:relative;
+top:5px;
+}
+.amtToPayPanelGrid{
+float:right;
+}
+.row1{background-color: orange}
+.row2{background-color: white}
+.row3{background-color: green}
+.bordrbottom{border-bottom: 1px solid #687abc;}
+body .ui-panelgrid.panelgrid1 .ui-panelgrid-cell {padding: 7px 10px;}
+body .ui-panelgrid.panelgrid2 .ui-panelgrid-cell {padding: 2px 9px;}
+</style>
+</ui:define>
+
+<ui:define name="content" >
+<h:form id="salesfrm" >
+<p:hotkey bind="1" oncomplete="PF('dlg12').show()"  update=":exchangeform:exchangetable" ></p:hotkey>
+<p:growl id="message" showDetail="true"  />
+<h:panelGrid columns="2" style="width:100%;">
+<p:panelGrid styleClass="panelgrid1" id="ordercust" style="background-color:#5475b8;width:105%;">
+    <f:facet name="header">
+        <p:row>
+            <p:column style="text-align:left;" colspan="6">Customer Details</p:column>
+        </p:row> 
+    </f:facet>
+ 
+    <p:row style="border-bottom: 1px solid #687abc;" styleClass="bordrbottom" >
+        <p:column  styleClass="labelRate bordrbottom" >Mobile</p:column>
+        <p:column style="border-left:2px solid white;border-right:2px solid white;" ><p:inputText styleClass="LabelCustomer ui-inputfield1" maxlength="10" style="width:115px;color:black"  value="#{sukiJMSOrderBean.customer.mobile1}" > 
+    <p:ajax event="blur"  listener="#{sukiJMSOrderBean.getCustomerDetailsByPhone}" update="ordercust,message"  /></p:inputText>
+    <p:commandButton  styleClass="ui-button-icon-only1 externallinkicon" icon="fa fa-external-link"  
+	oncomplete="PF('dlg7').show()" update=":subform3"   />
+        </p:column>
+ 
+        <p:column styleClass="labelRate" >City</p:column>
+        <p:column style="border-left:2px solid white;border-right:2px solid white;" ><p:inputText styleClass="LabelCustomer ui-inputfield1" style="width:115px;color:black" value="#{sukiJMSOrderBean.customer.city}"  /> </p:column>
+ 
+        <p:column styleClass="labelRate" >No</p:column>
+        <p:column style="border-left:2px solid white;" ><p:inputText styleClass="LabelCustomer ui-inputfield1" style="width:115px;color:black"  value="#{sukiJMSOrderBean.orderPlacemaster.orderPlaceNo}"   >
+    <p:ajax event="blur"  listener="#{sukiJMSOrderBean.getOrderDetailsByOrderNo}" update="salesfrm,datatable,:printorderestimate,showtable,:exchangeform:exchangetable"  /></p:inputText>
+        </p:column>
+    </p:row>
+    <p:row style="border-bottom: 1px solid #687abc;" >
+        <p:column styleClass="labelRate" >Name</p:column>
+        <p:column style="border-left:2px solid white;border-right:2px solid white;" ><p:inputText styleClass="LabelCustomer ui-inputfield1" style="width:115px;color:black" value="#{sukiJMSOrderBean.customer.custName}"   /></p:column>
+ 
+        <p:column styleClass="labelRate" >Pincode</p:column>
+        <p:column style="border-left:2px solid white;border-right:2px solid white;" ><p:inputText styleClass="LabelCustomer ui-inputfield1" style="width:115px;color:black" value="#{sukiJMSOrderBean.customer.pin}"  /> </p:column>
+ 
+        <p:column styleClass="labelRate" >Date</p:column>
+        <p:column style="border-left:2px solid white;" ><p:inputText styleClass="LabelCustomer ui-inputfield1" style="width:115px;color:black" id="button" value="#{sukiJMSOrderBean.billDate}" >
+    <f:convertDateTime pattern="MM/dd/yyyy"/>
+    </p:inputText></p:column>
+    </p:row >
+    <p:row style="border-bottom: 1px solid #687abc;" >
+        <p:column styleClass="labelRate" >Area 1</p:column>
+        <p:column style="border-left:2px solid white;border-right:2px solid white;" ><p:inputText styleClass="LabelCustomer ui-inputfield1" style="width:115px;color:black" value="#{sukiJMSOrderBean.customer.area1}"   /></p:column>
+ 
+        <p:column ></p:column>
+        <p:column style="border-left:2px solid white;border-right:2px solid white;" ></p:column>
+ 
+        <p:column styleClass="labelRate" >Type of Receive</p:column>
+        <p:column style="border-left:2px solid white;" ><h:selectOneMenu styleClass="labelInput"  style="width:150px;height:25px;color:black" value="#{sukiJMSOrderBean.orderPlacemaster.recdType}" >
+    		<f:selectItem itemLabel="-Select" itemValue="-Select" />
+            <f:selectItem itemLabel="ORDER RATE" itemValue="ORDER RATE" />
+            <f:selectItem itemLabel="DELIVERY RATE" itemValue="DELIVERY RATE" />
+            <f:selectItem itemLabel="WEIGHT BASIS" itemValue="WEIGHT BASIS" />
+   	</h:selectOneMenu></p:column>
+    </p:row>
+        <p:row >
+        <p:column styleClass="labelRate" >Area 2</p:column>
+        <p:column style="border-left:2px solid white;border-right:2px solid white;" ><p:inputText styleClass="LabelCustomer ui-inputfield1" style="width:115px;color:black" value="#{sukiJMSOrderBean.customer.area2}"  /> </p:column>
+ 
+        <p:column ></p:column>
+        <p:column style="border-left:2px solid white;border-right:2px solid white;" ></p:column>
+ 
+        <p:column ></p:column>
+        <p:column style="border-left:2px solid white;" ></p:column>
+    </p:row>
+</p:panelGrid>
+
+<p:panel id="ratepanel" header="Rate" style="text-align:center;margin-top:-1px;" styleClass="panelRate customTitleBar"  >
+	<h:panelGrid style="font-size:12px;text-align:right;" width="100%"  >
+	        <p:outputLabel  value="Gold 24C/g"  />
+	      	<p:inputText value="#{sukiJMSOrderBean.gold24ctRate.currentRate}" style="width:60px;text-align:right;border-width:0px;font-weight:bold;font-size:16px;margin-top:-10px;" styleClass="labelRate"  ><h:graphicImage library="images" name="inr1.png" style="margin-left:-10%;width:10px;height:10px;position:relative;left:8px;" />
+	      	<p:ajax event="blur" listener="#{sukiJMSOrderBean.getEditedRateFrmOrderPlacement}" />
+	      	</p:inputText>
+	      	<p:outputLabel  value="Gold 22C/g" />
+	      	<p:inputText value="#{sukiJMSOrderBean.gold22ctRate.currentRate}" style="width:60px;text-align:right;border-width:0px;font-weight:bold;font-size:16px;margin-top:-10px;"  styleClass="labelRate" ><h:graphicImage library="images" name="inr1.png" style="margin-left:-10px;width:10px; height:10px;position:relative;left:8px;" />
+	      	<p:ajax event="blur" listener="#{sukiJMSOrderBean.getEditedRateFrmOrderPlacement}" />
+	      	</p:inputText>
+	      	<p:outputLabel  value="Silver/g" />
+	      	<p:inputText value="#{sukiJMSOrderBean.silverRate.currentRate}" style="width:60px;text-align:right;border-width:0px;font-weight:bold;margin-top:-20px;font-size:16px;margin-top:-10px;" styleClass="labelRate" ><h:graphicImage library="images" name="inr1.png" style="margin-left:-10px;width:10px; height:10px;position:relative;left:25px;" />
+	      	<p:ajax event="blur" listener="#{sukiJMSOrderBean.getEditedRateFrmOrderPlacement}" />
+	      	</p:inputText>
+	</h:panelGrid>
+	</p:panel>
+	</h:panelGrid>
+
+	<div class="ui-g-9 ui-lg-8"  >
+	<div style="overflow:scroll;height:440px">
+	
+    	<p:dataTable rowIndexVar="rowId" var="obj" id="datatable"  value="#{sukiJMSOrderBean.orderPlaceTransList}" 
+	selection="#{sukiJMSOrderBean.selectOrderPlaceTransList}" rowKey="#{obj.slNo}" style="width:100%;" scrollable="true"    styleClass="myTable ui-datatable-header" >
+       
+        <p:ajax event="rowSelect" listener="#{sukiJMSOrderBean.getOrderPlaceTransStoneDetails}" update=":salesfrm:showpanel" />
+        
+        <p:column selectionMode="multiple" style="width:2%;text-align:center;" />
+        <p:column headerText="Id" style="width:3%;text-align:center"  >
+            <p:outputLabel value="#{rowId + 1}" />
+        </p:column>
+    	
+    	
+    	<p:column headerText="Image"  style="width:3%;text-align:center;" styleClass="dataTableFontSize">
+            <p:outputLabel   />
+        </p:column>
+        <p:column headerText="Code"  style="width:7%;text-align:center;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{obj.prodCd}"  /> 
+        </p:column>
+              
+        <p:column headerText="Description"  style="width:8%;" styleClass="dataTableFontSize">
+            <p:outputLabel  value="#{obj.prodDetails}" />
+        </p:column>
+        <p:column headerText="Purity"  style="width:7%;text-align:center;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{obj.purity}" />
+ 	    </p:column>        
+        <p:column headerText="Piece"  style="width:4%;text-align:center;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{obj.piece}" />
+ 	    </p:column>
+ 	    <p:column headerText="Ord.Weight"  style="width:8%;text-align:center;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{obj.orderWt}" />
+        </p:column>
+        <p:column headerText="Va"  style="width:4%;text-align:center;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{obj.wastage}" />
+        </p:column>
+        
+        <p:column headerText="MC"  style="width:5%;text-align:center;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{obj.makChrg}" />
+        </p:column>
+        
+         <!-- <p:column headerText="Actions"  style="width:6%;" styleClass="dataTableFontSize">
+            <p:commandButton  value="Edit" style="width:50px;background-color:#DDDDDD;color:black;" actionListener="#{sukiJMSOrderBean.getOrderPlaceTransDetailsActionEvent}" update=":salesfrm:orderPlaceId" />
+        </p:column> -->
+       
+	</p:dataTable  ><br />
+	</div>
+	<p:panel id="showpanel"    style="height:150px;background:#26395c;margin-top:10px;">
+  <h:panelGrid columns="3" columnClasses="colpanel1,colpanel2,colpanel3"  cellpadding="5" style="width:100%;font-size:12px;"  >
+  
+     <p:outputLabel  style="font-size:16px;margin-left:12px;" styleClass="productDetailsLabelBox1" />	
+     <p:outputLabel  style="font-size:16px;margin-left:-40px" styleClass="productDetailsLabelBox1" />
+     <p:outputLabel  style="font-weight:bold;margin-left:170px" styleClass="LabelCustomer" />
+
+
+ <p:dataTable id="showtable" style="width:100%;margin-top:-40px;text-align:left;margin-left:180px;" styleClass="myTable1 ui-datatable-header" var="item" value="#{sukiJMSOrderBean.orderPlacementStoneList}" 
+ scrollable="true" scrollHeight="93" >
+ <p:column style="width:5%;font-size:12px;background:#26395c;color:white" headerText="Stone" >
+ <p:outputLabel value="#{item.stoneName}"   style="width:100%;" />
+ </p:column>
+ <p:column style="width:4%;font-size:12px;text-align:center;background:#26395c;color:white" headerText="Piece"  >
+ <p:outputLabel value="#{item.piece}"   style="width:100%" />
+ </p:column>
+ <p:column style="width:5%;font-size:12px;text-align:center;background:#26395c;color:white" headerText="Carat" >
+ <p:outputLabel value="#{item.carat}"   style="width:100%" />
+ </p:column>
+ <p:column style="width:5%;font-size:12px;text-align:center;background:#26395c;color:white" headerText="Weight" >
+ <p:outputLabel value="#{item.weight}"   style="width:100%" />
+ </p:column>
+ <p:column style="width:5%;font-size:12px;text-align:center;background:#26395c;color:white" headerText="Rate" >
+ <p:outputLabel value="#{item.rate}"  style="width:100%" />
+ </p:column>
+ <p:column style="width:5%;font-size:12px;text-align:center;background:#26395c;color:white" headerText="Amount" >
+ <p:outputLabel value="#{item.amount}"  style="width:100%" />
+ </p:column>
+ </p:dataTable>
+</h:panelGrid>
+</p:panel>
+</div>
+	<div class="ui-g-9 ui-lg-4">
+	<p:scrollPanel id="orderPlaceId" style="text-align:center;height:600px;margin-top:-1px;" mode="native" styleClass="panelStyle" >
+	<h:panelGrid columns="2" style="width:100%;margin-top:10px;"  columnClasses="colpan1,colpan2" >
+	<p:outputLabel value="Sl No" styleClass="labelRate" />
+	<p:inputText value="#{sukiJMSOrderBean.slNo}" readonly="true" styleClass="LabelCustomer" />
+	<p:outputLabel value="Design" styleClass="labelRate" />
+	<p:inputText id="designid" value="#{sukiJMSOrderBean.orderPlaceTrans.design}" styleClass="LabelCustomer" >
+	<p:ajax event="focus" listener="#{sukiJMSOrderBean.getProductDesignDetailsList}" update=":subform" oncomplete="PF('dlg1').show()"  />
+    </p:inputText>
+	<p:outputLabel value="Product Code" styleClass="labelRate" />
+	<h:panelGrid columns="2">
+	<p:inputText id="productcd" value="#{sukiJMSOrderBean.orderPlaceTrans.prodCd}" styleClass="LabelCustomer" >
+	<p:ajax event="blur"  listener="#{sukiJMSOrderBean.getProductMasterDetails}" update=":salesfrm"  /></p:inputText>
+	<p:commandButton styleClass="ui-button-icon-only1 externallinkicon" icon="fa fa-external-link" action="#{sukiJMSOrderBean.getProductMasterDetailsList23}" 
+	oncomplete="PF('dlg3').show()" update=":subform3"   />
+	</h:panelGrid>
+	<p:outputLabel value="Product Details" styleClass="labelRate" />
+	<p:inputText id="proddetail" value="#{sukiJMSOrderBean.orderPlaceTrans.prodDetails}" styleClass="LabelCustomer" />
+	<p:outputLabel value="Purity" styleClass="labelRate" />
+	<h:selectOneMenu id="purityId" style="width:165px;height:23px;border-color:#687abc;" styleClass="LabelCustomer" value="#{sukiJMSOrderBean.orderPlaceTrans.purity}" >
+			<f:selectItem itemLabel="-Select- " itemValue="-Select-" />
+			<f:selectItems value="#{sukiJMSOrderBean.purityList}" />
+			<p:ajax event="change"  listener="#{sukiJMSOrderBean.getOrderWtCalc}" update="wastid,mcid,message,orderWt,hallmrkchrg" />
+    </h:selectOneMenu> 
+	<p:outputLabel value="Piece" styleClass="labelRate" />
+	<p:inputText id="piecesales" value="#{sukiJMSOrderBean.orderPlaceTrans.piece}" styleClass="LabelCustomer" >
+	<p:ajax event="blur"  listener="#{sukiJMSOrderBean.saveStoneAmount}" update="ordervalid" /></p:inputText>
+	<p:outputLabel value="Order Weight" styleClass="labelRate" />
+	<p:inputText id="orderWt" value="#{sukiJMSOrderBean.orderPlaceTrans.orderWt}" styleClass="LabelCustomer"  >
+	<p:ajax   listener="#{sukiJMSOrderBean.getOrderWtCalc}" update="message,wastid,mcid,orderWt,ordervalid" /></p:inputText>
+	<p:outputLabel value="Va" styleClass="labelRate" />
+	<p:inputText id="wastid" value="#{sukiJMSOrderBean.orderPlaceTrans.wastage}" styleClass="LabelCustomer" >
+	<p:ajax   listener="#{sukiJMSOrderBean.saveWastageAmtCalc}" update="ordervalid,message" /></p:inputText>
+	<p:outputLabel value="Making Charge" styleClass="labelRate" />
+	<p:inputText id="mcid" value="#{sukiJMSOrderBean.orderPlaceTrans.makChrg}" styleClass="LabelCustomer" >
+	<p:ajax   listener="#{sukiJMSOrderBean.saveMcAmtCalc}" update="ordervalid,message" /></p:inputText>
+	<p:outputLabel value="Hallmark Charge" styleClass="labelRate" />
+	<p:inputText id="hallmrkchrg" value="#{sukiJMSOrderBean.orderPlaceTrans.hallmarkChrg}" styleClass="LabelCustomer" >
+	<p:ajax event="blur"  listener="#{sukiJMSOrderBean.saveStoneAmount}" update="ordervalid" /></p:inputText>
+	<p:outputLabel value="Stone Amount" styleClass="labelRate" />
+	<h:panelGrid columns="2">
+	<p:inputText id="stoneamt" readonly="true" value="#{sukiJMSOrderBean.orderPlaceTrans.stoneAmt}" styleClass="LabelCustomer" />
+    <p:commandButton styleClass="ui-button-icon-only1 externallinkicon" icon="fa fa-external-link" action="#{sukiJMSOrderBean.getOrderPlacementStonePopUp}"  update="message"   />
+    </h:panelGrid>
+	<p:outputLabel value="Order Value" styleClass="labelRate" />
+	<p:inputText id="ordervalid" value="#{sukiJMSOrderBean.orderPlaceTrans.orderVal}" styleClass="LabelCustomer" >
+	<f:convertNumber pattern="#0.00"/> </p:inputText>
+	<p:outputLabel value="Salesman Name" styleClass="labelRate" />	
+	<h:selectOneMenu style="width:165px;height:23px;border-color:#687abc;" styleClass="LabelCustomer" value="#{sukiJMSOrderBean.orderPlaceTrans.salesmanName}" >
+			<f:selectItem itemLabel="0" itemValue="0" />
+			<f:selectItems value="#{sukiJMSOrderBean.salesManList}" />
+    </h:selectOneMenu> 	
+	<p:outputLabel value="Due Date" styleClass="labelRate" />
+	<p:calendar value="#{sukiJMSOrderBean.orderPlaceTrans.utilDueDt}" timeZone="" style="border-color:#687abc" styleClass="LabelCustomer" yearRange="c-50:c+10" navigator="true" pattern="dd-MM-YYYY" showOn="both" />
+	<p:outputLabel value="Image" styleClass="labelRate" />
+	<p:inputText id="image"  value="#{sukiJMSOrderBean.orderPlaceTrans.image}" styleClass="LabelCustomer" >
+	<p:ajax event="focus"  oncomplete="PF('dlg6').show()"  />
+	</p:inputText>
+	</h:panelGrid>
+	<h:panelGrid columns="2" style="margin-left:167px;margin-top:10px;" >
+	<p:commandButton value="CONFIRM" action="#{sukiJMSOrderBean.saveOrderPlacement}" style="background:white;color:#f18732;font-weight:bold;border-bottom:3px solid #f18732;" update="datatable,orderPlaceId,:stoneTable:stonetable,ratepanel,message,:printorderestimate,:salesfrm:showpanel" />
+ 	<p:commandLink value="CANCEL" style="font-weight:bold;margin-left:10px;font-size:14px;border-bottom:2px solid #f18732;color:grey" action="#{sukiJMSOrderBean.resetOrderPlaceTrans}" update="salesfrm,:stoneTable"  />
+	</h:panelGrid>
+	</p:scrollPanel>
+	</div>
+	
+
+	<div>
+	<h:panelGrid columns="3" style="background:#F0F1F6;margin-top: 5px;height:65px;">
+	<p:commandLink value="DELETE" style="font-weight:bold;font-size:14px;border-bottom:2px solid #f18732;color:grey;margin-left:10px;" onclick="if (!confirm('Are you sure want to delete this Order Placement?')) return false"
+		 actionListener="#{sukiJMSOrderBean.deleteOrderPlacementTrans}" update="datatable,message" />
+	<p:commandButton value="EDIT" actionListener="#{sukiJMSOrderBean.getOrderPlaceTransDetailsActionEvent}" style="width:100px;background:white;color:#f18732;font-weight:bold;border-bottom:3px solid #f18732;margin-left:1033px;" update="orderPlaceId,:stoneTable:stonetable" />			
+	<p:commandButton value="OVERVIEW" action="#{sukiJMSOrderBean.overviewActionEvent}" style="width:100px;background:white;color:#f18732;font-weight:bold;border-bottom:3px solid #f18732;margin-left:10px;" />
+ 	 
+	</h:panelGrid>
+	</div>
+	
+
+<p:panel style="width:85%;height:45px;margin-top:5px;">
+	<div  align="left" style="margin-top:5px;">
+	<p:commandButton icon="fa fa-print" >
+	<p:ajax listener="#{sukiJMSOrderBean.calcGoldEstiOrder}" update=":printorderestimate" />
+	 	<p:printer target="printorderestimate"  />
+	</p:commandButton>
+	<p:outputLabel value="Print"  style="font-size:14px;font-weight:bold;margin-left:5px;color:grey" />
+	<p:inputSwitch value="#{sukiJMSRateCardBean.value1}" style="margin-left:5px" >
+	<p:ajax listener="#{sukiJMSRateCardBean.inputCheck}"  update="check" />
+	</p:inputSwitch>
+	<p:outputLabel id="check" value="#{sukiJMSRateCardBean.value2}" style="font-size:12px;margin-left:5px;font-weight:bold;color:grey" />
+	</div>
+	<div align="right" style="margin-top:-33px;">
+	<p:commandLink value="CANCEL" style="font-weight:bold;font-size:14px;border-bottom:2px solid #f18732;color:grey;margin-left:10px;"
+	action="#{sukiJMSOrderBean.orderPlaceCancelButt}" update="salesfrm"   />
+	</div>
+	</p:panel>
+
+	
+ <div align="right" style="margin-top:-46px" >
+	<p:commandButton  value="MAKE PAYMENT" action="#{sukiJMSOrderBean.makePayment1}" update=":prcessfrm1"  oncomplete="PF('dlg10').show()" style="font-weight:bold;background:#f18732;height:45px;width:14.5%;color:white;"  />
+  </div>
+	
+	<br /><br /><br />	
+	</h:form>
+	
+	<p:dialog  header="Design Classification" widgetVar="dlg1"  modal="true" height="300" width="70%" closeOnEscape="true" >
+	<h:form id="subform">	
+	<div align="right" style="margin-top:5px" >
+	<p:inputText id="txt" icon="ui-icon-disk"   style="border-radius:0px;border-width:1px 1px 1px 1px;border-right-color:white;border-color:darkgrey; 
+	width:15%;height:22px;background-color:white;" value="#{sukiJMSOrderBean.reportKey.colValue}" >
+	<p:ajax event="keyup"  listener="#{sukiJMSOrderBean.getDesignSearchDetailList}" update="datatable1"  /></p:inputText>
+	<h:selectOneMenu id="input2" style="border-width:1px 1px 1px 1px;margin-left:-15px; 
+	width:10%;height:27px;background-color:white;"  value="#{sukiJMSOrderBean.reportKey.colName}" >  
+	<f:selectItems value="#{sukiJMSOrderBean.designColList}">
+ 	</f:selectItems>
+ 	<p:ajax event="change"  listener="#{sukiJMSOrderBean.getDesignSearchDetailList}" update="datatable1"  />
+	</h:selectOneMenu>
+	<p:commandButton icon="fa fa-search" action="#{sukiJMSOrderBean.getDesignSearchDetailList}"  update="datatable1"  />
+	<p:watermark for="txt" value="FILTER BY" />
+
+	<h:selectOneMenu  style="border-width:1px 1px 1px 1px;margin-left:20px; 
+	width:10%;height:27px;background-color:white;"  value="#{sukiJMSOrderBean.reportKey.sortColName}" > 
+	<p:ajax event="change"  listener="#{sukiJMSOrderBean.getDesignSortBy}" update="datatable1" />
+	<f:selectItem itemLabel="SORT BY" itemvalue="SORT BY" /> 
+	<f:selectItems value="#{sukiJMSOrderBean.designColList}">
+ 	</f:selectItems>
+ 	</h:selectOneMenu>
+ 	<br /> <br />
+	</div>
+	<p:dataTable rowIndexVar="rowId" var="var" id="datatable1"  value="#{sukiJMSOrderBean.prodDesignList}"  
+	selection="#{sukiJMSOrderBean.selectedProdDesignList}" rowKey="#{var.designCode}"  scrollable="true"  scrollHeight="150"   styleClass="myTable ui-datatable-header" >    	
+     	
+     	<p:ajax event="rowSelect" listener="#{sukiJMSOrderBean.getProductDesignCd}" update=":salesfrm:designid,:salesfrm:productcd,:salesfrm:proddetail" />     	
+        <p:column selectionMode="multiple" style="width:1%;"/>
+        <p:column headerText="Id" style="width:10%;text-align:center" >
+            <p:outputLabel value="#{rowId + 1}" />
+        </p:column>        
+        <p:column headerText="Code"  style="width:30%;text-align:center;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{var.designCode}"  /> 
+        </p:column>             
+        <p:column headerText="Description"   styleClass="dataTableFontSize">
+            <p:outputLabel  value="#{var.designDescription}" />
+        </p:column>
+     </p:dataTable>  <br />
+     <div align="center" >
+     <p:commandButton value="Get Design" onclick="PF('dlg1').hide()"  /> <br />
+     </div><br />
+	</h:form>
+	</p:dialog>
+	
+	<p:dialog  header="Product Details" widgetVar="dlg3"  modal="true" height="300" width="80%"  >
+	<h:form id="subform3">	
+	<p:growl id="message1" showDetail="true"  />
+	<div align="right" style="margin-top:5px" >
+	<p:inputText id="txt" icon="ui-icon-disk"   style="border-radius:0px;border-width:1px 1px 1px 1px;border-right-color:white;border-color:darkgrey; width:15%;height:22px;background-color:white;" 
+	value="#{sukiJMSOrderBean.reportKey.colValue}" >
+	<p:ajax event="keyup"  listener="#{sukiJMSOrderBean.getProductSearchDetailList}" update="datatable3"  /></p:inputText>
+	<h:selectOneMenu style="border-width:1px 1px 1px 1px;margin-left:-15px; 
+	width:10%;height:27px;background-color:white;"  value="#{sukiJMSOrderBean.reportKey.colName}" >  
+	<f:selectItems value="#{sukiJMSOrderBean.prodColList}">
+ 	</f:selectItems>
+ 	<p:ajax event="change"  listener="#{sukiJMSOrderBean.getProductSearchDetailList}" update="datatable3"  />
+	</h:selectOneMenu>
+	<p:commandButton icon="fa fa-search" actionListener="#{sukiJMSOrderBean.getProductSearchDetailList}" update="datatable3"  />
+	<p:watermark for="txt" value="FILTER BY" />
+
+	<h:selectOneMenu  style="border-width:1px 1px 1px 1px;margin-left:20px; 
+	width:10%;height:27px;background-color:white;"  value="#{sukiJMSOrderBean.reportKey.sortColName}" > 
+	<p:ajax event="change"  listener="#{sukiJMSOrderBean.getProductSortBy}" update="datatable3" />
+	<f:selectItem itemLabel="SORT BY" itemvalue="SORT BY" /> 
+	<f:selectItems value="#{sukiJMSOrderBean.prodColList}">
+ 	</f:selectItems>
+ 	</h:selectOneMenu>
+	</div><br />
+	
+	<p:dataTable rowIndexVar="rowId" var="var1" id="datatable3" value="#{sukiJMSOrderBean.prodMasterList}" 
+	selection="#{sukiJMSOrderBean.selectedProdMasterList}" rowKey="#{var1.prodCd}"  scrollable="true"  scrollHeight="150" styleClass="myTable ui-datatable-header" >    	
+     	
+     	<p:ajax event="rowSelect" listener="#{sukiJMSOrderBean.getProductCode}" 
+     	update=":salesfrm:productcd,:salesfrm:proddetail,:salesfrm:piecesales,:salesfrm:hallmrkchrg,:salesfrm:orderWt,:salesfrm:purityId,:salesfrm:wastid,:salesfrm:mcid,:salesfrm:ordervalid" />     	
+        <p:column selectionMode="multiple" style="width:2%;;"/>        
+        <p:column headerText="Prod Code"  style="width:15%;text-align:center;" styleClass="dataTableFontSize">
+            <p:outputLabel value="#{var1.prodCd}"  /> 
+        </p:column>             
+        <p:column headerText="Prod Details" styleClass="dataTableFontSize">
+            <p:outputLabel  value="#{var1.prodDesc}" />
+        </p:column>
+        <p:column headerText="Prod Group" styleClass="dataTableFontSize">
+            <p:outputLabel  value="#{var1.prodGroup}" />
+        </p:column>
+        <p:column headerText="Prod Head" styleClass="dataTableFontSize">
+            <p:outputLabel  value="#{var1.prodHead}" />
+        </p:column>
+     </p:dataTable>  <br />
+     <div align="center" >
+     <p:commandButton value="Get Code" onclick="PF('dlg3').hide()"  /> <br />
+     </div><br />
+	</h:form>
+	</p:dialog>
+	
+<p:dialog  header="Stone Details" widgetVar="dlg4"  modal="true" height="400" width="90%"  >
+<h:form id="subform4">	
+<div align="right" style="margin-top:5px" >
+	<p:inputText id="txt" icon="ui-icon-disk"   style="border-radius:0px;border-width:1px 1px 1px 1px;border-right-color:white;border-color:darkgrey; 
+	width:15%;height:22px;background-color:white;" value="#{sukiJMSOrderBean.reportKey.colValue}" >
+	<p:ajax event="keyup"  listener="#{sukiJMSOrderBean.getStoneDetailsSearchDetailList}" update="mcdatatable"  /></p:inputText>
+	<h:selectOneMenu id="input2" style="border-width:1px 1px 1px 1px;margin-left:-15px; 
+	width:10%;height:27px;background-color:white;"  value="#{sukiJMSOrderBean.reportKey.colName}" >  
+	<f:selectItems value="#{sukiJMSOrderBean.stoneColList}">
+	</f:selectItems>
+	<p:ajax event="change"  listener="#{sukiJMSOrderBean.getStoneDetailsSearchDetailList}" update="mcdatatable"  />
+	</h:selectOneMenu>
+	<p:commandButton icon="fa fa-search" actionListener="#{sukiJMSOrderBean.getStoneDetailsSearchDetailList}"  update="mcdatatable"  />
+	<p:watermark for="txt" value="FILTER BY" />
+
+	<h:selectOneMenu  style="border-width:1px 1px 1px 1px;margin-left:20px; 
+	width:10%;height:27px;background-color:white;"  value="#{sukiJMSOrderBean.reportKey.sortColName}" > 
+	<p:ajax event="change"  listener="#{sukiJMSOrderBean.getStoneSortBy}" update="mcdatatable" />
+	<f:selectItem itemLabel="SORT BY" itemvalue="SORT BY" /> 
+	<f:selectItems value="#{sukiJMSOrderBean.stoneColList}">
+	</f:selectItems>
+	</h:selectOneMenu>
+	<br /> <br />
+	</div>
+
+	<p:dataTable rowIndexVar="rowId" var="item" value="#{sukiJMSOrderBean.stoneList}" styleClass="myTable ui-datatable-header" id="mcdatatable"
+	selection="#{sukiJMSOrderBean.selectedStoneList}"  rowKey="#{item.rowId}" style="text-align:center;" scrollable="true"  scrollHeight="200" >
+	
+	<p:ajax event="rowSelect" listener="#{sukiJMSOrderBean.getStoneAmount}" update=":salesfrm:stoneamt" />
+	        <p:columnGroup type="header">
+            <p:row>
+                <p:column selectionMode="multiple" rowspan="3" style="width:3%;" />
+                <p:column rowspan="3" headerText="Id" style="width:4%;text-align:center;" />
+                <p:column rowspan="3" headerText="Details" style="text-align:center;" />
+            </p:row>
+            <p:row>
+                <p:column colspan="2" headerText="Amount" style="text-align:center;" />
+                <p:column colspan="2" headerText="Weight" style="text-align:center;" />               
+            </p:row>
+            <p:row>
+            <p:column headerText="Min.Amt" style="text-align:center;" />
+            <p:column headerText="Max.Amt" style="text-align:center;" />
+            <p:column headerText="Min.Wt" style="text-align:center;" />
+            <p:column headerText="Max.Wt" style="text-align:center;" />
+            </p:row>
+        </p:columnGroup>
+ 		<h:inputHidden id="subcode" value="#{item.rowId}" />
+ 		<p:column selectionMode="multiple" />
+        <p:column>
+            <h:outputText value="#{rowId + 1}"  style="text-align:center;font-size:12px;" />
+        </p:column>
+        <p:column>
+            <p:inputText value="#{item.details}" title="#{item.details}"  style="font-size:12px;text-align:center;" styleClass="ui-inputfield1" >
+            </p:inputText>
+        </p:column>
+        <p:column>
+            <p:inputText value="#{item.minAmount}" title="#{item.details}" style="font-size:12px;text-align:center;" styleClass="ui-inputfield1" >
+            </p:inputText>
+         </p:column>
+        <p:column>
+            <p:inputText value="#{item.maxAmount}" title="#{item.details}" style="font-size:12px;text-align:center;" styleClass="ui-inputfield1" >
+            <f:convertNumber pattern="#0.000"/> </p:inputText>
+        </p:column>
+        <p:column>
+            <p:inputText  value="#{item.minWeight}" title="#{item.details}" style="font-size:12px;text-align:center;" styleClass="ui-inputfield1" >
+             <f:convertNumber pattern="#0.000"/> </p:inputText>
+      </p:column>
+        <p:column>
+            <p:inputText  value="#{item.maxWeight}" title="#{item.details}" style="font-size:12px;text-align:center;" styleClass="ui-inputfield1" >
+            </p:inputText>
+        </p:column>
+           </p:dataTable><br />
+     <div align="center" >
+     <p:commandButton value="Get Stone" onclick="PF('dlg4').hide()"  /> <br />
+     </div><br />
+	</h:form>
+	</p:dialog>
+	
+	<p:dialog header="Stone Details"  widgetVar="dlg5" modal="true" height="400" width="1000" >
+	<h:form id="stoneTable">		
+   	<p:growl id="messagestone" showDetail="true"  />
+    <p:dataTable rowIndexVar="rowId" var="item"  style="margin-top:20px;width:100%;text-align:center;" value="#{sukiJMSOrderBean.orderStoneList}" id="stonetable" 
+    styleClass="myTable ui-datatable-header" scrollable="true" scrollHeight="300" selection="#{sukiJMSOrderBean.selectedOrderStoneList}"  rowKey="#{item.rowId}" >
+    
+    <p:column selectionMode="multiple"  style="width:4%;" />
+    <h:inputHidden id="code" value="#{item.stoneName}" />
+    
+    	<p:column headerText="#" width="4%" style="text-align:center;">
+            <h:outputText value="#{rowId + 1}"  style="text-align:center;font-size:12px;" />
+        </p:column>
+   
+           <p:column headerText="Stone Name" width="16%">
+             <p:selectOneMenu  styleClass="ui-inputfield1" filter="true" value="#{item.stoneName}" filterMatchMode="startsWith">
+             <f:selectItem itemValue="Select" itemLabel="Select"/>
+             <f:selectItems value="#{sukiJMSOrderBean.stoneDetList}"  />
+             <p:ajax event="change" listener="#{sukiJMSOrderBean.getStoneRate}" update="rate,weight,carat" ></p:ajax>
+              </p:selectOneMenu>
+           </p:column>
+            <p:column  headerText="Pc" style="text-align:center;">
+                <p:inputText value="#{item.piece}" styleClass="ui-inputfield1" >
+                <p:ajax event="blur" style="text-align:center;" listener="#{sukiJMSOrderBean.getStoneAmount}" update="amount" ></p:ajax>
+                </p:inputText>
+            </p:column>
+            <p:column headerText="Weight" style="text-align:center;">
+                <p:inputText value="#{item.weight}" styleClass="ui-inputfield1" id="weight" readonly="true" style="text-align:center;" />
+            </p:column>
+            <p:column headerText="Carat" style="text-align:center;">
+                <p:inputText value="#{item.carat}"  styleClass="ui-inputfield1" style="text-align:center;" id="carat" readonly="true" />
+            </p:column>
+            <p:column headerText="Rate" style="text-align:center;">
+                <p:inputText value="#{item.rate}" style="text-align:center;" styleClass="ui-inputfield1" readonly="true"  id="rate"/>
+            </p:column>
+             <p:column headerText="Amount" style="text-align:center;">
+                <p:inputText value="#{item.amount}" styleClass="ui-inputfield1" id="amount" readonly="true" />
+            </p:column>
+            <p:column headerText="Action" style="text-align:center;">
+                <p:commandButton value="Remove" style="text-align:center;" actionListener="#{sukiJMSOrderBean.removeOrderStone}" update="stoneTable"  />
+            </p:column>
+  </p:dataTable>
+  <p:commandButton value="+" action="#{sukiJMSOrderBean.addExtraStoneList}" update="stoneTable,messagestone" > </p:commandButton>
+  <p:commandButton value="Save" action="#{sukiJMSOrderBean.saveStoneAmount}" update="stoneTable,:salesfrm:stoneamt,:salesfrm:ordervalid" onclick="PF('dlg5').hide()" > </p:commandButton>
+  <p:commandButton value="Delete" actionListener="#{sukiJMSOrderBean.deleteOrderStone}" update="stoneTable"  > </p:commandButton>
+  </h:form>
+  </p:dialog>
+
+  <p:dialog header="Capture Image"  widgetVar="dlg6" modal="true" height="200" width="800" >
+	<h:form id="imagecapture">		
+   <p:photoCam widgetVar="pc" listener="#{photoCamView.oncapture}" update="photo" />
+  <br />
+  <p:commandButton value="Capture" onclick="PF('pc').capture()" style="margin-left:350px;" update=":salesfrm:image" />
+  <p:outputPanel id="photo">
+            <p:graphicImage value="/servlet/showImage?imageId=#{photoCamView.filename}.jpeg" rendered="#{not empty photoCamView.filename}"/>
+   </p:outputPanel>
+  </h:form>
+  </p:dialog>
+
+
+
+  <p:dialog header="Customer Overview"  widgetVar="dlg7" modal="true" height="500" width="1200" >
+	<ui:define name="head">
+    <style type="text/css">
+.col1{ width: 23%;font-size: 12px;}
+.col2{width: 1%;}
+.col3{width: 27%;font-size: 12px;}
+.col4{width: 1%;}
+.col5{width: 22%;font-size: 12px;}
+.col6{width: 1%;}
+.col7{width: 20%;font-size: 12px;}
+.coll1{width: 30%;text-align: right;font-size: 12px;}
+.coll2{width: 70%;text-align: left;font-size: 12px;}
+.dataTableFontSize{font-size:12px}
+.ui-widget-content1 {border-left-color: red;}
+.ui-widget-content2 {border-left-color: green;}
+.colle1{width:34%;}.colle2{width:33%;}.colle3{width:33%;}
+.panelCustomerDetail{height:200px;background:#c7d0e2;}
+.panelCustomerDetail1{height:100px;background:#c7d0e2;}
+.customTitleBar > .ui-panel-titlebar {background:#5475b8;color:white;font-weight:bold;text-align: center;}
+.ui-datatable.myTable1 th{text-align:left; background-color:#5475b8;color: #687abc !important;font-size:12px !important;}
+.ui-datatable-header{border-left: 1px solid black;border-right: 1px solid black;border-top: 1px solid black;border-bottom: 1px solid black; }
+.ui-datatable.myTable th{text-align:left; background-color:#5475b8;color: white !important;font-size:12px !important;}
+.ui-datatable.myTable1{background:#26395c;}
+.selectonestyle{width: 120px;height:23px;}
+.cole1{text-align: right;}
+.cole2{text-align:left}
+.coller1{width:5%;}.coller2{width:5%;}.coller3{width:5%;}.coller4{width:5%;}.coller5{width:5%;}.coller6{width:5%;}
+body .ui-scrollpanel .ui-scrollpanel-drag {background-color: #8BC34A;}
+.ui-scrollpanel-container {border: 1px solid black;}
+.label11{display:inline-block;width:100%;}
+body .ui-panel .ui-panel-content {box-sizing: border-box;border: 1 solid black;}
+.status1{color:red;}.status2{color:green;}.status3{color:#f18732;}.status4{color:black;}
+body.layout-compact .ui-chkbox .ui-chkbox-box {width: 12px;height: 12px;}
+body .ui-chkbox .ui-chkbox-box {border: 1px solid black;}
+body .ui-corner-all {border-radius: 0px;}
+.productDetailsLabelBox{color:#687abc;font-weight:bold;}
+.productDetailsLabelBox1{color:white;font-weight:bold;}
+body .ui-button .ui-icon {color: #212121;color:#f18732;}
+body .ui-button.ui-button-icon-only {border-radius:50%;width: 40px;height: 20px;background-color:white;font-size:1px;top:-5px;color:#f18732;} 
+body .ui-inputswitch {height: 1px;}
+body .ui-inputswitch .ui-inputswitch-handle {top: -8px;background-color:#F6953D;border-radius: 50%;width: 15px !important;height: 15px !important;}
+</style>
+</ui:define> 
+
+<h:form id="customeroverview" >
+<h:panelGrid columns="3">
+<h3 style="color:#5E83C5;"  >CUSTOMER OVERVIEW</h3>           
+</h:panelGrid>
+
+<div align="right" style="margin-top:-35px" >
+<p:inputText id="txt" icon="ui-icon-disk"   style="border-radius:0px;border-width:1px 1px 1px 1px;border-right-color:white;border-color:darkgrey; width:15%;height:22px;background-color:white;" 
+value="#{sukiJMSOrderBean.reportKey.colValue}" >
+<p:ajax event="keyup"  listener="#{sukiJMSOrderBean.getCustomerSearchDetailList}" update="datatable"  /></p:inputText>
+<h:selectOneMenu id="input2" style="border-width:1px 1px 1px 1px;margin-left:-15px; 
+width:10%;height:27px;background-color:white;"  value="#{sukiJMSOrderBean.reportKey.colName}" >  
+<f:selectItems value="#{sukiJMSOrderBean.custColList}" />
+<p:ajax event="change"  listener="#{sukiJMSOrderBean.getCustomerSearchDetailList}" update="datatable"  />
+</h:selectOneMenu>
+<p:commandButton icon="fa fa-search" actionListener="#{sukiJMSOrderBean.getCustomerSearchDetailList}"  update="datatable"  />
+<p:watermark for="txt" value="FILTER BY" />
+
+<h:selectOneMenu  style="border-width:1px 1px 1px 1px;margin-left:20px; 
+width:10%;height:27px;background-color:white;"  value="#{sukiJMSOrderBean.reportKey.sortColName}" > 
+<p:ajax event="change"  listener="#{sukiJMSOrderBean.getCustomerSortBy}" update="datatable" />
+<f:selectItem itemLabel="SORT BY" itemvalue="SORT BY" /> 
+<f:selectItems value="#{sukiJMSOrderBean.sortColList}">
+ </f:selectItems>
+ </h:selectOneMenu>
+</div><br />
+<p:dataTable rowIndexVar="rowId" var="obj" id="datatable" table-style="width:auto" value="#{sukiJMSOrderBean.customerList}" 
+		selection="#{sukiJMSOrderBean.selectedCustomerList}" rowKey="#{obj.custId}" selectionMode="multiple"
+		style="text-align:left;width:100%" scrollable="true"  scrollHeight="275"   styleClass="myTable ui-datatable-header" >
+		
+		<p:ajax event="rowSelect" listener="#{sukiJMSOrderBean.setCustomerToOrder}" update=":salesfrm:ordercust" />
+        
+         
+        <p:column headerText="Customer Id" style="width:2%;text-align:center" styleClass="dataTableFontSize">
+	    <h:outputText value="#{obj.custId}" />
+	   
+    	</p:column>
+        <p:column headerText="Image" style="width:1%;"  styleClass="dataTableFontSize">
+            <p:graphicImage value="/servlet/showImage?imageId=#{obj.image}" style="width:30px;height:15px;" />  
+        </p:column>
+              
+        <p:column headerText="Name" style="width:8%;"  styleClass="dataTableFontSize">
+          <p:outputLabel value="#{obj.custName}" style="width:100%" />  
+        </p:column>
+              
+        <p:column headerText="Mobile" style="width:8%;"  styleClass="dataTableFontSize">
+          <p:outputLabel value="#{obj.mobile1}" style="width:100%" />  
+        </p:column>
+        
+              
+        <p:column headerText="City" style="width:8%;"  styleClass="dataTableFontSize">
+          <p:outputLabel value="#{obj.city}" style="width:100%" />  
+        </p:column>
+ 	    
+       </p:dataTable><br />
+     <h:panelGrid columns="2" style="width:100%;background:#f0f1f6;height:50px;" >	
+ 	<p:commandButton value="GET" onclick="PF('dlg7').hide()"  style=" background:#f18732;color:white;font-weight:bold;border-bottom:3px solid #f18732;position:relative;left:550px;width:10%;"  />
+	</h:panelGrid>
+	
+	 <p:panel style="width:84%;background:#ffffff;height:40px;" />
+ <div align="right" style="margin-top:-41px">
+  <p:commandButton value="NEW CUSTOMER" style="height:40px;color:white; background:#f18732;text-align:center;width:15%;font-weight:bold" 
+  oncomplete="PF('dlg8').show();"  action="#{sukiJMSOrderBean.resetCustomer}"  />
+</div>
+
+</h:form>
+  </p:dialog>
+  
+  
+ <p:dialog   header="NEW CUSTOMER"  widgetVar="dlg8"  modal="true" height="310" width="50%"  >
+<h:form id="newcust">
+<p:panel>
+<div  align="center">
+
+<h:panelGrid columns="2" columnClasses="colbut1,colpan2" cellpadding="5" cellspacing="5"  styleClass="ui-panelgrid-blank " style="margin-left:-100px;">		
+<p:outputLabel styleClass="LabelCustomer" style="font-size:100%;font-weight:bold;margin-left:15px;" value="Customer Name" />
+<p:inputText styleClass="LabelCustomer" value="#{sukiJMSOrderBean.customer.custName}" maxlength="50" style="width:100%;height:20px; " />
+<p:outputLabel styleClass="LabelCustomer" style="font-size:100%;font-weight:bold;margin-left:15px;" value="Mobile" />
+<p:inputText styleClass="LabelCustomer" value="#{sukiJMSOrderBean.customer.mobile1}" maxlength="10" style="width:100%;height:20px; " />
+<p:outputLabel styleClass="LabelCustomer" style="font-size:100%;font-weight:bold;margin-left:15px;" value="Area1" />
+<p:inputText styleClass="LabelCustomer" value="#{sukiJMSOrderBean.customer.area1}" maxlength="50" style="width:100%;height:20px; " />
+<p:outputLabel styleClass="LabelCustomer" style="font-size:100%;font-weight:bold;margin-left:15px;" value="Area2" />
+<p:inputText styleClass="LabelCustomer" value="#{sukiJMSOrderBean.customer.area2}" maxlength="50" style="width:100%;height:20px; " />
+<p:outputLabel styleClass="LabelCustomer" style="font-size:100%;font-weight:bold;margin-left:15px;" value="City" />
+<p:inputText styleClass="LabelCustomer" value="#{sukiJMSOrderBean.customer.city}" maxlength="50" style="width:100%;height:20px; " />
+<p:outputLabel styleClass="LabelCustomer" style="font-size:100%;font-weight:bold;margin-left:15px;" value="Pincode" />
+<p:inputText styleClass="LabelCustomer" value="#{sukiJMSOrderBean.customer.pin}" maxlength="6" style="width:100%;height:20px; " />
+</h:panelGrid>
+<br />
+<p:commandButton  value="ADD CUSTOMER" action="#{sukiJMSOrderBean.saveCustomerChangesFrmOrder}" update=":customeroverview:datatable"  />
+
+</div>	
+</p:panel>
+</h:form>
+</p:dialog>
+
+	
+  
+  <p:dialog id="orderprocesses1" style="color: black"   header="Order Process"  widgetVar="dlg10"  modal="true" height="510" width="95%"  >
+	<h:form id="prcessfrm1" >
+  	<ui:include src="./makepayment.xhtml" />
+	</h:form>
+  </p:dialog>
+  
+<p:dialog   header="Print Overview"  widgetVar="dlg11"  modal="true" height="330" width="50%"  >
+<ui:define name="head"> 
+<style type="text/css">
+.printfontsize{font-size: 14px;}
+</style>
+</ui:define>
+
+<h:form id="printorderestimate">
+
+<p:panelGrid styleClass="panelgrid1" id="printorderestimate1" style="background-color:#5475b8;width:100%;">
+    <f:facet name="header">
+        <p:row>
+            <p:column style="font-size:12px;" colspan="10">
+            <h:panelGrid style="text-align:center;margin-left:400px;" columns="1">
+            <p:outputLabel value="GURUHASTHI THANGAMAALIGAI" styleClass="printfontsize"  style="font-size:14px;color:white;font-weight:bold" />
+            <p:outputLabel value="123 New Street" styleClass="printfontsize"  style="font-size:14px;color:white;font-weight:bold" />
+            <p:outputLabel value="New Nagar" styleClass="printfontsize"  style="font-size:14px;color:white;font-weight:bold" />
+            <p:outputLabel value="Poonamalli" styleClass="printfontsize"  style="font-size:14px;color:white;font-weight:bold" />
+            <p:outputLabel value="Chennai – 600 001" styleClass="printfontsize"  style="font-size:14px;color:white;font-weight:bold" />
+            <p:outputLabel value="Ph:044-25416458,9789851544" styleClass="printfontsize"  style="font-size:14px;color:white;font-weight:bold" />
+            <p:outputLabel value="GSTIN:33axdfsd2fd555" styleClass="printfontsize"  style="font-size:14px;color:white;font-weight:bold" />            
+         	<p:outputLabel value="GOLD ORDER ESTIMATE" styleClass="printfontsize"  style="font-size:14px;position:relative;left:-430px;color:white;font-weight:bold" />
+            </h:panelGrid>
+            </p:column>
+        </p:row> 
+    </f:facet>
+ 
+    <p:row>
+        <p:column colspan="8" >
+        <h:panelGrid columns="2">
+        <p:outputLabel value="Name:" styleClass="printfontsize"  style="font-size:14px;" />
+        <h:panelGrid columns="4">
+         <p:outputLabel style="font-size:14px;" styleClass="LabelCustomer ui-inputfield1 printfontsize" value="#{sukiJMSProductMBean.company.compName}"  />
+        [<p:outputLabel style="font-size:14px;" value="#{sukiJMSProductMBean.company.compName}" styleClass="printfontsize"   />]
+        </h:panelGrid>
+		<p:outputLabel value="Mobile:" styleClass="printfontsize"  style="font-size:14px;" />
+		<p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:14px;width:115px;color:black"   />
+        <p:outputLabel value="Area1:" styleClass="printfontsize"  style="font-size:14px;" />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:14px;width:115px;color:black" value="#{sukiJMSProductMBean.company.area1}"  />
+       <p:outputLabel value="Area2:" styleClass="printfontsize"  style="font-size:14px;" />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:14px;width:115px;color:black" value="#{sukiJMSProductMBean.company.area2}"   />
+        <p:outputLabel value="City:" styleClass="printfontsize"  style="font-size:14px;" />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:14px;width:115px;color:black" value="#{sukiJMSProductMBean.company.city}"   />
+        </h:panelGrid>
+        </p:column>
+        
+       </p:column>
+    </p:row>
+    
+    <p:row>
+    <p:column style="font-size:14px;text-align:center;" colspan="2" styleClass="printfontsize" >Sl.No</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Items</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Hsn Code</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Qty</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >UOM</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Rate</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Cgst</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Sgst</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Amount</p:column>    
+    </p:row>
+    
+    <p:repeat var="obj"  value="#{sukiJMSProductMBean.billPrintList}" >
+    <p:row>
+    <p:column styleClass="printfontsize" ><p:outputLabel  style="font-size:14px;"  /></p:column>
+    <p:column styleClass="printfontsize" >
+    <h:panelGrid columns="3">
+    <p:outputLabel  style="font-size:14px;" />
+    <p:outputLabel  style="font-size:14px;" />
+    <p:outputLabel style="font-size:14px;" />
+    </h:panelGrid>
+    <p:repeat var="obj1"  > 
+    <h:panelGrid columns="8">     
+    <p:outputLabel  style="font-size:14px;" />   
+    <p:outputLabel  style="font-size:14px;" /> -
+    <p:outputLabel style="font-size:14px;" />*
+    <p:outputLabel  style="font-size:14px;" />=
+    <p:outputLabel  style="font-size:14px;" />
+    </h:panelGrid>
+    </p:repeat>  
+    </p:column>
+    
+    <p:column styleClass="printfontsize" ><p:outputLabel  style="font-size:14px;" /></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;"  ><p:outputLabel  ><f:convertNumber pattern="#0.000"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ><p:outputLabel  ><f:convertDateTime pattern="MM/dd/yyyy" /></p:outputLabel></p:column>    
+    </p:row>
+    </p:repeat>
+    
+    <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;"  ><p:outputLabel   /></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ><p:outputLabel   ><f:convertNumber pattern="#0.000"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;"  ></p:column>    
+    </p:row>
+    
+    <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" colspan="2" >CGST 1.5%</p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;"  ></p:column>    
+    </p:row>
+    
+    <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;"  ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" colspan="2" >SGST 1.5%</p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>    
+    </p:row>
+    
+    
+    <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;"  ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" colspan="2" >Less</p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel value="0.00" ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>    
+    </p:row>
+    
+    <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" colspan="2" >Nett</p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column  ></p:column>    
+    </p:row>
+    
+    <p:row>
+    <p:column colspan="10" styleClass="printfontsize" style="font-size:14px;"  >
+    <p:outputLabel style="font-weight:bold;"  />
+    </p:column>
+    </p:row>
+    
+    <p:row>     
+    <p:column style="font-size:14px;text-align:center;" colspan="2" styleClass="printfontsize" >Item</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Pc</p:column> 
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Wt.</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Dust/StnWast</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Rate</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Stn</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Add</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Value</p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    </p:row>
+    
+     <p:repeat var="obj"  value="#{sukiJMSProductMBean.billPrintList}" >
+    <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ><p:outputLabel    /></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ><p:outputLabel value="#{obj.itemTrans}"   /></p:column>    
+    <p:column styleClass="printfontsize" style="font-size:14px;" ><p:outputLabel value="#{obj.hsnTrans}"  /></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;"  ><p:outputLabel value="#{obj.nos}" ><f:convertNumber pattern="#0.000"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel value="#{obj.uom}" ><f:convertNumber pattern="#0.000"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel value="#{obj.rate}" ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;text-align:right;" ><p:outputLabel value="#{obj.cgst}" ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;text-align:right;" ><p:outputLabel value="#{obj.sgst}" ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel value="#{obj.amount}" ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    </p:row>
+    </p:repeat>
+    
+    <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;"  ><p:outputLabel  /></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;"  ></p:column>    
+    </p:row>
+    
+     <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" colspan="2" >Advance</p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>    
+    </p:row>
+    
+        <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" colspan="2" >Balance</p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>    
+    </p:row>
+    
+    <p:row>
+    <p:column styleClass="printfontsize" style="text-align:left;font-size:14px;" colspan="10" >Rs:<p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    </p:row>
+    
+    <p:row>
+    <p:column styleClass="printfontsize" style="text-align:left;font-size:14px;" colspan="10" >Ten Thousand Only</p:column>
+    </p:row>
+    
+    <p:row>    
+    <p:column styleClass="printfontsize" style="text-align:center;font-size:14px;width:100%" colspan="10" >  
+    <p:repeat var="obj2"  >  
+    <h:panelGrid columns="1" >     
+    <p:outputLabel  style="font-size:14px;" />   
+    <p:outputLabel  style="font-size:14px;" />
+    </h:panelGrid>
+    </p:repeat>       
+    </p:column>
+    </p:row>
+    
+    <f:facet name="footer">
+    <p:row>
+    <p:column styleClass="printfontsize" style="text-align:center;font-size:14px;font-weight:bold" colspan="10" >THANK'S VISIT AGAIN THE QUALITY SHOP</p:column>
+    </p:row>
+    </f:facet>
+    
+
+</p:panelGrid>
+
+</h:form>
+</p:dialog>
+
+<p:dialog header="Exchange Product Details"  widgetVar="dlg12" modal="true" height="420" width="1300" >
+	<h:form id="exchangeform">		
+   	<p:growl id="exchangemsg" showDetail="true"  />
+    <p:dataTable rowIndexVar="rowId" var="item"  style="margin-top:20px;width:100%;text-align:center;" value="#{sukiJMSOrderBean.exchangeList}" id="exchangetable" 
+    styleClass="myTable ui-datatable-header" table-style="width:auto" scrollable="true" scrollHeight="300" selection="#{sukiJMSOrderBean.selectedExchangeList}"  rowKey="#{item.subId}" >
+    
+    <p:column selectionMode="multiple"  style="width:4%;" />
+    <h:inputHidden id="code" value="#{item.subId}" />
+    
+    	<p:column headerText="#" width="4%" style="text-align:center;">
+            <h:outputText value="#{rowId + 1}"  style="text-align:center;font-size:12px;" />
+        </p:column>
+   
+           <p:column headerText="Code" width="7%">
+             <h:selectOneMenu  styleClass="ui-inputfield1" value="#{item.prodCd}" style="width:70px;height:25px;" >
+             <f:selectItem itemValue="Select" itemLabel="Select"/>
+             <f:selectItems value="#{sukiJMSOrderBean.exchangeProdList}"  />
+             <p:ajax event="change" listener="#{sukiJMSOrderBean.getExchangeProdDetails}" update="proddetails,purity,rate,qty" ></p:ajax>
+             </h:selectOneMenu>
+           </p:column>
+            <p:column  headerText="Ex Items" style="text-align:center;width:80px;">
+                <p:inputText id="proddetails" value="#{item.prodDetails}" styleClass="ui-inputfield1" readonly="true" />
+            </p:column>
+            <p:column headerText="Qty" style="text-align:center;">
+                <p:inputText id="qty" value="#{item.qty}" styleClass="ui-inputfield1"   style="text-align:center;width:50px;" >
+                <p:ajax  listener="#{sukiJMSOrderBean.calcExchangeProd}" update="amount" ></p:ajax>
+                </p:inputText>
+            </p:column>
+            <p:column headerText="Weight" style="text-align:center;">
+                <p:inputText value="#{item.weight}"  styleClass="ui-inputfield1" style="text-align:center;width:50px;" >
+                <p:ajax  listener="#{sukiJMSOrderBean.calcExchangeProd}" update="nettwt" ></p:ajax>
+                </p:inputText>
+            </p:column>
+             <p:column headerText="Less" style="text-align:center;">
+                <p:inputText value="#{item.less}" styleClass="ui-inputfield1" style="text-align:center;width:50px;"  >
+                <p:ajax  listener="#{sukiJMSOrderBean.calcExchangeProd}" update="nettwt" ></p:ajax>
+                </p:inputText>
+            </p:column>
+            <p:column headerText="Nett.Wt" style="text-align:center;">
+                <p:inputText id="nettwt" value="#{item.nettWt}" style="text-align:center;width:50px;" styleClass="ui-inputfield1" readonly="true" >
+                <f:convertNumber pattern="#0.000"/>
+                </p:inputText>
+            </p:column>
+             <p:column headerText="Pure %" style="text-align:center;">
+                <p:inputText id="purity" value="#{item.purityPer}" styleClass="ui-inputfield1" style="text-align:center;width:50px;" >
+                 <p:ajax event="blur" listener="#{sukiJMSOrderBean.calcExchangeProd}" update="wastage" ></p:ajax>
+                </p:inputText>
+            </p:column>
+             <p:column headerText="Wastage" style="text-align:center;">
+                <p:inputText id="wastage" value="#{item.wastage}" styleClass="ui-inputfield1" style="text-align:center;width:50px;" readonly="true" >
+                <f:convertNumber pattern="#0.000"/>
+                </p:inputText>
+            </p:column>
+             <p:column headerText="Rate" style="text-align:center;">
+                <p:inputText id="rate" value="#{item.rate}" styleClass="ui-inputfield1" style="text-align:center;width:50px;"  >
+                 <p:ajax event="blur" listener="#{sukiJMSOrderBean.calcExchangeProd}" update="amount" ></p:ajax>
+                </p:inputText>
+            </p:column>
+             <p:column headerText="St.Amt" style="text-align:center;">
+                <p:inputText value="#{item.stoneAmt}" styleClass="ui-inputfield1" style="text-align:center;width:50px;"  >
+                <p:ajax  listener="#{sukiJMSOrderBean.calcExchangeProd}" update="amount" ></p:ajax>
+                </p:inputText>
+            </p:column>
+             <p:column headerText="Add" style="text-align:center;">
+                <p:inputText value="#{item.addAmt}" styleClass="ui-inputfield1" style="text-align:center;width:50px;"  >
+                 <p:ajax  listener="#{sukiJMSOrderBean.calcExchangeProd}" update="amount" ></p:ajax>
+                </p:inputText>
+            </p:column>
+             <p:column headerText="Amount" style="text-align:center;">
+                <p:inputText id="amount" value="#{item.amount}" styleClass="ui-inputfield1" style="text-align:center;width:50px;" readonly="true" />
+            </p:column>
+             <p:column headerText="Staff" style="text-align:center;">
+             <h:selectOneMenu style="width:70px;height:25px;"  value="#{item.staff}" >
+				<f:selectItem itemLabel="0" itemValue="0" />
+				<f:selectItems value="#{sukiJMSOrderBean.salesManList}" />
+   			 </h:selectOneMenu>
+            </p:column>
+            <p:column headerText="Action" style="text-align:center;width:100px;">
+                <p:commandButton value="Remove" style="text-align:center;" actionListener="#{sukiJMSOrderBean.removeExchangeProduct}" update="exchangetable"  />
+            </p:column>
+  </p:dataTable>
+  <p:commandButton value="+" action="#{sukiJMSOrderBean.addExtraExchangeProdList}" update="exchangetable,exchangeform:exchangemsg" />
+  <p:commandButton value="Save" action="#{sukiJMSOrderBean.saveOrderPlacementExchange}" update=":salesfrm:message"  />
+  <p:commandButton value="Delete" actionListener="#{sukiJMSOrderBean.deleteExchangeProduct}" update="exchangetable,exchangeform:exchangemsg"  />
+  </h:form>
+  </p:dialog>
+	
+</ui:define></ui:composition>

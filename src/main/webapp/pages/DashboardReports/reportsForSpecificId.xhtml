@@ -1,0 +1,137 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="datalist3">
+<p:growl id="messages" showDetail="true"></p:growl>
+<p:dataTable id="sizetable" var="item" rendered="#{dashBoardReportMBean.salesOrPurchase=='SALES' || dashBoardReportMBean.salesOrPurchase=='SALES_OUTSTANDING'}" value="#{dashBoardReportMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="10"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+<p:column headerText="Sl.No" width="6%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+<h:inputHidden id="invoiceno" value="#{item.billNo}" />
+</p:column>
+<p:column headerText="Date" width="12%">
+<p:outputLabel  value="#{item.date}"  style="margin-left:20px" >
+<f:convertDateTime timeZone="IST" pattern="dd/MM/YY" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Invoice No" width="9%">
+<p:outputLabel value="#{item.billNo}" style="margin-left:20px;font-weight:bold" ></p:outputLabel>
+<h:inputHidden value="#{item.billNo}" id="slNo" />
+</p:column>
+<p:column headerText="Company" width="35%">
+<p:outputLabel value="#{item.company}" style="margin-left:10px" ></p:outputLabel>
+</p:column>
+<p:column headerText="Amount" width="10%">
+<p:outputLabel value="#{item.totalAmount}" >
+<f:convertNumber pattern="#0.00"  />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Status" width="9%">
+<p:outputLabel value="#{item.status}" styleClass="#{item.statusColor}" ></p:outputLabel>
+</p:column>
+</p:dataTable>
+<p:dataTable id="sizetable1" var="obj" rendered="#{dashBoardReportMBean.salesOrPurchase=='SALES_PAYMENT'}" value="#{dashBoardReportMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="10"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+<p:column headerText="Sl.No" width="5%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+<h:inputHidden value="#{obj.paymentNo}" id="slNo" />
+</p:column>
+<p:column filterBy="#{obj.date}" headerText="Date" width="10%">
+<p:outputLabel  value="#{obj.date}" style="margin-left:20px" >
+<f:convertDateTime pattern="dd/MM/yyyy" timeZone="IST" />
+</p:outputLabel>
+</p:column>
+<p:column filterBy="#{obj.company}" headerText="Company" width="25%">
+<p:outputLabel value="#{obj.company}" style="margin-left:20px" ></p:outputLabel>
+</p:column>
+<p:column filterBy="#{obj.paymentmode}" headerText="Mode" width="10%">
+<p:outputLabel value="#{obj.paymentmode}"  style="margin-left:20px" ></p:outputLabel>
+</p:column>
+<p:column headerText="Amount" width="15%">
+<p:outputLabel value="#{obj.totalAmount}" style="margin-left:30px" >
+<f:convertNumber pattern="#0.00" />
+</p:outputLabel>
+</p:column>
+</p:dataTable>
+
+<p:dataTable id="sizetable2" var="item" rendered="#{dashBoardReportMBean.salesOrPurchase=='PURCHASE' || dashBoardReportMBean.salesOrPurchase=='PURCHASE_OUTSTANDING'}" value="#{dashBoardReportMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="10"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+<p:column headerText="Sl.No" width="6%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+<h:inputHidden id="slNo" value="#{item.rowId}" />
+</p:column>
+<p:column sortBy="#{item.date}" filterBy="#{item.date}" headerText="Date" width="12%">
+<p:outputLabel  value="#{item.date}"  style="margin-left:20px" >
+<f:convertDateTime timeZone="IST" pattern="dd/MM/yy" />
+</p:outputLabel>
+</p:column>
+<p:column sortBy="#{item.billNo}" filterBy="#{item.billNo}" headerText="Invoice No" width="9%">
+<p:outputLabel value="#{item.billNo}" style="margin-left:20px;font-weight:bold" ></p:outputLabel>
+</p:column>
+<p:column filterBy="#{item.supplier}" headerText="Supplier" width="35%">
+<p:outputLabel value="#{item.supplier}" style="margin-left:10px" ></p:outputLabel>
+</p:column>
+<p:column headerText="Amount" width="10%">
+<p:outputLabel value="#{item.totalAmount}" >
+<f:convertNumber pattern="#0.00"  />
+</p:outputLabel>
+</p:column>
+</p:dataTable>
+<p:dataTable id="sizetable3" var="obj" rendered="#{dashBoardReportMBean.salesOrPurchase=='PURCHASE_PAYMENT'}" value="#{dashBoardReportMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="10"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+<p:column headerText="Sl.No" width="5%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+<h:inputHidden value="#{obj.paymentNo}" id="slNo" />
+</p:column>
+<p:column headerText="Date" width="10%">
+<p:outputLabel  value="#{obj.date}" style="margin-left:20px" >
+<f:convertDateTime pattern="dd/MM/yyyy" timeZone="IST" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Supplier" width="25%">
+<p:outputLabel value="#{obj.companyName}" style="margin-left:20px" ></p:outputLabel>
+</p:column>
+<p:column  headerText="Mode" width="10%">
+<p:outputLabel value="#{obj.paymentmode}"  style="margin-left:20px" ></p:outputLabel>
+</p:column>
+<p:column headerText="Amount" width="15%">
+<p:outputLabel value="#{obj.totalAmount}" style="margin-left:30px" >
+<f:convertNumber pattern="#0.00" />
+</p:outputLabel>
+</p:column>
+</p:dataTable>
+</h:form>
+</ui:define>
+</ui:composition>

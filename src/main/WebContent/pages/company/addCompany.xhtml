@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+	<ui:define name="title"></ui:define>
+	<ui:define name="head">
+		<style type="text/css">
+		.ui-paginator .ui-paginator-top{
+			height:2px;
+		}
+</style>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="mainform">
+		<p:growl id="message" showDetail="true" />
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h3>ADD COMPANY</h3>
+                            <div class="ui-g-12 ui-lg-6">
+							<p:panelGrid columns="2" id="grid"
+								columnClasses="ui-grid-col-4,ui-grid-col-8"
+								layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<p:outputLabel value="Company Name *" />
+								<p:inputText id="name" required="#{param['mainform:save']!=null}" requiredMessage="Enter Supplier Name" value="#{companyMBean.company.compName}" label="Name">
+								</p:inputText>
+								
+								<p:outputLabel value="GST No" />
+								<p:inputText value="#{companyMBean.company.gst}" />
+								
+								<p:outputLabel value="Mail_id" />
+								<p:inputText value="#{companyMBean.company.mailId}">
+								</p:inputText>
+								<p:outputLabel value="Separate" />
+								<p:selectOneMenu value="#{companyMBean.company.split}" >
+									<f:selectItem itemValue="-select-" itemLabel="-select-" />
+									<f:selectItem itemValue="yes" itemLabel="yes" />
+									<f:selectItem itemValue="No" itemLabel="No" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Opening Balance" />
+								<p:inputText value="#{companyMBean.company.openingBalance}">
+									<f:convertNumber pattern="#0.00" />
+								</p:inputText>
+								</p:panelGrid>
+								</div>
+								<div class="ui-g-12 ui-lg-6">
+								<p:panelGrid columns="2" id="grid1"
+								columnClasses="ui-grid-col-4,ui-grid-col-8"
+								layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<p:outputLabel value="Area 1" />
+								<p:inputText value="#{companyMBean.company.area1}" />
+								<p:outputLabel value="Area 2" />
+								<p:inputText value="#{companyMBean.company.area2}" />
+								<p:outputLabel value="Area 3" />
+								<p:inputText value="#{companyMBean.company.area3}" />
+								<p:outputLabel value="City" />
+								<p:inputText value="#{companyMBean.company.city}" />
+							</p:panelGrid>
+							</div>
+							<p:panelGrid columns="3" styleClass="ui-panelgrid-blank form-group"
+								columnClasses="ui-lg-3 ui-md-4,ui-lg-3 ui-md-4,ui-lg-3 ui-md-4"
+								layout="grid">
+							<p:commandButton id="save" value="SAVE" action="#{companyMBean.saveCompany}" update="mainform"></p:commandButton>
+							<p:commandButton  value="NEW/RESET" action="#{companyMBean.reset}" update="mainform" ></p:commandButton>
+							<p:commandButton  disabled="#{companyMBean.buttonDisable(companyMBean.company.compId)}"
+									action="#{companyMBean.dialogShow(companyMBean.company.compId)}" value="DELETE" >
+							</p:commandButton>
+							</p:panelGrid>
+						</div>
+					</div>
+					</div>
+			</div>
+		</h:form>
+		<p:dialog widgetVar="confirmDialog" modal="true" global="true" showEffect="fade" hideEffect="fade">
+		<h:form>
+        <h:outputLabel value="Are You Sure want to Delete?" style="font-weight:bold;" />
+        <div align="center" >
+        <h:panelGrid columns="2" >
+        <p:commandButton value="Yes" action="#{companyMBean.delete}" update="mainform"  />
+        <p:commandButton value="No"  action="#{companyMBean.dialogHide}" />
+        </h:panelGrid>
+        </div>
+        </h:form>
+    </p:dialog> 
+	</ui:define>
+	</ui:composition>
+		

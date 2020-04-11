@@ -1,0 +1,155 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+
+<ui:define name="title">Dashboard</ui:define>
+<ui:define name="head">
+<style type="text/css">
+
+#titlepanel{
+text-align:center;
+background-color:#F0F1F6;
+}
+
+.transDetails{
+height:380px;
+}
+.transDetailsValues{
+color:#6181C2;
+}
+.quickReport{
+height:132px;
+width:100%;
+font-size:16px;
+}
+.outputLabel1{
+font-size:14px;
+font-Weight:bold;
+}
+.outputLabel2{
+font-size:14px;
+font-Weight:bold;
+color:#6181C2;
+}
+.outputLabel3{
+font-size:14px;
+font-Weight:bold;
+color:#BDBDBD;
+}
+.outputLabel4{
+font-size:16px;
+font-Weight:bold;
+position:relative;
+top:30px;"
+}
+.labelExtra{
+font-size:20px;
+color:#BDBDBD;
+margin-left:18%;
+}
+.panelGridCenter td,.panelGridCenter tr {
+    text-align: center;
+    width:100%;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<body>
+<p:panel  header="Quick Report" id="titlepanel">
+<div align="center">
+<h:panelGrid   style="text-align:center;" columns="5" >
+ 		
+ 		<p:panel styleClass="quickReport">
+ 		<h:panelGrid columns="2">
+ 		<h:panelGrid columns="1">
+			  <p:graphicImage url="/resources/images/manimage.jpg" style="margin-top:-12px;margin-left:-18px;position:relative;top:10px;"/>	
+	    </h:panelGrid>
+	    <h:panelGrid columns="1" style="text-align:left;">
+              <p:outputLabel value="S.Thananjeya Athithan  "  style="position:relative;top:5px;" styleClass="outputLabel1"/>
+              <p:button value="Admin" style="position:relative;top:5px;" />
+              <p:outputLabel value="Code"  style="position:relative;top:5px;" styleClass="outputLabel2"/>  
+              <p:outputLabel value="US3578" style="position:relative;top:5px;" styleClass="outputLabel3"/>
+        </h:panelGrid>
+        </h:panelGrid>
+       	</p:panel>
+       	
+       	<p:panel style="height:132px;width:100%;text-align:center;font-weight:bold;color:black; ">
+              <p:outputLabel value="Current Sales" style=" position:relative;top:30px;" styleClass="outputLabel3" /><br></br>
+              <p:outputLabel value=" 4,56,42,354.15" styleClass="outputLabel4" /> 
+       	</p:panel>
+       	<p:panel  style="width:100%;height:132px;text-align:center;font-weight:bold;color:black;">
+              <p:outputLabel value="Order Advances "  style="font-size:16px;width:40%; color:#BDBDBD;position:relative;top:30px;" /> <br></br>
+              <p:outputLabel value=" 4,56,42,354.15" styleClass="outputLabel4"/> 
+       	</p:panel>
+       	
+       	<p:panel  style=" width:100%; height:132px;  text-align:center; font-weight:bold; color:black; ">
+              <p:outputLabel value="Current Purchases" style="position:relative;top:30px;" styleClass="outputLabel3" /> <br></br>
+              <p:outputLabel value=" 4,56,42,354.15" styleClass="outputLabel4" /> 
+       	</p:panel>
+       	
+       	<p:panel  style=" width:100%; height:132px;text-align:center;font-weight:bold; color:black; ">
+              <p:outputLabel value="Counter Cash "  style="position:relative;top:30px;" styleClass="outputLabel3" /> <br></br>
+              <p:outputLabel value=" 4,56,42,354.15"  style="color:#F1764A;" styleClass="outputLabel4" /> 
+       	</p:panel>
+</h:panelGrid>
+</div>
+
+<div align="center">
+<h:panelGrid  columns="3">
+        <p:panel header="Transaction Details" styleClass="transDetails">
+       	<h:panelGrid columns="2" cellspacing="10px" cellpadding="3">
+         	<p:outputLabel value="By Cash" styleClass="transDetailsValues" />
+         	<p:outputLabel value="Rs:74,56,45,789.50" />      
+         	<p:outputLabel value="By Credit Card" styleClass="transDetailsValues" />
+         	<p:outputLabel value="Rs:74,56,45,789.50" />
+         	<p:outputLabel value="By Cheque Sale" styleClass="transDetailsValues" />
+         	<p:outputLabel value="Rs:74,56,45,789.50" />      
+         	<p:outputLabel value="By RTGS/NEFT" styleClass="transDetailsValues" />
+         	<p:outputLabel value="Rs:74,56,45,789.50" />
+         	<p:outputLabel value="By IMPS" styleClass="transDetailsValues" />
+         	<p:outputLabel value="Rs:74,56,45,789.50" />  
+         	<p:outputLabel />
+         	<p:outputLabel />
+         	<p:outputLabel value="Bank 1" styleClass="transDetailsValues" />
+         	<p:outputLabel value="Rs:74,56,45,789.50" />
+         	<p:outputLabel value="Bank 2" styleClass="transDetailsValues" />
+         	<p:outputLabel value="Rs:74,56,45,789.50" />      
+         	<p:outputLabel value="Bank 3 " styleClass="transDetailsValues" />
+         	<p:outputLabel value="Rs:74,56,45,789.50" />
+         	<p:outputLabel value="Bank 4" styleClass="transDetailsValues" />
+         	<p:outputLabel value="Rs:74,56,45,789.50" /> 
+      	</h:panelGrid> 
+      	</p:panel>
+      
+        <p:panel header="Transaction Details" styleClass="transDetails">
+        <h:panelGrid columns="2" cellspacing="10px" cellpadding="3">
+        	<p:outputLabel value="Chit Collect" styleClass="transDetailsValues" />
+        	<p:outputLabel value="Rs:74,56,45,789.50" />      
+        	<p:outputLabel value="Balance Rcvd and Paid" styleClass="transDetailsValues" />  
+          	<p:outputLabel value="Rs:74,56,45,789.50" />  
+        	<p:outputLabel value="Oreder Advance" styleClass="transDetailsValues" />
+        	<p:outputLabel value="Rs:74,56,45,789.50" />       
+        	<p:outputLabel value="Oreder Deliveried" styleClass="transDetailsValues" />
+          	<p:outputLabel value="Rs:74,56,45,789.50" />  
+        	<p:outputLabel value="Order Purchased" styleClass="transDetailsValues" />
+        	<p:outputLabel value="Rs:74,56,45,789.50" />       
+        	<p:outputLabel value="Expenses" styleClass="transDetailsValues"/>
+          	<p:outputLabel value="Rs:74,56,45,789.50" />  
+        </h:panelGrid>
+        </p:panel>
+        
+        
+       	<h:panelGrid styleClass="panelGridCenter">
+          <p:outputLabel style="">[Reserved Space]</p:outputLabel>
+          <p:outputLabel>Can add other details or sale graph here</p:outputLabel>
+	   	</h:panelGrid>
+	   	
+	 </h:panelGrid>
+</div>
+</p:panel>
+</body>
+</ui:define>
+</ui:composition>

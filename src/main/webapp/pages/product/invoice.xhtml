@@ -1,0 +1,574 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:6px;
+padding-bottom:6px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	background-color: #CBCBCB;
+}
+body .ui-datatable thead tr th {
+border:0px solid white;
+}
+body .ui-datatable tbody tr td {
+border:0px solid white;
+}
+body.layout-compact .ui-datatable thead th {
+background-color:#CBCBCB;
+}
+body .ui-inputfield {border-width:0px;}
+body.layout-compact .ui-datatable thead th {
+font-size:12px;
+	background-color:#CBCBCB;
+}
+body .ui-scrollpanel .ui-scrollpanel-drag {
+background-color:		#CDCDCD;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="bill">
+<div align="center">
+
+<p:dataTable rowIndexVar="rowId" var="obj" style="margin-top:15px"  value="#{sukiJMSProductMBean.deliveryMasterList2}" rowKey="#{obj.deliveryNo}" selection="#{sukiJMSProductMBean.selectedDeliveryMasterList1}" id="datatable" >
+<p:column selectionMode="multiple" width="3%"></p:column>
+<p:ajax event="rowSelect" listener="#{sukiJMSProductMBean.getDcListAction}" update="datalist1,dclist" ></p:ajax>
+<p:column headerText="DC.No" width="3%">
+<p:outputLabel value="#{obj.deliveryNo}" style="width:80px"></p:outputLabel>
+<h:inputHidden value="#{obj.deliveryNo}" id="dcNo" />
+</p:column>
+<p:column headerText="Date" width="7%">
+<p:outputLabel value="#{obj.date}" style="margin-left:40px">
+<f:convertDateTime pattern="dd/MM/YY" timeZone="IST" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Company" width="25%">
+<p:outputLabel value="#{obj.company}" style="width:30px;margin-left:60px" ></p:outputLabel>
+</p:column>
+</p:dataTable>
+</div>
+<div align="center" style="margin-top:20px">
+<p:commandButton value="Print Bill" action="#{sukiJMSProductMBean.billSelect}"  update="datalist3"  />
+</div>
+</h:form>
+
+<p:dialog widgetVar="dlg2" id="dclist" header="#{sukiJMSProductMBean.dcNoAndName}" height="550" width="900" modal="true" >
+<h:form id="datalist1">
+<p:dataTable rowIndexVar="rowId" var="obj" value="#{sukiJMSProductMBean.deliveryChalanShowList}" id="datatable" >
+<p:column headerText="Sl.No" width="10%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+<h:inputHidden value="#{obj.rowId}" id="dcNo" />
+</p:column>
+<p:column headerText="Description" width="30%">
+<p:outputLabel  value="#{obj.itemTrans}" />
+</p:column>
+<p:column headerText="Quantiy" width="15%">
+<p:outputLabel value="#{obj.nos}" style="margin-left:60px" ></p:outputLabel>
+</p:column>
+<p:column headerText="UOM" width="15%">
+<p:outputLabel value="#{obj.uom}" style="margin-left:60px" ></p:outputLabel>
+</p:column>
+<p:column headerText="" width="15%">
+<p:commandButton value="Delete" actionListener="#{sukiJMSProductMBean.dcItemReturn}" ></p:commandButton>
+</p:column>
+</p:dataTable>
+</h:form>
+</p:dialog>
+<p:dialog widgetVar="dlg3" height="550" width="1200" modal="true" >
+<h:form id="datalist3">
+<p:growl id="messages" showDetail="true"></p:growl>
+<h:panelGrid columns="6">
+<p:outputLabel value="Date"></p:outputLabel>
+<p:calendar value="#{sukiJMSProductMBean.billMaster.dateUtil}"></p:calendar>
+<p:outputLabel value="Invoice No:"></p:outputLabel>
+<h:inputText value="#{sukiJMSProductMBean.billMaster.billNo}" />
+<h:outputLabel value="PO No"  />
+<p:inputText  value="#{sukiJMSProductMBean.billMaster.poNo}"  />
+</h:panelGrid>
+<p:dataTable rowIndexVar="rowId" var="obj" value="#{sukiJMSProductMBean.billTransList}" id="datatable1" >
+<p:column headerText="Sl.No" width="10%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="Description" width="20%">
+<p:outputLabel  value="#{obj.products}" style="margin-left:20px" />
+<h:inputHidden value="#{obj.slNo}" id="item" />
+</p:column>
+<p:column headerText="Quantiy" width="12%">
+<p:outputLabel value="#{obj.qty}" style="margin-left:20px" >
+</p:outputLabel>
+</p:column>
+<p:column headerText="UOM" width="15%">
+<p:outputLabel value="#{obj.uom}" style="margin-left:20px" >
+<f:convertNumber pattern="0.00"/>
+</p:outputLabel>
+</p:column>
+<p:column headerText="Rate" width="15%">
+<p:inputText value="#{obj.rate}" >
+<p:ajax event="blur" listener="#{sukiJMSProductMBean.printBillAction}" update="amount,datalist3:total,datalist3:gstvalue" />
+<f:convertNumber pattern="0.00"/>
+</p:inputText>
+</p:column>
+<p:column headerText="CGST%" width="12%">
+<p:outputLabel value="#{obj.cgst}" style="margin-left:20px" >
+<f:convertNumber pattern="0.0"/>
+</p:outputLabel>
+</p:column>
+<p:column headerText="SGST%" width="12%">
+<p:outputLabel value="#{obj.sgst}" style="margin-left:20px" >
+<f:convertNumber pattern="0.0"/>
+</p:outputLabel>
+</p:column>
+<p:column headerText="Amount" width="14%">
+<p:outputLabel value="#{obj.amount}" id="amount" style="margin-left:20px">
+<f:convertNumber pattern="0.00"/>
+</p:outputLabel>
+</p:column>
+</p:dataTable>
+<div align="right">
+<h:panelGrid  columns="4" id="total" cellpadding="5">
+<h:outputLabel value="TOTAL" style="font-weight:bold;font-size:18px" />
+<h:outputLabel id="totalamt" value="#{sukiJMSProductMBean.newBill.totalAmount}"  style="font-weight:bold;font-size:18px">
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+</div>
+<p:panel id="gstvalue" >
+<h:panelGrid  columns="4" cellpadding="5">
+<h:outputLabel value="CGST 2.5%" />
+<h:outputLabel id="cgst25" value="#{sukiJMSProductMBean.newBill.totalCgst25}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 2.5%" />
+<h:outputLabel id="sgst25" value="#{sukiJMSProductMBean.newBill.totalSgst25}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 6%" />
+<h:outputLabel id="cgst6" value="#{sukiJMSProductMBean.newBill.totalCgst6}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 6%" />
+<h:outputLabel id="sgst6" value="#{sukiJMSProductMBean.newBill.totalSgst6}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 9%" />
+<h:outputLabel id="cgst9" value="#{sukiJMSProductMBean.newBill.totalCgst9}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 9%" />
+<h:outputLabel id="sgst9" value="#{sukiJMSProductMBean.newBill.totalSgst9}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 14%" />
+<h:outputLabel id="cgst14" value="#{sukiJMSProductMBean.newBill.totalCgst14}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 14%" />
+<h:outputLabel id="sgst14" value="#{sukiJMSProductMBean.newBill.totalSgst14}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+</p:panel>
+<p:commandButton value="Print Bill" action="#{sukiJMSProductMBean.billPrintPage}" >
+</p:commandButton>
+<p:commandButton value="Save" action="#{sukiJMSProductMBean.billSave}" update="messages" ></p:commandButton>
+</h:form>
+</p:dialog>
+<p:dialog widgetVar="dlg5" height="550" width="900" modal="true" >
+<h:form id="printbill">
+<div align="left">
+<p:graphicImage style="width:100%" url="/resources/images/WOSlogo.PNG"></p:graphicImage>
+</div>
+<p:panel style="height:160px;margin-top:0px">
+<p:outputLabel value="To"></p:outputLabel>
+<h:panelGrid columns="1" style="margin-left:40px;">
+<p:outputLabel value="#{sukiJMSProductMBean.company.compName}" style="font-size:18px;font-weight:bold"></p:outputLabel>
+<p:outputLabel value="#{sukiJMSProductMBean.company.area1}"></p:outputLabel>
+<p:outputLabel value="#{sukiJMSProductMBean.company.area2}"></p:outputLabel>
+<p:outputLabel value="#{sukiJMSProductMBean.company.city}"></p:outputLabel>
+<p:outputLabel value="GSTIN- #{sukiJMSProductMBean.company.gst}"></p:outputLabel>
+</h:panelGrid>
+</p:panel>
+
+<p:panel style="height:40px" >
+<h:panelGrid columns="2" style="width:100%" >
+<h:panelGrid columns="2" >
+<p:outputLabel value="Invoice No"></p:outputLabel>
+<p:outputLabel value="#{sukiJMSProductMBean.billMaster.billNo}"></p:outputLabel>
+</h:panelGrid>
+<h:panelGrid columns="2" >
+<p:outputLabel value="For Dc's:"></p:outputLabel>
+<p:outputLabel value="#{sukiJMSProductMBean.billMaster.dcNos}"></p:outputLabel>
+</h:panelGrid>
+</h:panelGrid>
+</p:panel>
+<p:dataTable rowIndexVar="rowId" var="obj" value="#{sukiJMSProductMBean.billPrintList}" id="datatable" >
+<p:column headerText="Sl.No" width="17%" style="font-size:14px" >
+<p:outputLabel value="#{rowId+1}" ></p:outputLabel>
+</p:column>
+<p:column headerText="DESCRIPTION" width="75%" style="font-size:14px" >
+<p:outputLabel value="#{obj.itemTrans}" ></p:outputLabel>
+</p:column>
+<p:column headerText="HSN CODE" width="25%" style="font-size:14px" >
+<p:outputLabel  style="width:30px" ></p:outputLabel>
+</p:column>
+<p:column headerText="QTY" width="15%" style="font-size:14px" >
+<p:outputLabel value="#{obj.nos}" style="width:80px"></p:outputLabel>
+</p:column>
+<p:column headerText="UOM" width="20%" style="font-size:14px" >
+<p:outputLabel value="#{obj.uom}" style="width:80px"></p:outputLabel>
+</p:column>
+<p:column headerText="RATE" width="25%" style="font-size:14px" >
+<p:outputLabel value="#{obj.rate}" style="width:80px">
+<f:convertNumber pattern="0.00" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="CGST" width="20%" style="font-size:14px">
+<p:outputLabel value="#{obj.cgst}" style="width:80px"></p:outputLabel>
+</p:column>
+<p:column headerText="SGST" width="20%" style="font-size:14px" >
+<p:outputLabel value="#{obj.sgst}" style="width:80px"></p:outputLabel>
+</p:column>
+<p:column headerText="AMOUNT" width="25%" style="font-size:14px" >
+<p:outputLabel value="#{obj.amount}" style="width:80px">
+<f:convertNumber pattern="0.00" />
+</p:outputLabel>
+</p:column>
+</p:dataTable>
+<p:panel style="height:145px">
+<h:panelGrid  columns="2" cellpadding="5" style="width:100%">
+<h:panelGrid  columns="4" cellpadding="5">
+<h:outputLabel value="CGST 2.5%" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalCgst25}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 2.5%" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalSgst25}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 6%" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalCgst6}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 6%" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalSgst6}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 9%" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalCgst9}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 9%" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalSgst9}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 14%" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalCgst14}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 14%" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalSgst14}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+<h:panelGrid  columns="2" cellpadding="5" style="position:relative;left:120px" >
+<h:outputLabel value="GST 5%" />
+<h:outputLabel value="#{sukiJMSProductMBean.billMaster.totalGst25}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="GST 12%" />
+<h:outputLabel value="#{sukiJMSProductMBean.billMaster.totalGst6}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="GST 18%" />
+<h:outputLabel value="#{sukiJMSProductMBean.billMaster.totalGst9}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="GST 28%" />
+<h:outputLabel value="#{sukiJMSProductMBean.billMaster.totalGst14}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+</h:panelGrid>
+</p:panel>
+<div align="right">
+<h:panelGrid  columns="4" id="total" cellpadding="5">
+<h:outputLabel value="TOTAL" style="font-weight:bold;font-size:20px" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalAmount}"  style="font-weight:bold;font-size:20px">
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+</div>
+<div>
+<div  style="margin-top:20px;">
+<p:outputLabel value="(Rupees #{sukiJMSProductMBean.newBill.amountNumeric} Only)" style="font-weight:bold;font-size:14px;position:relative;bottom:20px;left:245px"/>
+</div>
+<div  style="margin-top:20px">
+<p:outputLabel value="Customer Signature with seal"/>
+</div>
+<div align="right" style="margin-top:10px">
+<p:outputLabel value="WRIGHT OFFICE SOLUTION"/>
+</div>
+</div>
+</h:form>
+</p:dialog>
+<p:dialog   header="Print Overview"  widgetVar="dlg11"  modal="true" height="330" width="50%"  >
+<ui:define name="head"> 
+</ui:define>
+<h:form id="printorderestimate">
+
+<p:panelGrid styleClass="panelgrid1" id="printorderestimate1" style="background-color:#5475b8;width:100%;">
+    <f:facet name="header">
+        <p:row>
+            <p:column style="font-size:12px;" colspan="10">
+            <h:panelGrid style="text-align:center;margin-left:400px;" columns="1">
+            <p:outputLabel value="GURUHASTHI THANGAMAALIGAI" styleClass="printfontsize"  style="font-size:14px;color:white;font-weight:bold" />
+            <p:outputLabel value="123 New Street" styleClass="printfontsize"  style="font-size:14px;color:white;font-weight:bold" />
+            <p:outputLabel value="New Nagar" styleClass="printfontsize"  style="font-size:14px;color:white;font-weight:bold" />
+            <p:outputLabel value="Poonamalli" styleClass="printfontsize"  style="font-size:14px;color:white;font-weight:bold" />
+            <p:outputLabel value="Chennai – 600 001" styleClass="printfontsize"  style="font-size:14px;color:white;font-weight:bold" />
+            <p:outputLabel value="Ph:044-25416458,9789851544" styleClass="printfontsize"  style="font-size:14px;color:white;font-weight:bold" />
+            <p:outputLabel value="GSTIN:33axdfsd2fd555" styleClass="printfontsize"  style="font-size:14px;color:white;font-weight:bold" />            
+         	<p:outputLabel value="GOLD ORDER ESTIMATE" styleClass="printfontsize"  style="font-size:14px;position:relative;left:-430px;color:white;font-weight:bold" />
+            </h:panelGrid>
+            </p:column>
+        </p:row> 
+    </f:facet>
+ 
+    <p:row>
+        <p:column colspan="8" >
+        <h:panelGrid columns="2">
+        <p:outputLabel value="Name:" styleClass="printfontsize"  style="font-size:14px;" />
+        <h:panelGrid columns="4">
+         <p:outputLabel style="font-size:14px;" styleClass="LabelCustomer ui-inputfield1 printfontsize" value="#{sukiJMSProductMBean.company.compName}"  />
+        [<p:outputLabel style="font-size:14px;" value="#{sukiJMSProductMBean.company.compName}" styleClass="printfontsize"   />]
+        </h:panelGrid>
+		<p:outputLabel value="Mobile:" styleClass="printfontsize"  style="font-size:14px;" />
+		<p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:14px;width:115px;color:black"   />
+        <p:outputLabel value="Area1:" styleClass="printfontsize"  style="font-size:14px;" />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:14px;width:115px;color:black" value="#{sukiJMSProductMBean.company.area1}"  />
+       <p:outputLabel value="Area2:" styleClass="printfontsize"  style="font-size:14px;" />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:14px;width:115px;color:black" value="#{sukiJMSProductMBean.company.area2}"   />
+        <p:outputLabel value="City:" styleClass="printfontsize"  style="font-size:14px;" />
+        <p:outputLabel styleClass="LabelCustomer ui-inputfield1 printfontsize" style="font-size:14px;width:115px;color:black" value="#{sukiJMSProductMBean.company.city}"   />
+        </h:panelGrid>
+        </p:column>
+    </p:row>
+    
+    <p:row>
+    <p:column style="font-size:14px;text-align:center;" colspan="2" styleClass="printfontsize" >Sl.No</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Items</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Hsn Code</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Qty</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >UOM</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Rate</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Cgst</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Sgst</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Amount</p:column>    
+    </p:row>
+    
+    <p:repeat var="obj"  value="#{sukiJMSProductMBean.billPrintList}" >
+    <p:row>
+    <p:column styleClass="printfontsize" ><p:outputLabel  style="font-size:14px;"  /></p:column>
+    <p:column styleClass="printfontsize" >
+    <h:panelGrid columns="3">
+    <p:outputLabel  style="font-size:14px;" />
+    <p:outputLabel  style="font-size:14px;" />
+    <p:outputLabel style="font-size:14px;" />
+    </h:panelGrid>
+    <p:repeat var="obj1"  > 
+    <h:panelGrid columns="8">     
+    <p:outputLabel  style="font-size:14px;" />   
+    <p:outputLabel  style="font-size:14px;" /> -
+    <p:outputLabel style="font-size:14px;" />*
+    <p:outputLabel  style="font-size:14px;" />=
+    <p:outputLabel  style="font-size:14px;" />
+    </h:panelGrid>
+    </p:repeat>  
+    </p:column>
+    
+    <p:column styleClass="printfontsize" ><p:outputLabel  style="font-size:14px;" /></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;"  ><p:outputLabel  ></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ><p:outputLabel  ><f:convertDateTime pattern="MM/dd/yyyy" /></p:outputLabel></p:column>    
+    </p:row>
+    </p:repeat>
+    
+    <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;"  ><p:outputLabel   /></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ><p:outputLabel   ><f:convertNumber pattern="#0.000"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;"  ></p:column>    
+    </p:row>
+    
+    <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" colspan="2" >CGST 1.5%</p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;"  ></p:column>    
+    </p:row>
+    
+    <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;"  ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" colspan="2" >SGST 1.5%</p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>    
+    </p:row>
+    
+    
+    <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;"  ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" colspan="2" >Less</p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel value="0.00" ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>    
+    </p:row>
+    
+    <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" colspan="2" >Nett</p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column  ></p:column>    
+    </p:row>
+    
+    <p:row>
+    <p:column colspan="10" styleClass="printfontsize" style="font-size:14px;"  >
+    <p:outputLabel style="font-weight:bold;"  />
+    </p:column>
+    </p:row>
+    
+    <p:row>     
+    <p:column style="font-size:14px;text-align:center;" colspan="2" styleClass="printfontsize" >Item</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Pc</p:column> 
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Wt.</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Dust/StnWast</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Rate</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Stn</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Add</p:column>
+    <p:column style="font-size:14px;text-align:center;" styleClass="printfontsize" >Value</p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    </p:row>
+    
+     <p:repeat var="obj"  value="#{sukiJMSProductMBean.billPrintList}" >
+    <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ><p:outputLabel    /></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ><p:outputLabel value="#{obj.itemTrans}"   /></p:column>    
+    <p:column styleClass="printfontsize" style="font-size:14px;" ><p:outputLabel value="#{obj.hsnTrans}"  /></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;"  ><p:outputLabel value="#{obj.nos}" ><f:convertNumber pattern="#0.000"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel value="#{obj.uom}" ><f:convertNumber pattern="#0.000"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel value="#{obj.rate}" ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;text-align:right;" ><p:outputLabel value="#{obj.cgst}" ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;text-align:right;" ><p:outputLabel value="#{obj.sgst}" ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel value="#{obj.amount}" ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    </p:row>
+    </p:repeat>
+    
+    <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;"  ><p:outputLabel  /></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;"  ></p:column>    
+    </p:row>
+    
+     <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" colspan="2" >Advance</p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>    
+    </p:row>
+    
+        <p:row>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" colspan="2" >Balance</p:column>
+    <p:column styleClass="printfontsize" style="text-align:right;font-size:14px;" ><p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    <p:column styleClass="printfontsize" style="font-size:14px;" ></p:column>    
+    </p:row>
+    
+    <p:row>
+    <p:column styleClass="printfontsize" style="text-align:left;font-size:14px;" colspan="10" >Rs:<p:outputLabel  ><f:convertNumber pattern="#0.00"/></p:outputLabel></p:column>
+    </p:row>
+    
+    <p:row>
+    <p:column styleClass="printfontsize" style="text-align:left;font-size:14px;" colspan="10" >Ten Thousand Only</p:column>
+    </p:row>
+    
+    <p:row>    
+    <p:column styleClass="printfontsize" style="text-align:center;font-size:14px;width:100%" colspan="10" >  
+    <p:repeat var="obj2"  >  
+    <h:panelGrid columns="1" >     
+    <p:outputLabel  style="font-size:14px;" />   
+    <p:outputLabel  style="font-size:14px;" />
+    </h:panelGrid>
+    </p:repeat>       
+    </p:column>
+    </p:row>
+    
+    <f:facet name="footer">
+    <p:row>
+    <p:column styleClass="printfontsize" style="text-align:center;font-size:14px;font-weight:bold" colspan="10" >THANK'S VISIT AGAIN THE QUALITY SHOP</p:column>
+    </p:row>
+    </f:facet>
+    
+
+</p:panelGrid>
+
+</h:form>
+</p:dialog>
+</ui:define>
+</ui:composition>

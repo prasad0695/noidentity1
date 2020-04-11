@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+<style type="text/css">
+
+.titlepanel > .ui-panel-titlebar{
+background: #587abc ;
+}
+
+#b1
+{
+ 	background-image: url("/SukiJewelleryWebApp/resources/images/bg.png");
+}
+#content
+{
+margin-top:-75px;
+padding-top: 90px;
+text-align: center;
+margin-bottom: 40px;
+
+} 
+#input
+{
+padding-top: 30px;
+padding-left: 90px;
+color: #819df9;
+font-size: 14px;
+}
+#cmd-btn
+{
+width: 270px;
+height: 40px;
+background-color: #f18732;
+font-size: 18px;
+ bottom: -20px;
+ 
+}
+#horizontal
+{
+text-align:center; 
+width:500px;
+height: 350px;
+color: black;
+font-size: 12px;
+}
+#v1
+{
+width:250px;
+height:350px;
+font-size:13px;
+text-align:center;
+}
+#footer1
+{
+    position: absolute;
+    bottom: 185px;
+    margin-right:0px;
+    width: 35%;
+    font-size: 11px;
+    font-family:Roboto Bold;
+    }
+#footer2
+{   
+    bottom: 185px;
+    margin-top:66px;
+    font-size: 11px;
+  	font-family:Roboto Bold;
+    }  
+#footer3
+{
+    align:center;
+    margin-top: 44px;
+    margin-right:0px;
+    width: 50%;
+    font-size: 11px;
+    color:white;
+     font-family:Roboto Bold;
+    } 
+#img
+{
+    text-align:center;
+    width:1359px;
+    height:60px;
+    margin-top: -20px;
+ 	margin-left: -18px;
+	color: #819df9;
+	font-size: 14px;
+    }
+#logo
+    {
+    text-align:center;
+  }
+  #p1
+  {
+ color:#6181C2;
+ font-size:12px;
+ margin-top:30px;
+  }
+  #b1
+  {
+  width:1360px;
+  height:644px;
+  margin-left:-8px;
+  margin-top:8px;
+  }
+  #b2
+  {
+  margin-left:280px; 
+  margin-left:280px;
+  }
+</style>
+</h:head>
+<body>
+<form>
+<p:panel id="b1">
+<h:panelGrid>
+<p:panel id="img" columns="4" cellpadding="10">
+<div id="logo">
+<p:graphicImage url="/resources/images/logo.PNG" />
+</div> 
+</p:panel>
+<div id="content">
+<h:panelGrid id="b2" columns="4" cellpadding="10">
+<p:panel id="horizontal" styleClass="titlepanel" header="User Login">
+<div id="input">
+<h:panelGrid columns="2" cellspacing="5" cellpadding="10">
+<h:outputText value="Username"/>
+<h:inputText value="" style="border:1px solid #597BB8;"/>
+<h:outputText value="Password"/>
+<h:inputText value=""   style="border:1px solid #597BB8;"/>
+</h:panelGrid>
+</div>
+<p:button id="cmd-btn" value="LOGIN" outcome="/pages/dailyact/ratecard"/>
+<footer id="footer1"><i class="fa fa-info-circle Fs100"></i> Trouble to login? Please contact your administrator</footer>
+</p:panel>
+<div style="color:white;">
+(or)
+</div>
+<p:panel id="v1" styleClass="titlepanel" header="Bio Login">
+<p id="p1">Place your finger
+on scanner to login</p>
+ <p:graphicImage url="/resources/images/biologin.PNG" />
+ <footer id="footer2"><i class="fa fa-check-circle Fs100"></i> Thananjeya Athithan</footer>
+</p:panel>
+</h:panelGrid>
+</div>
+
+<div align="center">
+ <footer id="footer3" ><i class="fa fa-diamond Fs100 white"></i><br></br><br></br>AARA<br></br>	
+Aara Software Pvt.Ltd.<br></br>
+No.6, Third Cross Street, Sterling Road<br></br>
+Nungambakkam, Chennai-600041<br></br>
+Contact
+Support : +91 987654321
+Office : +91 44 456321
+ </footer> 
+ </div>
+ </h:panelGrid>
+ </p:panel>
+</form>
+</body>
+</html>

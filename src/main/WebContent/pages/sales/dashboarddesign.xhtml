@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+
+ <ui:define name="title">Dashboard</ui:define>
+<ui:define name="content">
+<body>
+<p:panel>
+<h5 style="text-align:center;font-weight:bolt;font-size:16px;">QUICK ACCESS </h5>
+<p:panel id="v1">
+<div align="center">
+<h:panelGrid columns="4" >
+		<p:commandButton value="QUICK MENU 1"  style="font-size:16px; width:250px; font-family: calibri ; height:112px; background-color:#e34b36;font-weight:bold; color:white;" /> 
+       	<p:commandButton value="QUICK MENU 2"  style="font-size:16px; width:250px; font-family: calibri ; height:112px; background-color:#e34b36;  font-weight:bold; color:white;" /> 
+       	<p:commandButton value="QUICK MENU 3"  style="font-size:16px; width:250px; font-family: calibri ; height:112px; background-color:#e34b36;font-weight:bold; color:white;" /> 
+       	<p:commandButton value="QUICK MENU 4"  style="font-size:16px; width:250px; font-family: calibri ; height:112px; background-color:#e34b36; font-weight:bold; color:white;" /> 
+ </h:panelGrid>
+ </div>
+ </p:panel>
+      
+       	<h5 style="text-align:center;font-weight:bolt;font-size:16px;"> ALL SECTIONS </h5>
+       	<p:panel id="v2">
+       	<div align="center">
+       	<h:panelGrid columns="6" >
+        <p:commandButton value="ROUGH ESTL/VAL" style="font-size:16px; font-family: calibri; width:162px; height:127px; background-color:#F27549; font-weight:bold; color:white;" />
+        <p:commandButton value="SALES"  style="font-size:16px; font-family: calibri; width:162px; height:127px; background-color:#F27549; font-weight:bold; color:white;" /> 
+       	<p:commandButton value="PURCHASE"  style="font-size:16px; font-family: calibri; width:162px; height:127px; background-color:#F27549; font-weight:bold; color:white;" /> 
+       	<p:commandButton value="ORDER"  style="font-size:16px; font-family: calibri; width:162px; height:127px; background-color:#F27549; font-weight:bold; color:white;" /> 
+       	<p:commandButton value="CHIT"  style="font-size:16px; font-family: calibri; width:162px; height:127px; background-color:#F27549;font-weight:bold; color:white;" /> 
+       	<p:commandButton value="VOUCHER ENTRY"  style="font-size:16px; font-family: calibri; width:162px; height:127px; background-color:#F27549;font-weight:bold; color:white;" /> 
+       	</h:panelGrid>
+       	</div>
+       	</p:panel>
+        
+        <p:panel id="v3">
+        <div align="center">
+       	<h:panelGrid columns="6" >
+ 		<p:commandButton value="MASTER"  style="font-size:16px; font-family: calibri; width:164px; height:75px; background-color:#F29341;  font-weight:bold; color:white;" /> 
+ 		<p:commandButton value="ACCOUNTS"  style="font-size:16px; font-family: calibri; width:164px; height:75px; background-color:#F29341;  font-weight:bold; color:white;" /> 
+   		<p:commandButton value="TAGGING"  style="font-size:16px; font-family: calibri; width:164px; height:75px; background-color:#F29341;  font-weight:bold; color:white;" /> 
+       	<p:commandButton value="GSM/DEALER ACCOUNTS"   styleclass="someClass" style="font-size:16px;font-family: calibri; width:164px; height:75px; background-color:#F29341; font-weight:bold; color:white;" /> 
+    	<p:commandButton value="GSM JOB STATUS"   style="font-size:16px; font-family: calibri; width:164px; height:75px; background-color:#F29341; font-weight:bold; color:white;" /> 
+       	<p:commandButton value="REPAIR ENTRY"   style="font-size:16px; font-family: calibri; width:164px; height:75px; background-color:#F29341;font-weight:bold; color:white;" /> 
+       	</h:panelGrid>
+       	</div>
+       	</p:panel>
+       	<p:panel >
+       	<div align="center">
+       	<h:panelGrid  columns="7" >
+    	<p:commandButton value="REPORTS-1" style="font-size:14px; font-family: calibri;width:140px; height:80px; background-color:#FEFFFF; font-weight:bold; color:#f95c22;" /> 
+     	<p:commandButton value="COUNTER REPORTS" style="font-size:14px; font-family: calibri;width:140px; height:80px; background-color:#FEFFFF; font-weight:bold; color:#f95c22;" /> 
+     	<p:commandButton value="MIS REPORTS"  style="font-size:14px; font-family: calibri; width:140px; height:80px; background-color:#FEFFFF; font-weight:bold; color:#f95c22;" /> 
+    	<p:commandButton value="REPORTS-2"  style="font-size:14px; font-family: calibri; width:140px; height:80px; background-color:#FEFFFF;font-weight:bold; color:#f95c22;"/> 
+    	<p:commandButton value="STAFF MAINTENACE"  style="font-size:14px; font-family: calibri; width:140px; height:80px; background-color:#FEFFFF;font-weight:bold; color:#f95c22;" /> 
+    	<p:commandButton value="COMPANY MAINTENANCE"  style="font-size:14px; font-family: calibri; width:140px; height:80px; background-color:#FEFFFF; font-weight:bold; color:#f95c22;" /> 
+  		<p:commandButton value="PRINTER SETUP"  style="font-size:14px; font-family: calibri; width:140px; height:80px; background-color:#FEFFFF;font-weight:bold; color:#f95c22;" /> 
+       </h:panelGrid>
+       </div>
+       </p:panel>
+              </p:panel>
+       </body>
+       
+       </ui:define>
+       </ui:composition>
+      	

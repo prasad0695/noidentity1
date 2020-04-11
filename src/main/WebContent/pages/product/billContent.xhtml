@@ -1,0 +1,127 @@
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+   
+<ui:define name="content">
+<h:form id="form">
+<p:panel style="height:40px" >
+<h:panelGrid columns="2" style="width:100%" >
+<h:panelGrid columns="2" >
+<p:outputLabel value="Invoice No"></p:outputLabel>
+<p:outputLabel value="#{sukiJMSProductMBean.billMaster.billNo}"></p:outputLabel>
+</h:panelGrid>
+<h:panelGrid columns="2" >
+<p:outputLabel value="For Dc's:"></p:outputLabel>
+<p:outputLabel value="#{sukiJMSProductMBean.billMaster.dcNos}"></p:outputLabel>
+</h:panelGrid>
+</h:panelGrid>
+</p:panel>
+<p:dataTable rowIndexVar="rowId" var="obj" value="#{sukiJMSProductMBean.billPrintList}" id="datatable" >
+<p:column headerText="Sl.No" width="20%" style="font-size:14px" >
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column headerText="DESCRIPTION" width="60%" style="font-size:14px" >
+<p:outputLabel value="#{obj.itemTrans}" ></p:outputLabel>
+</p:column>
+<p:column headerText="HSN CODE" width="37%" style="font-size:14px" >
+<p:outputLabel  style="width:30px" ></p:outputLabel>
+</p:column>
+<p:column headerText="QTY" width="20%" style="font-size:14px" >
+<p:outputLabel value="#{obj.nos}" style="width:80px"></p:outputLabel>
+</p:column>
+<p:column headerText="UOM" width="30%" style="font-size:14px" >
+<p:outputLabel value="#{obj.uom}" style="width:80px"></p:outputLabel>
+</p:column>
+<p:column headerText="RATE" width="25%" style="font-size:14px" >
+<p:outputLabel value="#{obj.rate}" style="width:80px"></p:outputLabel>
+</p:column>
+<p:column headerText="CGST" width="20%" style="font-size:14px">
+<p:outputLabel value="#{obj.cgst}" style="width:80px"></p:outputLabel>
+</p:column>
+<p:column headerText="SGST" width="20%" style="font-size:14px" >
+<p:outputLabel value="#{obj.sgst}" style="width:80px"></p:outputLabel>
+</p:column>
+<p:column headerText="AMOUNT" width="30%" style="font-size:14px" >
+<p:outputLabel value="#{obj.amount}" style="width:80px"></p:outputLabel>
+</p:column>
+</p:dataTable>
+<p:panel style="height:145px">
+<h:panelGrid  columns="2" cellpadding="5" style="width:100%">
+<h:panelGrid  columns="4" cellpadding="5">
+<h:outputLabel value="CGST 2.5%" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalCgst25}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 2.5%" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalSgst25}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 6%" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalCgst6}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 6%" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalSgst6}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 9%" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalCgst9}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 9%" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalSgst9}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="CGST 14%" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalCgst14}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="SGST 14%" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalSgst14}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+<h:panelGrid  columns="2" cellpadding="5" style="position:relative;left:78px" >
+<h:outputLabel value="GST 5%" />
+<h:outputLabel value="#{sukiJMSProductMBean.billMaster.totalGst25}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="GST 12%" />
+<h:outputLabel value="#{sukiJMSProductMBean.billMaster.totalGst6}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="GST 18%" />
+<h:outputLabel value="#{sukiJMSProductMBean.billMaster.totalGst9}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+<h:outputLabel value="GST 28%" />
+<h:outputLabel value="#{sukiJMSProductMBean.billMaster.totalGst14}" >
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+</h:panelGrid>
+</p:panel>
+<div align="right">
+<h:panelGrid  columns="4" id="total" cellpadding="5">
+<h:outputLabel value="TOTAL" style="font-weight:bold;font-size:20px" />
+<h:outputLabel value="#{sukiJMSProductMBean.newBill.totalAmount}"  style="font-weight:bold;font-size:20px">
+<f:convertNumber pattern="0.00"/>
+</h:outputLabel>
+</h:panelGrid>
+</div>
+<div>
+<div  style="margin-top:20px">
+<p:outputLabel value="(Rupees #{sukiJMSProductMBean.newBill.amountNumeric} Only)" style="font-weight:bold;font-size:14px;position:relative;bottom:20px;left:200px"/>
+</div>
+<div  style="margin-top:20px">
+<p:outputLabel value="Customer Signature with seal"/>
+</div>
+<div align="right" style="margin-top:10px">
+<p:outputLabel value="WRIGHT OFFICE SOLUTION"/>
+</div>
+</div>
+</h:form>
+</ui:define>
+</ui:composition>

@@ -17,7 +17,13 @@
 		<version>2.0.0.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-
+	<repositories>
+		<repository>
+			<id>prime-repo</id>
+			<name>Prime Repo</name>
+			<url>http://repository.primefaces.org</url>
+		</repository>
+	</repositories>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -25,6 +31,10 @@
 	</properties>
 
 	<dependencies>
+ 		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -36,10 +46,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -63,9 +69,9 @@
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
-			<version>6.1</version>
+			<version>6.2</version>
 		</dependency>
-		<!-- AOP Starter -->
+	<!-- AOP Starter -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
@@ -74,6 +80,21 @@
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
 		</dependency>
+		<dependency>
+    <groupId>org.ocpsoft.rewrite</groupId>
+    <artifactId>rewrite-servlet</artifactId>
+    <version>3.4.1.Final</version>
+</dependency>
+<dependency>
+    <groupId>org.ocpsoft.rewrite</groupId>
+    <artifactId>rewrite-integration-faces</artifactId>
+    <version>3.4.1.Final</version>
+</dependency>
+<dependency>
+    <groupId>org.ocpsoft.rewrite</groupId>
+    <artifactId>rewrite-config-prettyfaces</artifactId>
+    <version>3.4.1.Final</version>
+</dependency>
 <!-- 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

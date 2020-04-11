@@ -1,0 +1,158 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/dailyact/dailyacttemplate.xhtml">
+
+    <ui:define name="title">Dashboard</ui:define>
+
+    <ui:define name="head">
+           <script type="text/javascript">
+               //<![CDATA[
+               function skinChart() {
+                   this.cfg.shadow = false;
+                   this.cfg.title = '';
+                   this.cfg.seriesColors = ['#FFC107', '#03A9F4'];
+                   this.cfg.grid = {
+                       background: '#ffffff',
+                       borderColor: '#ffffff',
+                       gridLineColor: '#EEEEEE',
+                       shadow: false
+                   };
+                   this.cfg.axesDefaults = {
+                       rendererOptions: {
+                           textColor: '#212121'
+                       }
+                   };
+                   this.cfg.seriesDefaults = {
+                       shadow: false,
+                       lineWidth: 1,
+                       markerOptions: {
+                           shadow: false,
+                           size: 7,
+                           style: 'circle'
+                       }
+                   }
+               }
+               //]]>  
+           </script>
+           <style type="text/css">
+               .main-content {
+                   padding: 0;
+               }
+           </style>
+       </ui:define>
+
+    <ui:define name="content">
+     <p:chart type="bar" rendered="true" model="#{dashBoardReportMBean.barModel}" style="height:300px"/>
+        <div  class="ui-g dashboard">
+            <div class="ui-g-12 ui-md-6 ui-lg-3">
+                <div class="ui-g card colorbox colorbox-1">
+                    <div class="ui-g-4">
+                        <i class="material-icons">&#xE86C;</i>
+                    </div>
+                    <div class="ui-g-8">
+                    <p:commandLink>
+                        <span class="colorbox-name">Sales Pending</span>
+                        <span class="colorbox-count"><p:outputLabel value="#{dashBoardReportMBean.dashboardReport.salesPending}" ></p:outputLabel></span>
+                    </p:commandLink>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6 ui-lg-3">
+                <div class="ui-g card colorbox colorbox-2">
+                    <div class="ui-g-4">
+                        <i class="material-icons">&#xE8C9;</i>
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="colorbox-name">Purchases</span>
+                        <span class="colorbox-count"><p:outputLabel value="#{dashBoardReportMBean.dashboardReport.purchasePending}" ></p:outputLabel></span>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6 ui-lg-3">
+                <div class="ui-g card colorbox colorbox-3">
+                    <div class="ui-g-4">
+                        <i class="material-icons">&#xE160;</i>
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="colorbox-name">Issues</span>
+                        <span class="colorbox-count">22</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6 ui-lg-3">
+                <div class="ui-g card colorbox colorbox-4">
+                    <div class="ui-g-4">
+                        <i class="material-icons">&#xE0BE;</i>
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="colorbox-name">Messages</span>
+                        <span class="colorbox-count">10</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-4">
+                <p:panel header="Activity" style="height:100%">
+                    <div class="activity-header">
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <span style="font-weight:bold">Last Activity</span>
+                                <p>Updated 1 minute ago</p>
+                            </div>
+                            <div class="ui-g-6" style="text-align:right">
+                                <p:commandButton type="button" icon="ui-icon-update" />
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="activity-list">
+                        <li>
+                            <div class="count">$900</div>
+                            <div class="ui-g">
+                                <div class="ui-g-6">Income</div>
+                                <div class="ui-g-6">95%</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="count" style="background-color:#ffc107">$250</div>
+                            <div class="ui-g">
+                                <div class="ui-g-6">Tax</div>
+                                <div class="ui-g-6">24%</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="count" style="background-color:#673AB7">$125</div>
+                            <div class="ui-g">
+                                <div class="ui-g-6">Invoices</div>
+                                <div class="ui-g-6">55%</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="count" style="background-color:#00bcd4">$250</div>
+                            <div class="ui-g">
+                                <div class="ui-g-6">Expenses</div>
+                                <div class="ui-g-6">15%</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="count" style="background-color:#607D8B">$350</div>
+                            <div class="ui-g">
+                                <div class="ui-g-6">Bonus</div>
+                                <div class="ui-g-6">5%</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="count" style="background-color:#FF5722">$500</div>
+                            <div class="ui-g">
+                                <div class="ui-g-6">Revenue</div>
+                                <div class="ui-g-6">25%</div>
+                            </div>
+                        </li>
+                    </ul>
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

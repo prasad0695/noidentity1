@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+<ui:composition template="layout.xhtml">
+	<ui:define name="content">
+		<h:form id="empForm">
+			<p:panel header="Employee Info" id="empInfoPnl">
+				<h:panelGrid columns="2">
+					<p:outputLabel for="name" value="Emp Name: " />
+					<p:inputText id="name" size="40"
+						value="#{emplController.empUiTO.empName}" required="true"
+						requiredMessage="Please enter employee name " />
+					<p:outputLabel for="emppassword" value="Password: " />
+					<p:password id="emppassword" size="40"
+						value="#{emplController.empUiTO.password}" />
+					<p:outputLabel for="empemail" value="E-Mail : " />
+					<p:inputText id="empemail"
+						value="#{emplController.empUiTO.emailId}" size="40"
+						required="true" label="Email Address">
+
+						<f:validator validatorId="customEmailValidator" />
+					</p:inputText>
+					<p:outputLabel for="empaddres" value="Address " />
+					<p:inputTextarea id="empaddres" rows="4" cols="50"
+						value="#{emplController.empUiTO.address1}" />
+					<p:outputLabel for="empdept" value="Department " />
+
+					<p:selectOneMenu id="empdept"
+						value="#{emplController.empUiTO.departmentUITO}"
+						style="width:150px" converter="#{deptConverter}">
+						<f:selectItems value="#{emplController.departmentUiToList}"
+							var="departmentUITO" itemLabel="#{departmentUITO.deptName}"
+							itemValue="#{departmentUITO}" />
+
+					</p:selectOneMenu>
+					<h:commandButton value="#{emplController.actionLabel}"
+						action="#{emplController.doSaveInfoEmpl}">
+						<f:ajax execute="empForm" render="emplist empInfoPnl" />
+					</h:commandButton>
+				</h:panelGrid>
+			</p:panel>
+			<p:panel header="Employee List" id="emplist">
+				<p:dataTable id="table" var="emp"
+					value="#{emplController.empUiToList}">
+					<p:column>
+						<f:facet name="header"># Emp Id</f:facet>
+						<h:outputText value="#{emp.empId}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Name</f:facet>
+						<h:outputText value="#{emp.empName}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Address </f:facet>
+						<h:outputText value="#{emp.address1}">
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">Email </f:facet>
+						<h:outputText value="#{emp.emailId}">
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">Department </f:facet>
+						<h:outputText value="#{emp.departmentUITO.deptName}" />
+					</p:column>
+					<p:column id="action">
+						<f:facet name="header">Action</f:facet>
+						<h:commandLink value="Edit"
+							action="#{emplController.editEmployee(emp)}">
+							<f:ajax execute="action" render="empForm" />
+						</h:commandLink> /
+						  <sec:authorize access="hasRole('ROLE_ADMIN')">
+							<h:commandLink value="Delete"
+								action="#{emplController.deleteEmployee(emp)}">
+								<f:ajax execute="action" render="table" />
+							</h:commandLink>
+						</sec:authorize>
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

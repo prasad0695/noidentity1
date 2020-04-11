@@ -1,0 +1,128 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+	<ui:define name="title"></ui:define>
+	<ui:define name="head">
+	<script TYPE="text/javascript">  
+	function onSave(id) { 
+		var formSave="mainform:datatable:"+id+":save";
+		var formValue="mainform:datatable:"+id+":group";
+    form[formValue].required=param[formSave];
+    }  
+</script>
+		<style type="text/css" >
+body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
+padding-top:2px;
+padding-bottom:2px;
+}
+body.layout-compact .ui-datatable thead th {
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+.ui-panelgrid.form-group .ui-panelgrid-cell{
+ padding: 1px 2px;
+}
+.fontweightBold{
+font-weight:bold;
+}
+</style>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="mainform">
+		<p:growl showDetail="true" id="messages" /> 
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h3>NEW DC</h3>
+							<p:panelGrid columns="6"
+								columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-1,ui-grid-col-2,ui-grid-col-1,ui-grid-col-2"
+								layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								
+<h:outputLabel value="Company Name" styleClass="fontweightBold" />
+<p:autoComplete id="group" required="#{param['mainform:save']!=null || param['mainform:hotkey']!=null || param['mainform:update']!=null}" requiredMessage="Enter Company Name" readonly="#{deliveryChallanMBean.deliveryMaster.status=='Billed'}" value="#{deliveryChallanMBean.deliveryMaster.companyId}" completeMethod="#{deliveryChallanMBean.companyListAutoComplete}"
+                        var="obj" itemLabel="#{obj.compName}" itemValue="#{obj}" converter="pojoConverter" forceSelection="true"
+                        scrollHeight="250">
+                        <p:ajax event="itemSelect" />
+        </p:autoComplete>
+<h:outputLabel value="Date"  styleClass="fontweightBold" />
+<p:calendar value="#{deliveryChallanMBean.deliveryMaster.dateUtil}" pattern="dd/MM/yyyy" >
+</p:calendar>
+<h:outputLabel value="Dc No" styleClass="fontweightBold" />
+<p:inputText value="#{deliveryChallanMBean.deliveryMaster.deliveryNo}" >
+<p:ajax event="blur" listener="#{deliveryChallanMBean.dcNoValidation}" update="messages" />
+</p:inputText>
+</p:panelGrid>
+<p:dataTable rowIndexVar="rowId" var="obj" scrollable="true" scrollHeight="400" value="#{deliveryChallanMBean.deliveryMaster.dcTransList}" id="datatable" >
+<p:column headerText="Sl.No" width="20">
+<p:outputLabel value="#{rowId+1}"></p:outputLabel>
+<h:inputHidden value="#{rowId}" id="slNo" />
+</p:column>
+<p:column headerText="DESCRIPTION" width="200">
+<p:panelGrid rendered="#{obj.editBoolean}" columns="2" columnClasses="ui-grid-col-11,ui-grid-col-1"
+								layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;" cellpadding="5">
+<p:autoComplete id="group" value="#{obj.items}" completeMethod="#{deliveryChallanMBean.productListAutoComplete}" required="#{param['mainform:save']!=null || param['mainform:update']!=null}"
+                        var="item" itemLabel="#{item.item}" itemValue="#{item}" converter="pojoConverter" forceSelection="true"
+                        scrollHeight="250">
+                        <p:ajax event="itemSelect" update="dd" />
+                        </p:autoComplete>
+<p:commandLink actionListener="#{deliveryChallanMBean.dcProductAdd}"><i class="material-icons">add</i></p:commandLink>
+</p:panelGrid>
+<p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.items.item}" />
+</p:column> 
+<p:column headerText="UOM" width="80">
+<p:autoComplete id="dd" dropdown="true" rendered="#{obj.editBoolean}" value="#{obj.uom}" var="item" completeMethod="#{obj.getProdUomList}" 
+												itemLabel="#{item.uomId.unitName}" itemValue="#{item}" converter="pojoConverter" forceSelection="true" >
+												<p:ajax event="itemSelect" listener="#{obj.getDecinalPattern(obj.uom)}" update="datatable" />
+												</p:autoComplete>
+<p:outputLabel value="#{obj.uom.uomId.unitName}"  rendered="#{!obj.editBoolean}" ></p:outputLabel>
+</p:column>
+<p:column headerText="QUANTITY" width="80">
+<p:inputText id="nos" required="#{param['mainform:save']!=null || param['mainform:hotkey']!=null || param['mainform:update']!=null}" value="#{obj.nos}" rendered="#{obj.editBoolean}" >
+<f:convertNumber  minFractionDigits="#{obj.uom.uomId.decPattern}" />
+<f:validateDoubleRange disabled="#{param['mainform:save']==null || param['mainform:hotkey']==null || param['mainform:update']==null}" minimum="0.1" ></f:validateDoubleRange>
+</p:inputText>
+<p:outputLabel id="nosLabel" value="#{obj.nos}" rendered="#{!obj.editBoolean}" >
+<f:convertNumber minFractionDigits="#{obj.uom.uomId.decPattern}" />
+</p:outputLabel>
+</p:column>
+<p:column rendered="#{deliveryChallanMBean.deliveryMaster.status=='Pending'}" width="60">
+<p:panelGrid columns="2" cellspacing="5" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;" >
+<p:commandLink rendered="#{deliveryChallanMBean.deliveryMaster.editBoolean and !obj.editBoolean}" actionListener="#{deliveryChallanMBean.dcItemEdit}" update="datatable" ><i class="material-icons">edit</i></p:commandLink>
+<p:commandLink id="delete" onclick="if(!confirm('Are u want to delete?')) return false" actionListener="#{deliveryChallanMBean.deleteDcItem}" validateClient="false" update="datatable" ><i class="material-icons">delete</i></p:commandLink>
+<p:commandLink id="save" rendered="#{deliveryChallanMBean.deliveryMaster.editBoolean and obj.editBoolean}" actionListener="#{deliveryChallanMBean.saveDcItem}" update="datatable" ><i class="material-icons">save</i></p:commandLink>
+</p:panelGrid>
+</p:column>
+</p:dataTable>
+<div align="right">
+<p:commandButton id="hotkey" style="width:20%" value="Add" bind="down" action="#{deliveryChallanMBean.addRowDC}" 
+oncomplete="PrimeFaces.focus('mainform:datatable:'+#{deliveryChallanMBean.deliveryMaster.dcTransList.size()}+':group')" 
+update="mainform" />
+</div>		
+					
+					<p:panelGrid columns="5" styleClass="ui-panelgrid-blank form-group"
+								columnClasses="ui-lg-2 ui-md-3,ui-lg-2 ui-md-3,ui-lg-2 ui-md-3,ui-lg-2 ui-md-3,ui-lg-2 ui-md-3"
+								layout="grid">
+<p:commandButton id="save" value="SAVE" rendered="#{!deliveryChallanMBean.deliveryMaster.editBoolean}" action="#{deliveryChallanMBean.saveDC}" update="messages,datatable,update" ></p:commandButton>
+<p:commandButton id="update" value="UPDATE" rendered="#{deliveryChallanMBean.deliveryMaster.editBoolean}" action="#{deliveryChallanMBean.updateDC}" update="messages,datatable" ></p:commandButton>
+<p:commandButton id="print" value="PRINT" action="#{deliveryChallanMBean.print}" ></p:commandButton>
+<p:commandButton id="delete" value="DELETE" disabled="#{!deliveryChallanMBean.deliveryMaster.editBoolean}" action="#{deliveryChallanMBean.getDelete}" update="messages,mainform" ></p:commandButton>
+<p:commandButton id="reset" value="NEW/RESET" action="#{deliveryChallanMBean.newDeliveryChalan}" update="mainform" />
+</p:panelGrid>
+			</div>
+					</div>
+					</div>		
+			</div>
+
+		</h:form>
+	</ui:define>
+	</ui:composition>
+		

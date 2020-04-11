@@ -1,0 +1,53 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+<ui:define name="title"></ui:define>
+<ui:define name="head"> 
+<style type="text/css" >
+
+</style>
+</ui:define>
+<ui:define name="content">
+<h:form id="datalist3">
+<p:dataTable id="sizetable" var="obj" value="#{purchasePaymentMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="10"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+<p:column headerText="Sl.No" width="5%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+<h:inputHidden value="#{obj.paymentNo}" id="slNo" />
+</p:column>
+<p:column headerText="Date" width="10%">
+<p:outputLabel  value="#{obj.date}" style="margin-left:20px" >
+<f:convertDateTime pattern="dd/MM/yyyy" timeZone="IST" />
+</p:outputLabel>
+</p:column>
+<p:column headerText="Supplier" width="25%">
+<p:outputLabel value="#{obj.companyName}" style="margin-left:20px" ></p:outputLabel>
+</p:column>
+<p:column  headerText="Mode" width="10%">
+<p:outputLabel value="#{obj.paymentmode}"  style="margin-left:20px" ></p:outputLabel>
+</p:column>
+<p:column headerText="Amount" width="15%">
+<p:outputLabel value="#{obj.totalAmount}" style="margin-left:30px" >
+<f:convertNumber pattern="#0.00" />
+</p:outputLabel>
+</p:column>
+<p:column  width="7%">
+<p:commandLink actionListener="#{purchasePaymentMBean.getSalPaymentObjActionEvent}" ><i class="material-icons">
+edit
+</i></p:commandLink>
+<p:commandLink style="margin-left:5px;" onclick="if(!confirm('Are u want to delete?')) return false" actionListener="#{purchasePaymentMBean.getDeleteActionEvent}" ><i style="color: black;" class="material-icons">delete</i></p:commandLink>
+<p:commandLink style="margin-left:5px;" ><i class="material-icons">print</i></p:commandLink>
+</p:column>
+</p:dataTable>
+<div align="right" style="margin-top:-20px">
+<p:commandButton value="New Payments" action="#{purchasePaymentMBean.newPayment}"></p:commandButton>
+</div>
+</h:form>
+</ui:define>
+</ui:composition>

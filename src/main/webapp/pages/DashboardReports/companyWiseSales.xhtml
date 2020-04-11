@@ -1,0 +1,303 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/dailyact/dailyacttemplate.xhtml">
+
+    <ui:define name="title">Dashboard</ui:define>
+
+    <ui:define name="head">
+   <script type="text/javascript">
+               //<![CDATA[
+               function skinChart() {
+                   this.cfg.shadow = false;
+                   this.cfg.title = '';
+                   this.cfg.seriesColors = ['#FFC107', '#03A9F4'];
+                   this.cfg.grid = {
+                       background: '#ffffff',
+                       borderColor: '#ffffff',
+                       gridLineColor: '#EEEEEE',
+                       shadow: false
+                   };
+                   this.cfg.axesDefaults = {
+                       rendererOptions: {
+                           textColor: '#212121'
+                       }
+                   };
+                   this.cfg.seriesDefaults = {
+                       shadow: false,
+                       lineWidth: 1,
+                       markerOptions: {
+                           shadow: false,
+                           size: 7,
+                           style: 'circle'
+                       }
+                   }
+               }
+               //]]>  
+           </script>
+           <style>
+           @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+body {
+  margin-top: 20px;
+  font-family: "Open Sans", sans-serif;
+  color: #282828;
+}
+.skills {
+  width: 95%;
+  max-width: 960px;
+  height: 780px;
+  margin: auto;
+  position: relative;
+}
+.lines {
+  height: 100%;
+  position: relative;
+}
+.line {
+  height: inherit;
+  width: 2px;
+  position: absolute;
+  background: rgba(238, 238, 238, 0.6);
+}
+.line.l--0 {
+  left: 0;
+}
+.line.l--25 {
+  left: 25%;
+}
+.line.l--50 {
+  left: 50%;
+}
+.line.l--75 {
+  left: 75%;
+}
+.line.l--100 {
+  left: calc(100% - 1px);
+}
+.line__label {
+  display: block;
+  width: 100px;
+  text-align: center;
+  position: absolute;
+  bottom: -20px;
+  right: -50px;
+}
+.line__label.title {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+.charts {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+.chart {
+  margin: 10px 0 0;
+}
+.chart:first-child {
+  margin: 0;
+}
+.chart__title {
+  display: block;
+  margin: 0 0 0px;
+  font-weight: bold;
+  opacity: 0;
+  animation: 1s anim-lightspeed-in ease forwards;
+}
+.chart--prod .chart__title {
+  animation-delay: 3.3s;
+}
+.chart--design .chart__title {
+  animation-delay: 4.5s;
+}
+.chart--horiz {
+  overflow: hidden;
+}
+.chart__bar {
+  height: 25px;
+  margin-bottom: 5px;
+  background: linear-gradient(to left, #4cb8c4, #3cd3ad);
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  opacity: 0;
+  animation: 1s anim-lightspeed-in ease forwards;
+}
+.chart--dev .chart__bar:nth-of-type(11) {
+  animation-delay: 2.7s;
+}
+.chart--dev .chart__bar:nth-of-type(10) {
+  animation-delay: 2.5s;
+}
+.chart--dev .chart__bar:nth-of-type(9) {
+  animation-delay: 2.3s;
+}
+.chart--dev .chart__bar:nth-of-type(8) {
+  animation-delay: 2.1s;
+}
+.chart--dev .chart__bar:nth-of-type(7) {
+  animation-delay: 1.9s;
+}
+.chart--dev .chart__bar:nth-of-type(6) {
+  animation-delay: 1.7s;
+}
+.chart--dev .chart__bar:nth-of-type(5) {
+  animation-delay: 1.5s;
+}
+.chart--dev .chart__bar:nth-of-type(4) {
+  animation-delay: 1.3s;
+}
+.chart--dev .chart__bar:nth-of-type(3) {
+  animation-delay: 1.1s;
+}
+.chart--dev .chart__bar:nth-of-type(2) {
+  animation-delay: 0.9s;
+}
+.chart--dev .chart__bar:nth-of-type(1) {
+  animation-delay: 0.7s;
+}
+.chart--prod .chart__bar:nth-of-type(2) {
+  animation-delay: 4.2s;
+}
+.chart--prod .chart__bar:nth-of-type(1) {
+  animation-delay: 4s;
+}
+.chart--design .chart__bar:nth-of-type(3) {
+  animation-delay: 5.6s;
+}
+.chart--design .chart__bar:nth-of-type(2) {
+  animation-delay: 5.4s;
+}
+.chart--design .chart__bar:nth-of-type(1) {
+  animation-delay: 5.2s;
+}
+.chart__label {
+  padding-left: 10px;
+  line-height: 30px;
+  color: white;
+}
+@keyframes anim-lightspeed-in {
+  0% {
+    transform: translateX(-200%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+           </style>
+       </ui:define>
+
+    <ui:define name="content">
+    <h:form id="form">
+    <p:panelGrid columns="4" cellspacing="5" styleClass="ui-panelgrid-blank form-group" columnClasses="ui-g-8,ui-g-1,ui-g-1,ui-g-2"
+									style="border:0px none;width:100%; background-color:transparent;" >
+    <p:outputLabel rendered="#{dashBoardReportMBean.salesOrPurchase=='Sales'}" value="SALES" style="font-weight:bold;" ></p:outputLabel>
+    <p:outputLabel rendered="#{dashBoardReportMBean.salesOrPurchase=='Purchase'}" value="PURCHASE" style="font-weight:bold;" ></p:outputLabel>
+     <p:selectOneMenu value="#{dashBoardReportMBean.currentYear}">
+      <f:selectItems value="#{dashBoardReportMBean.getYearList()}"></f:selectItems>
+      <p:ajax event="change" listener="#{dashBoardReportMBean.onCurrentYearChange}" update="form" />
+      </p:selectOneMenu>
+      <p:commandButton rendered="#{dashBoardReportMBean.salesOrPurchase=='PRODUCT_SALES'}" value="ProductWiseSales" action="#{dashBoardReportMBean.getProductWiseSales()}" update="form"></p:commandButton>
+      <p:commandButton rendered="#{dashBoardReportMBean.salesOrPurchase=='PRODUCT_PURCHASE'}" value="ProductWisePurchase" action="#{dashBoardReportMBean.getProductWisePurchase()}" update="form"></p:commandButton>
+      <p:outputLabel rendered="#{dashBoardReportMBean.salesOrPurchase=='Sales'}" value="COMPANY" ></p:outputLabel>
+      <p:autoComplete rendered="#{dashBoardReportMBean.salesOrPurchase=='Sales'}" id="group" value="#{dashBoardReportMBean.companyId}" completeMethod="#{dashBoardReportMBean.companyListAutoComplete}"
+                        var="obj" itemLabel="#{obj.compName}" itemValue="#{obj}" converter="pojoConverter" forceSelection="true"
+                        scrollHeight="250">
+                        <p:ajax event="itemSelect" listener="#{dashBoardReportMBean.onCompanySelect}" update="form" />
+        </p:autoComplete>
+       <p:outputLabel rendered="#{dashBoardReportMBean.salesOrPurchase=='Purchase'}" value="SUPPLIER" ></p:outputLabel>
+       <p:autoComplete rendered="#{dashBoardReportMBean.salesOrPurchase=='Purchase'}" id="group1" value="#{dashBoardReportMBean.supplierId}" completeMethod="#{dashBoardReportMBean.supplierListAutoComplete}"
+                        var="obj" itemLabel="#{obj.name}" itemValue="#{obj}" converter="pojoConverter" forceSelection="true"
+                        scrollHeight="250">
+                        <p:ajax event="itemSelect" listener="#{dashBoardReportMBean.onCompanySelect}" update="form" />
+        </p:autoComplete>
+        </p:panelGrid>
+     <p:chart type="bar" rendered="true" model="#{dashBoardReportMBean.barModel}" style="height:280px;width:100%;" />
+    <div class="skills">
+  <ul class="lines">
+  </ul>
+ 
+  <div class="charts">
+    <div class="chart chart--dev">
+    <p:panelGrid columns="3" cellspacing="5" styleClass="ui-panelgrid-blank form-group" columnClasses="ui-grid-col-9,ui-grid-col-2,ui-grid-col-1"
+									style="border:0px none;width:100%; background-color:transparent;" >
+     <p:outputLabel style="font-weight:bold;" value="TOTAL SALES ----       #{dashBoardReportMBean.totalSum}" />
+      <p:outputLabel value="Month of " />
+      <p:selectOneMenu value="#{dashBoardReportMBean.currentMonth}">
+      <f:selectItems value="#{dashBoardReportMBean.getMonthList()}"></f:selectItems>
+      <p:ajax event="change" listener="#{dashBoardReportMBean.onCurrentYearChange}" update="form" />
+      </p:selectOneMenu>
+      </p:panelGrid>
+      <ul class="chart--horiz">
+       <p:repeat var="obj" rendered="#{!dashBoardReportMBean.productBySales}"  value="#{dashBoardReportMBean.companySalesList}" >
+       <div style="display:flex;">
+       <div style="width:30%">
+       <p:outputLabel style="font-size:12px;" value="#{obj.companyName}" ></p:outputLabel>
+       </div>
+       <div style="width:85%">
+        <div class="chart__bar" style="width:#{obj.widthPercentage}%;">
+          <span class="chart__label1">
+           <p:outputLabel value="#{obj.percentage}" >
+            <f:convertNumber pattern="0.00" />
+            </p:outputLabel>
+          </span>
+        </div>
+        </div>
+        <div>
+        <p:outputLabel style="font-size:13px;font-weight:bold;" value="#{obj.totalSales}" >
+         <f:convertNumber pattern="0.00" />
+         </p:outputLabel>
+         </div>
+         </div>
+        </p:repeat>
+      </ul>
+      <p:dataTable id="sizetable" rendered="#{dashBoardReportMBean.productBySales}" var="obj" value="#{dashBoardReportMBean.productUnitWiseReport}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="10"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+<p:column headerText="Sl.No" width="5%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.product}" filterBy="#{obj.product}" groupRow="true" headerText="PRODUCT"  width="25%">
+<p:outputLabel value="#{obj.product}" style="width:30px;margin-left:60px" ></p:outputLabel>
+</p:column>
+<p:column sortBy="#{obj.nos}" headerText="NOS" filterBy="#{obj.nos}" width="25%">
+<p:outputLabel value="#{obj.nos}" style="width:30px;margin-left:60px" ></p:outputLabel>
+</p:column>
+<p:column headerText="UOM"  width="25%">
+<p:outputLabel value="#{obj.unitName}" style="width:30px;margin-left:60px" ></p:outputLabel>
+</p:column>
+<p:column headerText="AMOUNT" width="25%">
+<p:outputLabel value="#{obj.amount}" style="width:30px;margin-left:60px" ></p:outputLabel>
+</p:column>
+</p:dataTable>
+    </div>
+    </div>
+</div>
+    
+        <!-- Horizontal, rounded -->
+<p:dataTable rendered="false" rowIndexVar="rowId" var="obj" style="margin-top:15px" widgetVar="billTable" scrollable="true" scrollHeight="470" value="#{dashBoardReportMBean.companySalesList}" id="datatable" >
+<p:column headerText="Sl.No" width="2%">
+<p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+</p:column>
+<p:column  filterMatchMode="contains" headerText="Company" width="10%">
+<p:outputLabel value="#{obj.companyName}" style="margin-left:40px;font-weight:bold"></p:outputLabel>
+</p:column>
+<p:column headerText="Total Sales" width="20%">
+<p:outputLabel value="#{obj.totalSales}" style="width:80px;margin-left:40px;font-weight:bold"></p:outputLabel>
+</p:column>
+<p:column  width="5%">
+<p:commandButton value="show"  />
+</p:column>
+</p:dataTable>
+</h:form>
+     </ui:define>
+     </ui:composition>
