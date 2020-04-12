@@ -293,15 +293,15 @@ public class PdfDocuments {
 		return dcPdf;
 	}
 	 
-	public  void OnStartPage(PdfWriter writer, Document document) {
-	    base.OnStartPage(writer, document);
-	    PdfPTable tabHead = new PdfPTable(new float[] { 1F });
-	    PdfPCell cell;
-	    tabHead.WidthPercentage = 100;
-	    cell = new PdfPCell(new Phrase("Header"));
-	    tabHead.AddCell(cell);
-	    tabHead.WriteSelectedRows(0, -1, 150, document.Top, writer.DirectContent);
-	}
+//	public  void OnStartPage(PdfWriter writer, Document document) {
+//	    base.OnStartPage(writer, document);
+//	    PdfPTable tabHead = new PdfPTable(new float[] { 1F });
+//	    PdfPCell cell;
+//	    tabHead.WidthPercentage = 100;
+//	    cell = new PdfPCell(new Phrase("Header"));
+//	    tabHead.AddCell(cell);
+//	    tabHead.WriteSelectedRows(0, -1, 150, document.Top, writer.DirectContent);
+//	}
 		public static byte[] createBill(BillMasterDomain billmaster){
 			int billNo=billmaster.getBillNo();
 			Company company=billmaster.getCompanyId();
@@ -558,6 +558,6 @@ public class PdfDocuments {
 	   
 	}
 	 public static void main(String[] args){
-		 createBill(1,"","");
+//		 createBill(1,"","");
 	 }
 }

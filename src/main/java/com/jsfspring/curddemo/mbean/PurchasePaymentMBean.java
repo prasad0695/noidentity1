@@ -93,12 +93,12 @@ public class PurchasePaymentMBean{
 		sukiBaseBean.overviewList();
 	}
 	public void getPendingPurchaseBill() {
-		try {
-			billListForPayment=SukiServiceAPI.getInstance().getPendingPurchaseBillMasterList(purchasePayment.getSupId().getSupCode());
-		} catch (SukiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			billListForPayment=SukiServiceAPI.getInstance().getPendingPurchaseBillMasterList(purchasePayment.getSupId().getSupCode());
+//		} catch (SukiException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 	
 	

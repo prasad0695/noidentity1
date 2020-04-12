@@ -34,7 +34,6 @@ import java.util.regex.Pattern;
 
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
-import javax.mail.MessagingException;
 
 import com.jsfspring.curddemo.entity.BillMasterDomain;
 import com.jsfspring.curddemo.entity.DeliveryChalanMaster;
@@ -480,59 +479,6 @@ public static int getIntMonthFromStringMonth(String prefixStr){
 		}
 	}
 
-	public static String getPreferenceValue(String key) {
-		if (key != null) {
-			String value = SukiAppPreference.erpPreference.get(key);
-			return value;
-		} else
-			return "";
-	}
-	
-	public static boolean getPreferenceValueForBoolean(String key) {
-		if (key != null) {
-			String value = SukiAppPreference.erpPreference.get(key);
-			if(value!=null && value.equalsIgnoreCase("Yes")){
-				return true;
-			}else{
-				return false;
-			}
-		} else
-			return false;
-	}
-
-	
-
-	public static String getDownTimeReasonCd(String key) {
-		if (key != null) {
-			String value = SukiAppPreference.downTimeReason.get(key);
-			return value;
-		} else
-			return "";
-	}
-
-	public static String getAccountYear(String key) {
-		if (key != null) {
-			String value = SukiAppPreference.accYear.get(key);
-			return value;
-		} else
-			return "";
-	}
-	
-	public static String getAccountYearStr(String key) {
-		if (key != null) {
-			String value = SukiAppPreference.accYearStr.get(key);
-			return value;
-		} else
-			return "";
-	}
-	public static String getAccountYearStrShrt(String key) {
-		if (key != null) {
-			String value = SukiAppPreference.accYearStrshrt.get(key);
-			return value;
-		} else
-			return "";
-	}
-
 	public static String getAccountYear() {
 		int month = SukiAppUtil.getMonth(SukiAppUtil.getCurrentSQLDate());
 		// System.out.println(" month " +month);
@@ -546,22 +492,7 @@ public static int getIntMonthFromStringMonth(String prefixStr){
 		}
 		return accYearStr;
 	}
-	
-	public static Date getAccountYearStartDate()
-	{
-		Date accYearStartDate=SukiAppUtil.getDate(1,4,getAccountYearInt(getAccountYear()));
-		return accYearStartDate;
-	}
-
-	public static int getAccountYearInt(String key) {
-		if (key != null) {
-			String value = SukiAppPreference.accYear.get(key);
-			return Integer.parseInt(value);
-		} else
-			return SukiAppUtil.getCurrentYear();
-	}
-
-	
+		
 	public static double calculatePOValue(double qty, double price,
 			double disper) {
 		double discountValue = 0;
@@ -573,22 +504,6 @@ public static int getIntMonthFromStringMonth(String prefixStr){
 			poValue = poValue - discountValue;
 		}
 		return poValue;
-	}
-
-	public static String getPurchaseStatusValue(String key) {
-		if (key != null) {
-			String value = SukiAppPreference.purchaseStatus.get(key);
-			return value;
-		} else
-			return "";
-	}
-
-	public static String getPurchaseStatusCd(String key) {
-		if (key != null) {
-			String value = SukiAppPreference.purchaseStatusCd.get(key);
-			return value;
-		} else
-			return "";
 	}
 
 	public static java.util.Date getUtilDateFromSQLDate(java.sql.Date date) {
@@ -2954,38 +2869,38 @@ public static int getIntMonthFromStringMonth(String prefixStr){
 		 return value;
 	 }
 
-	 public static String sendEmailDc(String contactPerson,String emailId,String fileName){
-			try {
-				StringBuilder message=new StringBuilder();
-				message.append("<h2><font color='blue'> Dear "+contactPerson+",</h2><br/>");
-				message.append("<h3><font color='blue'> Greetings of the day! </h3>");
-			//	message.append("<p> Thanks for your booking.</a>");
-			//	message.append("<p> Your Booking for the Puja "+SukiAppUtil.replaceWithNull(pujaName) +" is confirmed and Booking id is "+bookingId+"</p>");
-			//	message.append("<p> Benifits of this Puja are ... "+SukiAppUtil.replaceWithNull(details) +"</p>");
-				message.append("<p>your order products will be delivered within 50 mins</p>");
-				message.append("<p><font color='red'> NOTE : This is a system generated mail. Please do not reply to this email ID.</p>");
-				message.append("<p><font color='blue'> Please write to your suggestion/feedback to wrightOfficeSolutions@gmail.com.</p>");
-				message.append("<br/><br/><p> Thanks & Regards, </p>");
-			//	message.append("<p>www.panditonline.com </p>");
-		//		String emailids[] = SukiAppUtil.getSplitOfStrings(emailId, ",");
-				try {
-					System.out.println("email id"+emailId);
-					SUKIEMail.sendMailNew(emailId, "Delivery Chalan", message.toString(),fileName, true);
-					System.out.println("Email has been sent ");
-					//FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Email has been sent"));
-				} catch (MessagingException e) {
-					// TODO Auto-generated catch block
-					System.out.println("Email is not sent, please check your internet connection");
-					//FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Email is not sent, please check your internet connection"));
-					e.printStackTrace();
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			return "";
-		}
+//	 public static String sendEmailDc(String contactPerson,String emailId,String fileName){
+//			try {
+//				StringBuilder message=new StringBuilder();
+//				message.append("<h2><font color='blue'> Dear "+contactPerson+",</h2><br/>");
+//				message.append("<h3><font color='blue'> Greetings of the day! </h3>");
+//			//	message.append("<p> Thanks for your booking.</a>");
+//			//	message.append("<p> Your Booking for the Puja "+SukiAppUtil.replaceWithNull(pujaName) +" is confirmed and Booking id is "+bookingId+"</p>");
+//			//	message.append("<p> Benifits of this Puja are ... "+SukiAppUtil.replaceWithNull(details) +"</p>");
+//				message.append("<p>your order products will be delivered within 50 mins</p>");
+//				message.append("<p><font color='red'> NOTE : This is a system generated mail. Please do not reply to this email ID.</p>");
+//				message.append("<p><font color='blue'> Please write to your suggestion/feedback to wrightOfficeSolutions@gmail.com.</p>");
+//				message.append("<br/><br/><p> Thanks & Regards, </p>");
+//			//	message.append("<p>www.panditonline.com </p>");
+//		//		String emailids[] = SukiAppUtil.getSplitOfStrings(emailId, ",");
+//				try {
+//					System.out.println("email id"+emailId);
+//					SUKIEMail.sendMailNew(emailId, "Delivery Chalan", message.toString(),fileName, true);
+//					System.out.println("Email has been sent ");
+//					//FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Email has been sent"));
+//				} catch (MessagingException e) {
+//					// TODO Auto-generated catch block
+//					System.out.println("Email is not sent, please check your internet connection");
+//					//FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Email is not sent, please check your internet connection"));
+//					e.printStackTrace();
+//				}
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			
+//			return "";
+//		}
 	
 	/*public static void generateExcel(){
 		 WritableWorkbook myFirstWbook = null;

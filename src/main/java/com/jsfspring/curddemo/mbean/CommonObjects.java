@@ -181,29 +181,29 @@ public class CommonObjects{
 			//	entityManager.persist(i);
 			});
 		}
-		if (object.getClass().equals(InwardMaster.class)) {
-			InwardMaster temp = (InwardMaster) object;
-			List<Integer> intList=new ArrayList<Integer>();
-			temp.getInwardTransList().parallelStream().forEach(i -> {
-				ProductUom product = i.getUom();
-				product.setStock(product.getStock() + i.getReceived());
-				entityManager.merge(product);
-			//	entityManager.persist(i);
-				PurchaseOrderTrans poTrans=i.getPoTransNo();
-				if(poTrans!=null) {
-				poTrans.setReceived(i.getReceived());
-				if(poTrans.getNos()==poTrans.getReceived())
-					poTrans.setStatus(SukiAppConstants.CLOSED_STATUS);
-				else
-					poTrans.setStatus(SukiAppConstants.PENDING_STATUS);
-				entityManager.merge(poTrans);
-				if(!intList.contains(poTrans.getPoNo().getPoNo())) {
-					intList.add(poTrans.getPoNo().getPoNo());
-					setInwardStatus(poTrans.getPoNo().getPoNo());
-				}
-				}
-			});
-		}
+//		if (object.getClass().equals(InwardMaster.class)) {
+//			InwardMaster temp = (InwardMaster) object;
+//			List<Integer> intList=new ArrayList<Integer>();
+//			temp.getInwardTransList().parallelStream().forEach(i -> {
+//				ProductUom product = i.getUom();
+//				product.setStock(product.getStock() + i.getReceived());
+//				entityManager.merge(product);
+//			//	entityManager.persist(i);
+//				PurchaseOrderTrans poTrans=i.getPoTransNo();
+//				if(poTrans!=null) {
+//				poTrans.setReceived(i.getReceived());
+//				if(poTrans.getNos()==poTrans.getReceived())
+//					poTrans.setStatus(SukiAppConstants.CLOSED_STATUS);
+//				else
+//					poTrans.setStatus(SukiAppConstants.PENDING_STATUS);
+//				entityManager.merge(poTrans);
+//				if(!intList.contains(poTrans.getPoNo().getPoNo())) {
+//					intList.add(poTrans.getPoNo().getPoNo());
+//					setInwardStatus(poTrans.getPoNo().getPoNo());
+//				}
+//				}
+//			});
+//		}
 		if (object.getClass().equals(BillMasterDomain.class)) {
 			BillMasterDomain temp = (BillMasterDomain) object;
 			if (temp.getInvoiceType().equalsIgnoreCase("Direct")) {
@@ -269,26 +269,26 @@ public class CommonObjects{
 			product.setStock(product.getStock() - temp.getNos());
 			entityManager.merge(product);
 		}
-		if (object.getClass().equals(InwardTrans.class)) {
-			InwardTrans temp = (InwardTrans) object;
-			ProductUom product;
-			product = temp.getUom();
-			System.out.println("Stock"+product.getStock());
-			System.out.println("Recived"+temp.getReceived());
-			System.out.println("NOs For Edit"+temp.getNosForEdit());
-			product.setStock(product.getStock() + temp.getReceived()- temp.getNosForEdit());
-			System.out.println("Final Stock"+product.getStock());
-			entityManager.merge(product);
-			PurchaseOrderTrans poTrans=temp.getPoTransNo();
-			poTrans.setReceived(poTrans.getReceived()+temp.getReceived()- temp.getNosForEdit());
-			if(poTrans.getNos()==poTrans.getReceived())
-				poTrans.setStatus(SukiAppConstants.CLOSED_STATUS);
-			else
-				poTrans.setStatus(SukiAppConstants.PENDING_STATUS);
-			entityManager.merge(poTrans);
-			setInwardStatus(poTrans.getPoNo().getPoNo());
-			return object;
-		}
+//		if (object.getClass().equals(InwardTrans.class)) {
+//			InwardTrans temp = (InwardTrans) object;
+//			ProductUom product;
+//			product = temp.getUom();
+//			System.out.println("Stock"+product.getStock());
+//			System.out.println("Recived"+temp.getReceived());
+//			System.out.println("NOs For Edit"+temp.getNosForEdit());
+//			product.setStock(product.getStock() + temp.getReceived()- temp.getNosForEdit());
+//			System.out.println("Final Stock"+product.getStock());
+//			entityManager.merge(product);
+//			PurchaseOrderTrans poTrans=temp.getPoTransNo();
+//			poTrans.setReceived(poTrans.getReceived()+temp.getReceived()- temp.getNosForEdit());
+//			if(poTrans.getNos()==poTrans.getReceived())
+//				poTrans.setStatus(SukiAppConstants.CLOSED_STATUS);
+//			else
+//				poTrans.setStatus(SukiAppConstants.PENDING_STATUS);
+//			entityManager.merge(poTrans);
+//			setInwardStatus(poTrans.getPoNo().getPoNo());
+//			return object;
+//		}
 		if (object.getClass().equals(BillTransDomain.class)) {
 			BillTransDomain temp = (BillTransDomain) object;
 			if (temp.getBillMaster().getInvoiceType().equalsIgnoreCase("Direct")) {
@@ -328,28 +328,28 @@ public class CommonObjects{
 	}
 
 	public <T> void delete(T object, int rowId) throws SukiException {
-		if (object.getClass().equals(InwardMaster.class)) {
-			InwardMaster temp = (InwardMaster) object;
-			List<Integer> intList=new ArrayList<Integer>();
-			temp.getInwardTransList().parallelStream().forEach(i -> {
-				ProductUom product = i.getUom();
-				product.setStock(product.getStock() - i.getReceived());
-				entityManager.merge(product);
-				PurchaseOrderTrans poTrans=i.getPoTransNo();
-				poTrans.setReceived(poTrans.getReceived()-i.getReceived());
-				System.out.println("POTrans   Delete---"+poTrans.getReceived());
-				System.out.println("Received  Delete---"+i.getReceived());
-				if(poTrans.getNos()==poTrans.getReceived())
-					poTrans.setStatus(SukiAppConstants.CLOSED_STATUS);
-				else
-					poTrans.setStatus(SukiAppConstants.PENDING_STATUS);
-				entityManager.merge(poTrans);
-				if(!intList.contains(poTrans.getPoNo().getPoNo())) {
-					intList.add(poTrans.getPoNo().getPoNo());
-					setInwardStatus(poTrans.getPoNo().getPoNo());
-				}
-			});
-		}
+//		if (object.getClass().equals(InwardMaster.class)) {
+//			InwardMaster temp = (InwardMaster) object;
+//			List<Integer> intList=new ArrayList<Integer>();
+//			temp.getInwardTransList().parallelStream().forEach(i -> {
+//				ProductUom product = i.getUom();
+//				product.setStock(product.getStock() - i.getReceived());
+//				entityManager.merge(product);
+//				PurchaseOrderTrans poTrans=i.getPoTransNo();
+//				poTrans.setReceived(poTrans.getReceived()-i.getReceived());
+//				System.out.println("POTrans   Delete---"+poTrans.getReceived());
+//				System.out.println("Received  Delete---"+i.getReceived());
+//				if(poTrans.getNos()==poTrans.getReceived())
+//					poTrans.setStatus(SukiAppConstants.CLOSED_STATUS);
+//				else
+//					poTrans.setStatus(SukiAppConstants.PENDING_STATUS);
+//				entityManager.merge(poTrans);
+//				if(!intList.contains(poTrans.getPoNo().getPoNo())) {
+//					intList.add(poTrans.getPoNo().getPoNo());
+//					setInwardStatus(poTrans.getPoNo().getPoNo());
+//				}
+//			});
+//		}
 		if (object.getClass().equals(PurchaseBillMaster.class)) {
 			PurchaseBillMaster temp = (PurchaseBillMaster) object;
 			if (temp.getInvoiceType().equalsIgnoreCase("Direct")) {
@@ -396,20 +396,20 @@ public class CommonObjects{
 				});
 			}
 		}
-		if (object.getClass().equals(InwardTrans.class)) {
-			InwardTrans temp = (InwardTrans) object;
-			ProductUom product = temp.getUom();
-			product.setStock(product.getStock() - temp.getReceived());
-			entityManager.merge(product);
-			PurchaseOrderTrans poTrans=temp.getPoTransNo();
-			poTrans.setReceived(poTrans.getReceived()-temp.getReceived());
-			if(poTrans.getNos()==poTrans.getReceived())
-				poTrans.setStatus(SukiAppConstants.CLOSED_STATUS);
-			else
-				poTrans.setStatus(SukiAppConstants.PENDING_STATUS);
-			entityManager.merge(poTrans);
-			setInwardStatus(poTrans.getPoNo().getPoNo());
-		}
+//		if (object.getClass().equals(InwardTrans.class)) {
+//			InwardTrans temp = (InwardTrans) object;
+//			ProductUom product = temp.getUom();
+//			product.setStock(product.getStock() - temp.getReceived());
+//			entityManager.merge(product);
+//			PurchaseOrderTrans poTrans=temp.getPoTransNo();
+//			poTrans.setReceived(poTrans.getReceived()-temp.getReceived());
+//			if(poTrans.getNos()==poTrans.getReceived())
+//				poTrans.setStatus(SukiAppConstants.CLOSED_STATUS);
+//			else
+//				poTrans.setStatus(SukiAppConstants.PENDING_STATUS);
+//			entityManager.merge(poTrans);
+//			setInwardStatus(poTrans.getPoNo().getPoNo());
+//		}
 		if (object.getClass().equals(BillTransDomain.class)) {
 			BillTransDomain temp = (BillTransDomain) object;
 			if (temp.getBillMaster().getInvoiceType().equalsIgnoreCase("Direct")) {
