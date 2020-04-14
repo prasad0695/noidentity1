@@ -3,3 +3,4 @@ COPY / /app
 WORKDIR /app
 RUN cd /app && mvn clean package
 ENTRYPOINT mvn spring-boot:run
+EXPOSE 9091
