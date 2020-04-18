@@ -76,7 +76,13 @@ public class PurchasePaymentMBean{
 	}
 	
 	public void getDeleteActionEvent(ActionEvent event) {
-			purchasePaymentRepo.deleteById(sukiBaseBean.actionEvent(event));
+		purchasePayment=purchasePaymentRepo.findById(sukiBaseBean.actionEvent(event)).get();
+		deletePayment();
+	}
+	public void deletePayment() {
+		purchasePaymentRepo.updateBeforeDelete(purchasePayment.getPaymentNo());
+		purchasePaymentRepo.delete(purchasePayment);
+		sukiBaseBean.addMessage("Purchase Payment", "Saved Successfully");
 	}
 	public void getAmtFromList(){
 		selectedBillListForPayment.parallelStream().forEach(i->{i.setPaidAmt(i.getTotalAmount());});
@@ -93,12 +99,7 @@ public class PurchasePaymentMBean{
 		sukiBaseBean.overviewList();
 	}
 	public void getPendingPurchaseBill() {
-//		try {
-//			billListForPayment=SukiServiceAPI.getInstance().getPendingPurchaseBillMasterList(purchasePayment.getSupId().getSupCode());
-//		} catch (SukiException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+			billListForPayment=purchasePaymentRepo.findInvByPendingStatus(purchasePayment.getSupId().getSupCode());
 	}
 	
 	

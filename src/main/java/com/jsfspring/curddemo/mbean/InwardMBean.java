@@ -18,6 +18,7 @@ import com.jsfspring.curddemo.entity.PurchaseOrderMaster;
 import com.jsfspring.curddemo.entity.PurchaseOrderTrans;
 import com.jsfspring.curddemo.repositry.InwardMasterRepo;
 import com.jsfspring.curddemo.repositry.InwardTransRepo;
+import com.jsfspring.curddemo.utills.SukiAppConstants;
 import com.jsfspring.curddemo.utills.SukiAppUtil;
 import com.jsfspring.curddemo.utills.SukiException;
 
@@ -150,10 +151,19 @@ public class InwardMBean{
 		sukiBaseBean.pageRedirect(newInward);
 	}
 	public void getDeleteActionEvent(ActionEvent event) {
-			inwardMasterRepo.deleteById(sukiBaseBean.actionEvent(event));
+			inwardMaster=inwardMasterRepo.findById(sukiBaseBean.actionEvent(event)).get();
+			if(inwardMaster.getStatus().equals(SukiAppConstants.BILLED)) {
+				sukiBaseBean.errorMessage("Inward", "Already Billed");
+				return;
+			}
+			inwardMasterRepo.delete(inwardMaster);
 			sukiBaseBean.addMessage("Inward", "Deleted Successfully");
 	}
 	public void deleteInward() {
+		if(inwardMaster.getStatus().equals(SukiAppConstants.BILLED)) {
+			sukiBaseBean.errorMessage("Inward", "Already Billed");
+			return;
+		}
 		inwardMasterRepo.delete(inwardMaster);
 		sukiBaseBean.addMessage("Inward", "Deleted Successfully");
 	}

@@ -161,14 +161,14 @@ public class CommonObjects{
 	public <T> T save(T object) throws SukiException {
 		if (object.getClass().equals(PurchaseBillMaster.class)) {
 			PurchaseBillMaster temp = (PurchaseBillMaster) object;
-			if (temp.getInvoiceType().equalsIgnoreCase("Direct")) {
-				temp.setInwardMaster(new InwardMaster(temp));
-				temp.getInwardMaster().setInwardNo(getAutoNumber("inwardNo","InwardMaster"));
-				System.out.println("Size---"+temp.getInwardMaster().getInwardTransList().size());
-				temp.getPurchaseBillTransList().parallelStream().forEach(i -> {
-					addProductUom(i.getUom(),i.getQty());
-				});
-			}
+//			if (temp.getInvoiceType().equalsIgnoreCase("Direct")) {
+//				temp.setInwardMaster(new InwardMaster(temp));
+//				temp.getInwardMaster().setInwardNo(getAutoNumber("inwardNo","InwardMaster"));
+//				System.out.println("Size---"+temp.getInwardMaster().getInwardTransList().size());
+//				temp.getPurchaseBillTransList().parallelStream().forEach(i -> {
+//					addProductUom(i.getUom(),i.getQty());
+//				});
+//			}
 		}
 		object=entityManager.merge(object); 
 		

@@ -188,6 +188,7 @@ body.layout-compact .ui-datatable thead th {
 </div>
 <p:commandButton value="Print Bill" action="#{purchaseInvoiceMBean.billPrintPage}" >
 </p:commandButton>
+<p:commandButton value="Delete" action="#{purchaseInvoiceMBean.deletePuchaseInvoice}" update="messages" ></p:commandButton>
 <p:commandButton value="Save" action="#{purchaseInvoiceMBean.saveBill}" update="messages" ></p:commandButton>
 </h:form>
 
@@ -207,12 +208,12 @@ body.layout-compact .ui-datatable thead th {
 <p:outputLabel value="#{obj.supplier}" style="width:30px;margin-left:60px" ></p:outputLabel>
 </p:column>
 </p:dataTable>
-<p:dataTable rendered="#{purchaseInvoiceMBean.purchaseBillMaster.invoiceType=='DC'}" rowIndexVar="rowId" var="obj" style="margin-top:15px" value="#{purchaseInvoiceMBean.inwardMasterList}" rowKey="#{obj.dcNo}" selection="#{purchaseInvoiceMBean.selectedInwardMasterList}" id="datatable1" >
+<p:dataTable rendered="#{purchaseInvoiceMBean.purchaseBillMaster.invoiceType=='DC'}" rowIndexVar="rowId" var="obj" style="margin-top:15px" value="#{purchaseInvoiceMBean.inwardMasterList}" rowKey="#{obj.inwardNo}" selection="#{purchaseInvoiceMBean.selectedInwardMasterList}" id="datatable1" >
 <p:column headerText="select" selectionMode="multiple" width="5%"> 
 </p:column>
 <p:column headerText="DC.No" width="3%">
-<p:outputLabel value="#{obj.dcNo}" style="width:80px;margin-left:40px"></p:outputLabel>
-<h:inputHidden value="#{obj.dcNo}" id="slNo" />
+<p:outputLabel value="#{obj.inwardNo}" style="width:80px;margin-left:40px"></p:outputLabel>
+<h:inputHidden value="#{obj.inwardNo}" id="slNo" />
 </p:column>
 <p:column headerText="Date" width="7%">
 <p:outputLabel value="#{obj.date}" style="margin-left:40px"></p:outputLabel>

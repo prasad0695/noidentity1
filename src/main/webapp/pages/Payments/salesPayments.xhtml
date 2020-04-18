@@ -12,6 +12,7 @@
 </ui:define>
 <ui:define name="content">
 <h:form id="datalist3">
+<p:growl id="messages" showDetail="true"></p:growl>
 <p:dataTable id="sizetable" var="obj" value="#{salesPaymentMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
                      paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
                              tableStyleClass="pdatatable-table" rows="10"
@@ -41,7 +42,7 @@
 <p:commandLink actionListener="#{salesPaymentMBean.getSalPaymentObjActionEvent}" ><i class="material-icons">
 edit
 </i></p:commandLink>
-<p:commandLink style="margin-left:5px;" onclick="if(!confirm('Are u want to delete?')) return false" actionListener="#{salesPaymentMBean.getDeleteActionEvent}" ><i style="color: black;" class="material-icons">delete</i></p:commandLink>
+<p:commandLink style="margin-left:5px;" onclick="if(!confirm('Are u want to delete?')) return false" update="datalist3:messages" actionListener="#{salesPaymentMBean.getDeleteActionEvent}" ><i style="color: black;" class="material-icons">delete</i></p:commandLink>
 <p:commandLink style="margin-left:5px;" ><i class="material-icons">print</i></p:commandLink>
 </p:column>
 </p:dataTable>

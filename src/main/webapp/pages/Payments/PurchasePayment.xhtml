@@ -12,6 +12,7 @@
 </ui:define>
 <ui:define name="content">
 <h:form id="datalist3">
+<p:growl id="messages" showDetail="true"></p:growl>
 <p:dataTable id="sizetable" var="obj" value="#{purchasePaymentMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
                      paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
                              tableStyleClass="pdatatable-table" rows="10"
@@ -27,7 +28,7 @@
 </p:outputLabel>
 </p:column>
 <p:column headerText="Supplier" width="25%">
-<p:outputLabel value="#{obj.companyName}" style="margin-left:20px" ></p:outputLabel>
+<p:outputLabel value="#{obj.supId.name}" style="margin-left:20px" ></p:outputLabel>
 </p:column>
 <p:column  headerText="Mode" width="10%">
 <p:outputLabel value="#{obj.paymentmode}"  style="margin-left:20px" ></p:outputLabel>
@@ -41,7 +42,7 @@
 <p:commandLink actionListener="#{purchasePaymentMBean.getSalPaymentObjActionEvent}" ><i class="material-icons">
 edit
 </i></p:commandLink>
-<p:commandLink style="margin-left:5px;" onclick="if(!confirm('Are u want to delete?')) return false" actionListener="#{purchasePaymentMBean.getDeleteActionEvent}" ><i style="color: black;" class="material-icons">delete</i></p:commandLink>
+<p:commandLink style="margin-left:5px;" onclick="if(!confirm('Are u want to delete?')) return false" update="datalist3:messages" actionListener="#{purchasePaymentMBean.getDeleteActionEvent}" ><i style="color: black;" class="material-icons">delete</i></p:commandLink>
 <p:commandLink style="margin-left:5px;" ><i class="material-icons">print</i></p:commandLink>
 </p:column>
 </p:dataTable>

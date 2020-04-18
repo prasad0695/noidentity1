@@ -12,6 +12,5 @@ public interface InwardMasterRepo extends JpaRepository<InwardMaster, Integer>{
 	
 	@Query("select u from InwardMaster u where u.supId.supCode =?1 and status='Pending'")
 	public List<InwardMaster> findInwDcByPendingStatus(Integer supId);
-
-
+	
 }

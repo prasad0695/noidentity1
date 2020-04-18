@@ -98,7 +98,13 @@ public class SalesPaymentMBean{
 	}
 	
 	public void getDeleteActionEvent(ActionEvent event) {
-			salesPaymentRepo.deleteById(sukiBaseBean.actionEvent(event));
+			salesPayment=salesPaymentRepo.findById(sukiBaseBean.actionEvent(event)).get();
+			deletePayment();
+	}
+	public void deletePayment() {
+		salesPaymentRepo.updateBeforeDelete(salesPayment.getPaymentNo());
+		salesPaymentRepo.delete(salesPayment);
+		sukiBaseBean.addMessage("Sales Payment", "Deleted Successfully");
 	}
 	public void getAmtFromList(){
 		selectedBillListForPayment.parallelStream().forEach(i->{i.setPaidAmt(i.getTotalAmount());});

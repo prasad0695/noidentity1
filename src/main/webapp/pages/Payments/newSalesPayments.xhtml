@@ -136,6 +136,8 @@ body.layout-compact .ui-datatable thead th {
 			</h:panelGrid>
 			<p:commandButton id="save" value="Save"
 				action="#{salesPaymentMBean.savePayment}" update="messages"></p:commandButton>
+			<p:commandButton id="delete" value="Delete"
+				action="#{salesPaymentMBean.deletePayment}" update="messages"></p:commandButton>	
 		</h:form>
 	</ui:define>
 </ui:composition>

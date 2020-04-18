@@ -60,13 +60,16 @@ public class PurchaseBillMaster implements Serializable{
 		       fetch=FetchType.LAZY,cascade = CascadeType.ALL)
 	private List<PurchaseBillTrans> purchaseBillTransList=new ArrayList<PurchaseBillTrans>();
 	
-	@OneToOne(orphanRemoval=true,mappedBy="purchaseBillMaster",targetEntity=InwardMaster.class,
-		       fetch=FetchType.LAZY,cascade = CascadeType.ALL)
-	private InwardMaster inwardMaster=new InwardMaster();
+//	@OneToOne(orphanRemoval=true,mappedBy="purchaseBillMaster",targetEntity=InwardMaster.class,
+//		       fetch=FetchType.LAZY,cascade = CascadeType.ALL)
+//	private InwardMaster inwardMaster=new InwardMaster();
 	
 	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
 	@JoinColumn(name = "PAYMENT_NO")
 	private PurchasePaymentsDomain paymentNo;
+	
+	@OneToMany(orphanRemoval=true,mappedBy="purchaseBillMaster",targetEntity=InwardMaster.class,fetch=FetchType.LAZY,cascade = {CascadeType.ALL})
+	private List<InwardMaster> inwardMasterList=new ArrayList<InwardMaster>();
 	
 	@Transient
 	private double totalWithoutTax;
@@ -243,13 +246,13 @@ public class PurchaseBillMaster implements Serializable{
 		this.totalWithoutTax = totalWithoutTax;
 	}
 
-	public InwardMaster getInwardMaster() {
-		return inwardMaster;
-	}
-
-	public void setInwardMaster(InwardMaster inwardMaster) {
-		this.inwardMaster = inwardMaster;
-	}
+//	public InwardMaster getInwardMaster() {
+//		return inwardMaster;
+//	}
+//
+//	public void setInwardMaster(InwardMaster inwardMaster) {
+//		this.inwardMaster = inwardMaster;
+//	}
 
 	public PurchasePaymentsDomain getPaymentNo() {
 		return paymentNo;
@@ -275,5 +278,13 @@ public class PurchaseBillMaster implements Serializable{
 
 	public void setSupplier(String supplier) {
 		this.supplier = supplier;
+	}
+
+	public List<InwardMaster> getInwardMasterList() {
+		return inwardMasterList;
+	}
+
+	public void setInwardMasterList(List<InwardMaster> inwardMasterList) {
+		this.inwardMasterList = inwardMasterList;
 	}
 }

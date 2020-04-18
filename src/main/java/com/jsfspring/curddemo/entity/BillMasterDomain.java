@@ -84,7 +84,7 @@ public class BillMasterDomain implements Serializable{
 	@JoinColumn(name="DC_NO")
 	private DeliveryChalanMaster dcMaster=new DeliveryChalanMaster();
 	
-	@OneToMany(orphanRemoval=true,mappedBy="billNo",targetEntity=DeliveryChalanMaster.class,fetch=FetchType.LAZY,cascade = {CascadeType.MERGE})
+	@OneToMany(orphanRemoval=true,mappedBy="billNo",targetEntity=DeliveryChalanMaster.class,fetch=FetchType.LAZY,cascade = {CascadeType.ALL})
 	private List<DeliveryChalanMaster> dcMasterList=new ArrayList<DeliveryChalanMaster>();
 	
 	@Transient

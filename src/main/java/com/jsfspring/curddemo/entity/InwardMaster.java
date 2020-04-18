@@ -31,7 +31,7 @@ public class InwardMaster implements Serializable {
 	public InwardMaster(PurchaseBillMaster purchaseBillMaster){
 		date=purchaseBillMaster.getDate();
 		supId=purchaseBillMaster.getSupId();
-		status="Received";
+		status="Billed";
 		this.purchaseBillMaster=purchaseBillMaster;
 		purchaseBillMaster.getPurchaseBillTransList().parallelStream().forEach(i->{
 			InwardTrans trans=new InwardTrans(this, i);

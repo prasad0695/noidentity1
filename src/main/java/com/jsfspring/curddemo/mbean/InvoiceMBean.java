@@ -123,9 +123,12 @@ public class InvoiceMBean{
 			sukiBaseBean.addMessage(sukiBaseBean.errorMessage("Invoice", "can't  delete Bill already paid for "+billMaster.getPaymentNo().getPaymentNo()));
 			return;
 		}
+		if(billMaster.getInvoiceType().equalsIgnoreCase("DC"))
+			billMasterRepo.updateBeforeDelete(billMaster.getBillNo());
 			billMasterRepo.delete(billMaster);
 			sukiBaseBean.addMessage("Delivery Chalan", "Deleted Successfullly");
 	}
+		
 	public void getDelete() {
 		deleteFunction();
 		newInvoice();

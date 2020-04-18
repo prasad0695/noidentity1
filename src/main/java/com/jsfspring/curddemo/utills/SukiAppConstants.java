@@ -109,7 +109,8 @@ public class SukiAppConstants {
 	public static final String MONTH_WISE_PRODUCT_REPORT="select sum(nos*price) as amount from VWProduct where year(date)=? and month(date)=? and type='%s'";
 	public static final String MONTH_WISE_PRODUCT_REPORT_WITHID="select sum(nos*price) as amount from VWProduct where year(date)=? and month(date)=? and items=? and type='%s'";
 	
-	
+	public static String BILLED = "Billed";
+	public static String PAID = "Paid";
 	
 	
 	

@@ -25,6 +25,7 @@ import com.jsfspring.curddemo.entity.PurchaseOrderMaster;
 import com.jsfspring.curddemo.repositry.InwardMasterRepo;
 import com.jsfspring.curddemo.repositry.PurchaseBillMasterRepo;
 import com.jsfspring.curddemo.repositry.PurchaseBillTransRepo;
+import com.jsfspring.curddemo.utills.SukiAppConstants;
 import com.jsfspring.curddemo.utills.SukiAppUtil;
 import com.jsfspring.curddemo.utills.SukiException;
 
@@ -68,12 +69,13 @@ public class PurchaseInvoiceMBean{
 		selectedPoMasterList=new ArrayList<PurchaseOrderMaster>();
 	}
 	public PurchaseBillMaster getInwardMasterFromPurchaseBill(PurchaseBillMaster billMaster) {
-		billMaster.setInwardMaster(new InwardMaster(billMaster));
+		billMaster.getInwardMasterList().add(new InwardMaster(billMaster));
 		return billMaster;
 	}
 	
 	public void newInvoice() {
 		purchaseBillMaster=new PurchaseBillMaster();
+		selectedInwardMasterList=new ArrayList<InwardMaster>();
 		try {
 			purchaseBillMaster.setRowId(commonObjects.getAutoNumber("rowId","PurchaseBillMaster"));
 		} catch (SukiException e) {
@@ -109,7 +111,19 @@ public class PurchaseInvoiceMBean{
 	}
 	
 	public void getDeleteActionEvent(ActionEvent event) {
-			purchaseBillMasterRepo.deleteById(sukiBaseBean.actionEvent(event));
+			purchaseBillMaster=purchaseBillMasterRepo.findById(sukiBaseBean.actionEvent(event)).get();	
+			deletePuchaseInvoice();
+	}
+	
+	public void deletePuchaseInvoice() {
+		if(purchaseBillMaster.getStatus().equals(SukiAppConstants.PAID)) {
+			sukiBaseBean.errorMessage("Purchase Invoice", "Already Paid");
+			return;
+		}
+		if(purchaseBillMaster.getInvoiceType().equalsIgnoreCase("DC"))
+		purchaseBillMasterRepo.updateBeforeDelete(purchaseBillMaster.getRowId());
+		purchaseBillMasterRepo.delete(purchaseBillMaster);
+		sukiBaseBean.addMessage("Purchase Invoice", "Deleted Successfully");
 	}
 	
 	public void OverviewListFromMenu() {
@@ -141,6 +155,8 @@ public class PurchaseInvoiceMBean{
 			});
 		}else if(purchaseBillMaster.getInvoiceType().equalsIgnoreCase("DC")){
 			selectedInwardMasterList.parallelStream().forEach(i->{
+				i.setStatus("Billed");
+				i.setPurchaseBillMaster(purchaseBillMaster);
 				i.getInwardTransList().parallelStream().forEach(j->{
 					PurchaseBillTrans trans=new PurchaseBillTrans();
 					trans.setProductId(j.getProductId());
@@ -250,11 +266,14 @@ public class PurchaseInvoiceMBean{
 		try {
 			if(purchaseBillMaster.getInvoiceType().equalsIgnoreCase("Direct")) {
 				purchaseBillMaster=getInwardMasterFromPurchaseBill(purchaseBillMaster);
-				purchaseBillMaster.getInwardMaster().setInwardNo(commonObjects.getAutoNumber("inwardNo","InwardMaster"));
+				purchaseBillMaster.getInwardMasterList().get(0).setInwardNo(commonObjects.getAutoNumber("inwardNo","InwardMaster"));
 			}else {
-				purchaseBillMaster.setInwardMaster(null);
+//				purchaseBillMaster.setInwardMaster(null);
 			}
+			if(selectedInwardMasterList.size()>0)
+			purchaseBillMaster.setInwardMasterList(selectedInwardMasterList);
 			purchaseBillMaster=purchaseBillMasterRepo.save(purchaseBillMaster);
+			sukiBaseBean.addMessage("Purchase Invoice", "Saved Successfully");
 			}catch (Exception e) {
 			}
 		}

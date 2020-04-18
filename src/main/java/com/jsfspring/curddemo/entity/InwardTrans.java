@@ -33,7 +33,7 @@ public class InwardTrans implements Serializable {
     	status="Billed";
 	}
 	public InwardTrans(PurchaseBillTrans billTrans){
-    	inwardNo=billTrans.getMasterRowId().getInwardMaster();
+    	inwardNo=billTrans.getMasterRowId().getInwardMasterList().get(0);
     	productId=billTrans.getProductId();
     	uom=billTrans.getUom();
     	received=billTrans.getQty();
