@@ -102,12 +102,12 @@ public class SukiAppConstants {
 	public static final String SALES_OUTSTANDING="SALES_OUTSTANDING";
 	public static final String PURCHASE_OUTSTANDING="PURCHASE_OUTSTANDING";
 	
-	public static final String MONTH_WISE_REPORT_WITHID="select sum(totalAmount) as amt from %s where year(date)=? and month(date)=? and %s=?";
-	public static final String MONTH_WISE_REPORT="select sum(totalAmount) as amt from %s where year(date)=? and month(date)=?";
-	public static final String PRODUCT_WISE_SALES_PURCHASE="select 0,A.ITEMS,B.ITEM,sum(A.NOS*A.PRICE) as amount from VW_PRODUCT A, PRODUCT B where A.TYPE='%s' and month(A.DATE)=? and year(A.DATE)=?"
+	public static final String MONTH_WISE_REPORT_WITHID="select sum(totalAmount) as amt from %s where year(date)=?1 and month(date)=?2 and %s=?3";
+	public static final String MONTH_WISE_REPORT="select sum(totalAmount) as amt from %s where year(date)=?1 and month(date)=?2";
+	public static final String PRODUCT_WISE_SALES_PURCHASE="select 0,A.ITEMS,B.ITEM,sum(A.NOS*A.PRICE) as amount from VW_PRODUCT A, PRODUCT B where A.TYPE='%s' and month(A.DATE)=?1 and year(A.DATE)=?2"
 			+ " and A.ITEMS=B.PROD_CODE GROUP BY B.ITEM,A.ITEMS,YEAR(A.DATE) order by amount desc";
-	public static final String MONTH_WISE_PRODUCT_REPORT="select sum(nos*price) as amount from VWProduct where year(date)=? and month(date)=? and type='%s'";
-	public static final String MONTH_WISE_PRODUCT_REPORT_WITHID="select sum(nos*price) as amount from VWProduct where year(date)=? and month(date)=? and items=? and type='%s'";
+	public static final String MONTH_WISE_PRODUCT_REPORT="select sum(nos*price) as amount from VWProduct where year(date)=?1 and month(date)=?2 and type='%s'";
+	public static final String MONTH_WISE_PRODUCT_REPORT_WITHID="select sum(nos*price) as amount from VWProduct where year(date)=?1 and month(date)=?2 and items=?3 and type='%s'";
 	
 	public static String BILLED = "Billed";
 	public static String PAID = "Paid";

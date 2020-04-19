@@ -211,7 +211,7 @@ body {
                                 scrollHeight="250">
                                 <p:ajax event="itemSelect" listener="#{dashBoardReportMBean.getSalesOutstandingForCompany}" update="form" />
         </p:autoComplete>
-        <p:commandButton value="All" action="#{dashBoardReportMBean.getSalesOutstandingForAll}" update="form"></p:commandButton>
+        <p:commandButton value="All" action="#{sukiBaseBean.getSalesOutstandingForAll}" update="form"></p:commandButton>
       </p:panelGrid>
        <ul class="chart--horiz">
        <p:repeat var="obj"  value="#{dashBoardReportMBean.outstandingSalesList}" >
