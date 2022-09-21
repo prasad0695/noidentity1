@@ -119,7 +119,7 @@
                            <p:menuitem value="DELIVERY CHALLAN" icon="&#xE8B8;" actionListener="#{deliveryChallanMBean.OverviewListFromMenu}" />
                            <p:menuitem value="INVOICE" icon="&#xE8B8;" actionListener="#{invoiceMBean.OverviewListFromMenu}"  />
                            <p:menuitem value="PAYMENTS" icon="&#xE8B8;" actionListener="#{salesPaymentMBean.OverviewListFromMenu}"  />
-                           <p:menuitem value="QUOTATION" icon="&#xE8B8;" actionListener="#{productMBean.getQuotMasterList}" />
+                           <p:menuitem value="QUOTATION" icon="&#xE8B8;" actionListener="#{quotationMBean.getQuotMasterList}" />
                            </p:submenu>
                            <p:submenu label="SALES REPORT" icon="&#xE8B8;">
                            <p:menuitem value="SALES" icon="&#xE8B8;"  actionListener="#{dashBoardReportMBean.sales}" />
@@ -148,6 +148,10 @@
                            </p:submenu>
                            <p:menuitem value="GST" icon="&#xE8B8;"  actionListener="#{dashBoardReportMBean.getGstReport}" />
                            <p:menuitem id="commonReport" value="COMMON REPORT" icon="&#xE8B8;" action="#{dashBoardReportMBean.commonReportRoute}" />
+                           <p:menuitem value="Expenses" icon="&#xE8B8;"  action="#{expenseMBean.OverviewListFromMenu}" />
+                            <p:menuitem value="Category" icon="&#xE8B8;"  action="#{categoryMBean.newCompanyCategory}" />
+                            <p:menuitem value="CompanyCategories" icon="&#xE8B8;"  action="#{categoryMBean.getCompanyCategoryList}" />
+                            <p:menuitem value="Product Category" icon="&#xE8B8;"  action="#{categoryMBean.getProductCategory}" />
                            <p:submenu label="PRODUCT REPORT" icon="&#xE8B8;">  
                              <p:menuitem value="PRODUCT SALES" icon="&#xE8B8;"  actionListener="#{dashBoardReportMBean.productSales}" />
                              <p:menuitem value="PRODUCT PURCHASE" icon="&#xE8B8;"  actionListener="#{dashBoardReportMBean.productPurchase}" />

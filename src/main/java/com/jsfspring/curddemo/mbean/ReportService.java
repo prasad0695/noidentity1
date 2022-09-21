@@ -65,19 +65,43 @@ public class ReportService {
 		Query query = entityManager.createQuery("select sum(totalAmount-paidAmt) from PurchaseBillMaster");
 		double purchasePending=0;
 		double salesPending=0;
+		double salesProfit=0;
+		double salesGst=0;
+		double purchaseGst=0;
 		try {
 			purchasePending=(double) query.getSingleResult();
 		}catch(Exception e) {
 			purchasePending=0;
 		}
 		dashBoardReport.setPurchasePending(purchasePending);
-		query = entityManager.createQuery("select sum(totalAmount-paidAmt) from BillMasterDomain");
+		query = entityManager.createQuery(""
+				+ "select sum(totalAmount-paidAmt) from BillMasterDomain");
 		try {
 			salesPending=(double) query.getSingleResult();
 		}catch(Exception e) {
 			salesPending=0;
 		}
 		dashBoardReport.setSalesPending(salesPending);
+		query=entityManager.createQuery("select (sum(qty*rate)-sum(qty*purchaseRate)) as Rate from BillTransDomain");
+		try {
+			salesProfit=(double) query.getSingleResult();
+		}catch(Exception e) {
+			salesProfit=0;
+		}
+		dashBoardReport.setTotalProfit(SukiAppUtil.roundOffHigherSideNew(salesProfit));
+		query=entityManager.createQuery("Select sum(gstAmount) from BillMasterDomain");
+		try {
+			salesGst=(double) query.getSingleResult();
+		}catch(Exception e) {
+			salesGst=0;
+		}
+		query=entityManager.createQuery("Select sum(gstAmount) from PurchaseBillMaster");
+		try {
+			purchaseGst=(double) query.getSingleResult();
+		}catch(Exception e) {
+			purchaseGst=0;
+		}
+		dashBoardReport.setGstCredit(SukiAppUtil.roundOffHigherSideNew(purchaseGst-salesGst));
 		return dashBoardReport;
 	}
 	public Map<String, Double> monthWiseReportForYear(int Year, int id, String type) throws SukiException{
@@ -138,8 +162,7 @@ public class ReportService {
 	}
 	public GstReportDomain getGstReport(int month, int year) throws SukiException {
 		GstReportDomain gstReport=new GstReportDomain();
-		String sql="SELECT A.GST,SUM(A.QUANTITY*A.RATE/100),B.INVOICE_NO AS GSTAMOUNT FROM BILL_TRANS A,BILL_MASTER B" + 
-				" WHERE A.BILL_NO=B.INVOICE_NO AND MONTH(B.DATE)=? AND YEAR(B.DATE)=? GROUP BY A.GST,B.INVOICE_NO";
+		String sql="SELECT A.GST,SUM((A.QUANTITY*A.RATE)*A.GST/100),B.INVOICE_NO AS GSTAMOUNT,C.COMPANY_NAME,C.GST AS GSTNO,B.TOTAL_AMOUNT FROM BILL_TRANS A,BILL_MASTER B,COMPANY C WHERE A.BILL_NO=B.INVOICE_NO AND B.COMPANY_ID=C.COMPANY_ID AND MONTH(B.DATE)=? AND YEAR(B.DATE)=? AND B.GST_BILL='1' GROUP BY A.GST,B.INVOICE_NO,C.COMPANY_NAME,C.GST,B.TOTAL_AMOUNT";
 		Query query = entityManager.createNativeQuery(sql);
 		query.setParameter(1, month);
 		query.setParameter(2, year);
@@ -151,11 +174,30 @@ public class ReportService {
 			gst.setGstPercentage(Double.parseDouble(list.get(i)[0].toString()));
 			gst.setGstAmount(Double.parseDouble(list.get(i)[1].toString()));
 			gst.setBillNo((int)list.get(i)[2]);
+			gst.setCompanyName(list.get(i)[3].toString());
+			gst.setGst(list.get(i)[4].toString());
+			gst.setTotalAmt(Double.parseDouble(list.get(i)[5].toString()));
 			gstReportList.add(gst);
 		}
 		gstReport.setGstReportList(gstReportList);
-		query = entityManager.createNativeQuery("SELECT SUM(A.QUANTITY*A.RATE/100)AS GSTAMOUNT FROM BILL_TRANS A,BILL_MASTER B \r\n" + 
-				"WHERE A.BILL_NO=B.INVOICE_NO  AND MONTH(B.DATE)=? AND YEAR(B.DATE)=?");
+		sql="SELECT A.GST,SUM((A.QUANTITY*A.RATE)*A.GST/100),B.ROW_ID AS GSTAMOUNT FROM PURCHASE_BILL_TRANS A,PURCHASE_BILL_MASTER B \r\n" + 
+				"WHERE A.MASTER_ROW_ID=B.ROW_ID AND MONTH(B.DATE)=? AND YEAR(B.DATE)=? AND B.GST_BILL='1' GROUP BY A.GST,B.ROW_ID";
+		query = entityManager.createNativeQuery(sql);
+		query.setParameter(1, month);
+		query.setParameter(2, year);
+		list = query.getResultList();
+		gst=new GstDomain();
+		gstReportList=new ArrayList<GstDomain>();
+		for(int i=0;i<list.size();i++) {
+			gst=new GstDomain();
+			gst.setGstPercentage(Double.parseDouble(list.get(i)[0].toString()));
+			gst.setGstAmount(Double.parseDouble(list.get(i)[1].toString()));
+			gst.setBillNo((int)list.get(i)[2]);
+			gstReportList.add(gst);
+		}
+		gstReport.setPurchaseGstReportList(gstReportList);
+		query = entityManager.createNativeQuery("SELECT SUM((A.QUANTITY*A.RATE)*A.GST/100)AS GSTAMOUNT FROM BILL_TRANS A,BILL_MASTER B \r\n" + 
+				"WHERE A.BILL_NO=B.INVOICE_NO  AND MONTH(B.DATE)=? AND YEAR(B.DATE)=? AND B.GST_BILL='1'");
 		query.setParameter(1, month);
 		query.setParameter(2, year);
 		double  gstAmt=0;
@@ -164,6 +206,17 @@ public class ReportService {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		query = entityManager.createNativeQuery("SELECT SUM((A.QUANTITY*A.RATE)*A.GST/100)AS GSTAMOUNT FROM PURCHASE_BILL_TRANS A,PURCHASE_BILL_MASTER B WHERE A.MASTER_ROW_ID=B.ROW_ID AND MONTH(B.DATE)=? AND YEAR(B.DATE)=? AND B.GST_BILL='1'");
+		query.setParameter(1, month);
+		query.setParameter(2, year);
+		double purchaseGstAmt=0;
+		try {
+			purchaseGstAmt= Double.parseDouble(query.getSingleResult().toString());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+		//SELECT SUM((A.QUANTITY*A.RATE)*A.GST/100)AS GSTAMOUNT FROM PURCHASE_BILL_TRANS A,PURCHASE_BILL_MASTER B WHERE A.MASTER_ROW_ID=B.ROW_ID AND MONTH(B.DATE)=5 AND YEAR(B.DATE)=2020 AND B.GST_BILL='1'
 		query = entityManager.createNativeQuery("select sum(TOTAL_AMOUNT) from PURCHASE_BILL_MASTER where MONTH(DATE)=? AND YEAR(DATE)=?");
 		query.setParameter(1, month);
 		query.setParameter(2, year);
@@ -173,6 +226,7 @@ public class ReportService {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		gstReport.setTotalPurchaseGstAmount(purchaseGstAmt);
 		gstReport.setTotalPurchaseAmount(purchaseAmount);
 		gstReport.setTotalGstAmount(gstAmt);
 		return gstReport;

@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+	<ui:define name="title"></ui:define>
+	<ui:define name="head">
+		<style type="text/css">
+		.ui-paginator .ui-paginator-top{
+			height:2px;
+		}
+body .ui-datalist .ui-datalist-header {
+    padding: 1px 1px; }
+    .ui-paginator .ui-paginator-top .ui-widget-header .ui-corner-top{
+    padding:1px;
+    height:1px;
+    }
+    .textalignCenter{text-align:center;}
+</style>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="mainform">
+		<p:growl id="messages" showDetail="true" ></p:growl>
+        <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h3>EXPENSES</h3>
+                            <p:panelGrid id="content" columns="6" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                        <p:outputLabel value="Date" />
+						<p:calendar value="#{expenseMBean.expense.dateUtil}" >
+						</p:calendar>
+						<p:outputLabel value="Reason" />
+						<p:inputText value="#{expenseMBean.expense.reason}" />
+						<p:outputLabel value="Amount" />
+						<p:inputText value="#{expenseMBean.expense.amount}" />
+						</p:panelGrid>
+						<p:panelGrid columns="3" styleClass="ui-panelgrid-blank form-group"
+								columnClasses="ui-lg-3 ui-md-4,ui-lg-3 ui-md-4,ui-lg-3 ui-md-4"
+								layout="grid">
+						<p:commandButton
+					value="ADD NEW" action="#{expenseMBean.newExpense}" update="content,decimalPattern,delete" />
+					<p:commandButton
+					value="SAVE" action="#{expenseMBean.saveExpense}" validateClient="true" update="datatable,messages" />
+					<p:commandButton
+					value="DELETE" id="delete" action="#{expenseMBean.expenseDelete}" disabled="#{sukiBaseBean.buttonDisable(expenseMBean.expenseDomain.rowId)}" update="datatable,content,messages" />
+					</p:panelGrid>
+						</div>
+						</div>
+						</div>
+						</div>
+					<p:dataTable id="datatable" var="item" value="#{expenseMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+                     paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
+                             tableStyleClass="pdatatable-table" rows="5"
+                             rowsPerPageTemplate="10,25,50,100" paginator="true"
+                             emptyMessage="No Users are available" >
+				<p:column  width="25" styleClass="textalignCenter" headerText="S.No">
+					<p:outputLabel value="#{rowId + 1}" />
+					<h:inputHidden id="slNo" value="#{rowId}" />
+				</p:column>
+				<p:column width="50" styleClass="textalignCenter" headerText="Date">
+					<p:outputLabel  value="#{item.date}"  style="margin-left:20px" >
+					<f:convertDateTime timeZone="IST" pattern="dd/MM/YY" />
+					</p:outputLabel>
+				</p:column>
+				<p:column width="50" styleClass="textalignCenter" headerText="Reason">
+					<p:outputLabel value="#{item.reason}" />
+				</p:column>
+				<p:column width="50" styleClass="textalignCenter" headerText="Amount">
+					<p:outputLabel value="#{item.amount}" />
+				</p:column>
+				<p:column width="50" styleClass="textalignCenter" >
+					<p:commandLink actionListener="#{expenseMBean.getExpenseActionEvent}" update="mainform:content,mainform:decimalPattern,mainform:delete" ><i class="material-icons">edit</i></p:commandLink>		
+				</p:column>
+				</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>

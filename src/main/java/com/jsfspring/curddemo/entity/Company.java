@@ -1,12 +1,20 @@
 package com.jsfspring.curddemo.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -52,6 +60,9 @@ public class Company implements Serializable {
 	@Column(name = "OPENING_BALANCE")
 	private double openingBalance;
 	
+	@OneToMany(fetch=FetchType.LAZY,mappedBy="compId",cascade=CascadeType.ALL)
+    private List<CompanyCategoryList> categoryList=new ArrayList<CompanyCategoryList>();
+	
 	@Transient
 	private String address;
 	
@@ -67,6 +78,8 @@ public class Company implements Serializable {
 	@Transient
 	private double ledgerBalance;
 	
+	@Transient
+	private List<String> categoryListString = new ArrayList<String>();;
 	
 	@Column(name = "SPLIT")
 	private String split;
@@ -204,8 +217,28 @@ public class Company implements Serializable {
 		return mailId;
 	}
 
-
 	public void setMailId(String mailId) {
 		this.mailId = mailId;
 	}
+
+	
+	public List<CompanyCategoryList> getCategoryList() {
+		return categoryList;
+	}
+
+	public void setCategoryList(List<CompanyCategoryList> categoryList) {
+		this.categoryList = categoryList;
+	}
+
+	public List<String> getCategoryListString() {
+//		if(categoryList!=null && categoryList.size()>0)
+//		categoryListString = categoryList.stream().map(i->i.getCategoryId().getCategory()).collect(Collectors.toList());
+		return categoryListString;
+	}
+
+	public void setCategoryListString(List<String> categoryListString) {
+		System.out.println(categoryListString.size());
+		this.categoryListString = categoryListString;
+	}
+
 }

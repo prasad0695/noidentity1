@@ -9,6 +9,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.jsfspring.curddemo.entity.BillMasterDomain;
@@ -16,7 +19,6 @@ import com.jsfspring.curddemo.entity.BillTransDomain;
 import com.jsfspring.curddemo.entity.Company;
 import com.jsfspring.curddemo.entity.DeliveryChalanDomain;
 import com.jsfspring.curddemo.entity.DeliveryChalanMaster;
-import com.jsfspring.curddemo.entity.InwardMaster;
 import com.jsfspring.curddemo.entity.InwardTrans;
 import com.jsfspring.curddemo.entity.OverviewListAndCount;
 import com.jsfspring.curddemo.entity.ProductDomain;
@@ -24,9 +26,9 @@ import com.jsfspring.curddemo.entity.ProductUnitWise;
 import com.jsfspring.curddemo.entity.ProductUom;
 import com.jsfspring.curddemo.entity.PurchaseBillMaster;
 import com.jsfspring.curddemo.entity.PurchaseBillTrans;
-import com.jsfspring.curddemo.entity.PurchaseOrderTrans;
 import com.jsfspring.curddemo.entity.SupplierDomain;
 import com.jsfspring.curddemo.entity.UnitMasterDomain;
+import com.jsfspring.curddemo.repositry.ProductRepo;
 import com.jsfspring.curddemo.utills.SukiAppConstants;
 import com.jsfspring.curddemo.utills.SukiAppUtil;
 import com.jsfspring.curddemo.utills.SukiException;
@@ -42,6 +44,9 @@ public class CommonObjects{
 	 */
 	@PersistenceContext
     private EntityManager entityManager;
+	
+	@Autowired
+	public ProductRepo productRepo;
 	
 	public CommonObjects() {
 		// TODO Auto-generated constructor stub
@@ -87,6 +92,8 @@ public class CommonObjects{
 			Map<String, Object> filters) {
 		OverviewListAndCount overView=new OverviewListAndCount();
 		StringBuffer sql = new StringBuffer();
+//		Pageable pageable = PageRequest.of(0, 10);
+//		productRepo.findAll(pageable);
 		    sql.append(String.format("from %s ", ObjectType.getClass().getSimpleName()));
 		if (filters != null && filters.size() > 0) {
 			sql.append(" where ");
@@ -470,4 +477,15 @@ public class CommonObjects{
 		}
 		return productList;
 	}
+//	public double getTotalProfit() {
+//		String sql = "select (sum(QUANTITY*RATE)-sum(QUANTITY*PUR_RATE)) as Rate from BILL_TRANS";
+//		Query query=entityManager.createNativeQuery(sql);
+//		double salesProfit=(double) query.getSingleResult();
+//		sql = "Select sum(GST_AMOUNT) from BILL_MASTER";
+//		query=entityManager.createNativeQuery(sql);
+//		double salesGst=(double) query.getSingleResult();
+//		sql = "Select sum(GST_AMOUNT) from PURCHASE_BILL_MASTER";
+//		query=entityManager.createNativeQuery(sql);
+//		double purchaseGst=(double) query.getSingleResult();
+//	}
 }

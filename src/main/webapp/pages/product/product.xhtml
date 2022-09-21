@@ -37,15 +37,6 @@ body.layout-compact .ui-datatable thead th {
 				<p:column width="220" filterBy="#{item.item}" filterMatchMode="contains" headerText="PRODUCT NAME">
 					<p:outputLabel value="#{item.item}" />
 				</p:column>
-				<p:column width="100" filterBy="#{item.getproductUom(item)}" filterMatchMode="contains" headerText="UOM">
-					<p:outputLabel value="#{item.getproductUom()}" />
-				</p:column>
-				<p:column width="100" filterBy="#{item.item}" filterMatchMode="contains" headerText="STOCK">
-					<p:outputLabel value="#{item.getproductStock()}" />
-				</p:column>
-				<p:column width="100" filterBy="#{item.item}" filterMatchMode="contains" headerText="PRICE">
-					<p:outputLabel value="#{item.getproductRate()}" />
-				</p:column>
 				<p:column width="35" filterBy="#{item.gst}" filterMatchMode="contains" headerText="GST">
 					<p:outputLabel value="#{item.gst}" />
 				</p:column>

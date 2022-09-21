@@ -49,21 +49,6 @@ public class ProductMBean{
 //	private ProductDomain size = new ProductDomain();
 	private ProductDomain product;
 //	private List<ProductDomain> sizeList = null;
-	private List<Integer> uniqueCompName = new ArrayList<Integer>();
-	private List<SelectItem> companyList = new ArrayList<SelectItem>();
-	private List<SelectItem> supplierDropDownList = new ArrayList<SelectItem>();
-	private List<SelectItem> productList = new ArrayList<SelectItem>();
-	private List<SelectItem> monthList = new ArrayList<SelectItem>();
-	private List<SelectItem> stoneColList = new ArrayList<SelectItem>();
-	private List<SelectItem> gradeColList = new ArrayList<SelectItem>();
-	private List<SelectItem> sizeColList = new ArrayList<SelectItem>();
-	private List<SelectItem> designColList = new ArrayList<SelectItem>();
-	private List<SelectItem> mcWastageColList = new ArrayList<SelectItem>();
-	private List<SelectItem> poSearchList = new ArrayList<SelectItem>();
-	private List<SelectItem> dcSearchList = new ArrayList<SelectItem>();
-	private List<SelectItem> billMasterSearchList = new ArrayList<SelectItem>();
-	private List<SelectItem> inwardSearchList = new ArrayList<SelectItem>();
-	private List<SelectItem> poBillSearchList = new ArrayList<SelectItem>();
 	private List<SelectItem> uomList = new ArrayList<SelectItem>();
 
 	private List<String> selectedUomList = new ArrayList<String>();
@@ -170,14 +155,7 @@ public class ProductMBean{
 	}
 	// Product
 	public void saveProduct() {
-			if(sukiBaseBean.validateList(product.getProdUomTransList().size(), "Product UOM"))
-				return;
-			if (product.getProdCode() > 0) {
-				sukiBaseBean.addMessage("Product", "Update Successfullly");
-			} else {
-				sukiBaseBean.addMessage("Product", "Saved Successfullly");
-			}
-			product=productRepo.save(product);
+		sukiBaseBean.saveProduct(product);
 	}
 
 	public void getProductObjActionEvent(ActionEvent event) {
@@ -289,12 +267,6 @@ public class ProductMBean{
 				sukiBaseBean.addMessage("Unit Master", "Deleted Successfullly");
 			    unitMaster = new UnitMasterDomain();
 			}
-	}
-
-	public void getQuotMasterList() {
-		sukiBaseBean.t = quotationMaster;
-		sukiBaseBean.overviewList();
-		sukiBaseBean.pageRedirect(quotationOverview);
 	}
 
 //	public String getQuotationActionEvent(ActionEvent event) {
@@ -505,76 +477,8 @@ public class ProductMBean{
 		return "billPrint";
 	}
 
-	public List<SelectItem> getStoneColList() {
-		return stoneColList;
-	}
-
-	public void setStoneColList(List<SelectItem> stoneColList) {
-		this.stoneColList = stoneColList;
-	}
-
-	public List<SelectItem> getGradeColList() {
-		return gradeColList;
-	}
-
-	public void setGradeColList(List<SelectItem> gradeColList) {
-		this.gradeColList = gradeColList;
-	}
-
-	public List<SelectItem> getSizeColList() {
-		return sizeColList;
-	}
-
-	public void setSizeColList(List<SelectItem> sizeColList) {
-		this.sizeColList = sizeColList;
-	}
-
-	public List<SelectItem> getDesignColList() {
-		return designColList;
-	}
-
-	public void setDesignColList(List<SelectItem> designColList) {
-		this.designColList = designColList;
-	}
-
-	public List<SelectItem> getMcWastageColList() {
-		return mcWastageColList;
-	}
-
-	public void setMcWastageColList(List<SelectItem> mcWastageColList) {
-		this.mcWastageColList = mcWastageColList;
-	}
-
 	public int getTabIndex() {
 		return tabIndex;
-	}
-
-	public void setTabIndex(int tabIndex) {
-		this.tabIndex = tabIndex;
-	}
-
-	public List<SelectItem> getProductList() {
-		return productList;
-	}
-
-	public void setProductList(List<SelectItem> productList) {
-		this.productList = productList;
-	}
-
-	public List<SelectItem> getMonthList() {
-		return monthList;
-	}
-
-	public void setMonthList(List<SelectItem> monthList) {
-		this.monthList = monthList;
-	}
-
-	public List<Integer> getUniqueCompName() {
-		return uniqueCompName;
-	}
-
-	public void setUniqueCompName(List<Integer> uniqueCompName) {
-		this.uniqueCompName = uniqueCompName;
 	}
 
 	public ProductDomain getProduct() {
@@ -593,15 +497,6 @@ public class ProductMBean{
 		this.ratePrint = ratePrint;
 	}
 
-	public List<SelectItem> getCompanyList() {
-		return companyList;
-	}
-
-	public void setCompanyList(List<SelectItem> companyList) {
-		this.companyList = companyList;
-	}
-
-
 	public String isButtonColor() {
 		return buttonColor;
 	}
@@ -610,23 +505,7 @@ public class ProductMBean{
 		this.buttonColor = buttonColor;
 	}
 
-	public List<SelectItem> getDcSearchList() {
-		return dcSearchList;
-	}
-
-	public void setDcSearchList(List<SelectItem> dcSearchList) {
-		this.dcSearchList = dcSearchList;
-	}
-
-	public List<SelectItem> getBillMasterSearchList() {
-		return billMasterSearchList;
-	}
-
-	public void setBillMasterSearchList(List<SelectItem> billMasterSearchList) {
-		this.billMasterSearchList = billMasterSearchList;
-	}
-
-		public double getTotalBalance() {
+	public double getTotalBalance() {
 		return totalBalance;
 	}
 

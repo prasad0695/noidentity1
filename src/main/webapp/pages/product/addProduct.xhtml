@@ -110,6 +110,34 @@ function onSave(form) {
 									update="mainform" />		
 							</p:panelGrid>
 							</div>
+							<div class="ui-g-12 ui-lg-12">
+							<p:dataTable var="val" rowIndexVar="rowId" id="purchaseList" value="#{productMBean.product.productSellPriceList}">
+							<p:column width="25" headerText="Sl.No">
+								<p:outputLabel value="#{rowId + 1}" />
+							</p:column>
+							<p:column headerText="BillNo" >
+							<h:inputHidden id="slNo" value="#{rowId}" />
+							<p:outputLabel rendered="#{val.rowId > 0}" value="#{val.productUom.uomId.unitName}" />
+							</p:column>
+							<p:column headerText="Date" >
+							<p:outputLabel value="#{val.rate}" />
+							</p:column>
+							<p:column headerText="Rate" >
+							<p:outputLabel value="#{val.rate}" />
+							</p:column>
+							<p:column headerText="Sell Price" >
+							<p:outputLabel value="#{val.sellPrice}" />
+							</p:column>
+							<p:column headerText="M.R.P">
+							<p:outputLabel value="#{val.mrp}" />
+							</p:column>
+							<p:column headerText="Stock">
+							<p:selectBooleanCheckbox value="#{val.enable}">
+								<p:ajax event="change" listener="#{invoiceMBean.setNonGstBill}" />
+							</p:selectBooleanCheckbox>
+							</p:column>
+							</p:dataTable>
+							</div>
 					</div>
 				</div>
 			</div>

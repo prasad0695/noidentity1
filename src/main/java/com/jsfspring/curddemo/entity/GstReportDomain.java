@@ -8,8 +8,11 @@ import java.util.Map;
 public class GstReportDomain {
 	
 	private List<GstDomain> gstReportList=new ArrayList<GstDomain>();
+	private List<GstDomain> purchaseGstReportList=new ArrayList<GstDomain>();
 	
 	private double totalPurchaseAmount;
+	
+	private double totalPurchaseGstAmount;
 	
 	private double totalGstAmount;
 
@@ -35,6 +38,22 @@ public class GstReportDomain {
 
 	public void setTotalGstAmount(double totalGstAmount) {
 		this.totalGstAmount = totalGstAmount;
+	}
+
+	public double getTotalPurchaseGstAmount() {
+		return totalPurchaseGstAmount;
+	}
+
+	public void setTotalPurchaseGstAmount(double totalPurchaseGstAmount) {
+		this.totalPurchaseGstAmount = totalPurchaseGstAmount;
+	}
+
+	public List<GstDomain> getPurchaseGstReportList() {
+		return purchaseGstReportList;
+	}
+
+	public void setPurchaseGstReportList(List<GstDomain> purchaseGstReportList) {
+		this.purchaseGstReportList = purchaseGstReportList;
 	}
 	
 	

@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -55,6 +56,12 @@ public class PurchaseBillMaster implements Serializable{
 	
 	@Column(name="INVOICE_TYPE")
 	private String invoiceType;
+	
+	@Column(name="GST_BILL")
+	private boolean gstBill;
+	
+	@Column(name="GST_AMOUNT")
+	private double gstAmount=0;
 	
 	@OneToMany(orphanRemoval=true,mappedBy="masterRowId",targetEntity=PurchaseBillTrans.class,
 		       fetch=FetchType.LAZY,cascade = CascadeType.ALL)
@@ -286,5 +293,21 @@ public class PurchaseBillMaster implements Serializable{
 
 	public void setInwardMasterList(List<InwardMaster> inwardMasterList) {
 		this.inwardMasterList = inwardMasterList;
+	}
+
+	public boolean isGstBill() {
+		return gstBill;
+	}
+
+	public void setGstBill(boolean gstBill) {
+		this.gstBill = gstBill;
+	}
+
+	public double getGstAmount() {
+		return gstAmount;
+	}
+
+	public void setGstAmount(double gstAmount) {
+		this.gstAmount = gstAmount;
 	}
 }
