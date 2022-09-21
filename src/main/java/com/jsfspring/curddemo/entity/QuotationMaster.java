@@ -37,7 +37,7 @@ public class QuotationMaster implements Serializable{
 	@JoinColumn(name="COMPANY_ID")
 	private Company companyId;
 	
-	@OneToMany(fetch=FetchType.LAZY,mappedBy="quotMaster",cascade=CascadeType.PERSIST)
+	@OneToMany(fetch=FetchType.EAGER,mappedBy="quotMaster",cascade=CascadeType.ALL)
 	private List<QuotationTrans> quotTransList=new ArrayList<QuotationTrans>();
 	
 	@Transient
@@ -84,7 +84,7 @@ public class QuotationMaster implements Serializable{
 	}
 
 	public String getCompany() {
-		company=getCompanyId().getCompName();
+		company=getCompanyId()!=null ? getCompanyId().getCompName() : "";
 		return company;
 	}
 

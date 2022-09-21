@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/dailyact/dailyacttemplate.xhtml">
+	<ui:define name="title"></ui:define>
+	<ui:define name="head">
+		<style type="text/css">
+		.ui-paginator .ui-paginator-top{
+			height:2px;
+		}
+body .ui-datalist .ui-datalist-header {
+    padding: 1px 1px; }
+    .ui-paginator .ui-paginator-top .ui-widget-header .ui-corner-top{
+    padding:1px;
+    height:1px;
+    }
+    .textalignCenter{text-align:center;}
+</style>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="mainform">
+		<p:growl id="messages" showDetail="true" ></p:growl>
+        <div class="ui-fluid">
+                            <h3></h3>
+		</div>
+		<div>
+		<p:inputText style="width:200px" ></p:inputText>
+		<p:accordionPanel style="margin-top:10px" var="obj" value="#{categoryMBean.productSubCategoryList}">
+		<p:tab title="#{obj.subCategory}">
+           	<p:commandLink>
+           	<p:panel>
+         	</p:panel>
+         	</p:commandLink>
+       </p:tab>  	
+	   </p:accordionPanel>
+		</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

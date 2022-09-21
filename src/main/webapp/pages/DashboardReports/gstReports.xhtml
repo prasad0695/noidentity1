@@ -22,7 +22,7 @@ body.layout-compact .ui-datatable thead th {
 <ui:define name="content">
 <h:form id="form">
 <p:growl id="messages" showDetail="true"></p:growl>
-<div class="ui-g-6">
+<div class="ui-g-12">
 <p:selectOneMenu value="#{dashBoardReportMBean.currentYear}">
       <f:selectItems value="#{dashBoardReportMBean.getYearList()}"></f:selectItems>
       <p:ajax event="change" listener="#{dashBoardReportMBean.getGstReport}" update="form" />
@@ -52,15 +52,29 @@ body.layout-compact .ui-datatable thead th {
 <p:column filterBy="#{item.supplier}" headerText="Supplier" width="150">
 <p:outputLabel value="#{item.supplier}" ></p:outputLabel>
 </p:column>
+<p:column width="70" headerText="GST 5">
+<p:outputLabel value="#{dashBoardReportMBean.getPurchaseGstValue(item.rowId,5)}" ></p:outputLabel>
+</p:column>
+<p:column width="70" headerText="GST 12">
+<p:outputLabel value="#{dashBoardReportMBean.getPurchaseGstValue(item.rowId,12)}"  ></p:outputLabel>
+</p:column>
+<p:column width="70" headerText="GST 18">
+<p:outputLabel value="#{dashBoardReportMBean.getPurchaseGstValue(item.rowId,18)}"  ></p:outputLabel>
+</p:column>
+<p:column width="70" headerText="GST 28">
+<p:outputLabel value="#{dashBoardReportMBean.getPurchaseGstValue(item.rowId,28)}" ></p:outputLabel>
+</p:column>
 <p:column headerText="Amount" width="100">
-<p:outputLabel value="#{item.totalAmount}" >
+<p:outputLabel value="#{item.gstAmount}" >
 <f:convertNumber pattern="#0.00"  />
 </p:outputLabel>
 </p:column>
 </p:dataTable>
-<p:outputLabel value="#{dashBoardReportMBean.gstReportDomain.totalPurchaseAmount}" ></p:outputLabel>
+<div align="right" style="margin-top:10px">
+<p:outputLabel style="font-size:18px;font-weight:bold" value="#{dashBoardReportMBean.gstReportDomain.totalPurchaseGstAmount}" ></p:outputLabel>
 </div>
-<div class="ui-g-6">
+</div>
+<div class="ui-g-12">
 <p:dataTable id="sizetable" var="item" value="#{dashBoardReportMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
                      paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink} {Exporters}"
                              tableStyleClass="pdatatable-table" rows="10"
@@ -70,32 +84,43 @@ body.layout-compact .ui-datatable thead th {
 <p:outputLabel value="#{rowId+1}"></p:outputLabel>
 <h:inputHidden id="invoiceno" value="#{item.billNo}" />
 </p:column>
-<p:column sortBy="#{item.date}" filterBy="#{item.date}" width="85" headerText="Date">
+<p:column sortBy="#{item.date}" filterBy="#{item.date}" width="100" headerText="Date">
 <p:outputLabel  value="#{item.date}">
 <f:convertDateTime timeZone="IST" pattern="dd/MM/YY" />
 </p:outputLabel>
 </p:column>
-<p:column sortBy="#{item.billNo}" width="70" filterBy="#{item.billNo}" filterMatchMode="contains" headerText="Invoice No">
+<p:column sortBy="#{item.billNo}" width="65" filterBy="#{item.billNo}" filterMatchMode="contains" headerText="Invoice No">
 <p:outputLabel value="#{item.billNo}" style="font-weight:bold" ></p:outputLabel>
 <h:inputHidden value="#{item.billNo}" id="slNo" />
 </p:column>
-<p:column headerText="GST 5">
+<p:column sortBy="#{item.companyName}" width="90" filterBy="#{item.companyName}" filterMatchMode="contains" headerText="Company">
+<p:outputLabel value="#{dashBoardReportMBean.getBillDetails(item.billNo).companyName}" style="font-weight:bold" ></p:outputLabel>
+</p:column>
+<p:column sortBy="#{item.gst}" width="90" filterBy="#{item.gst}" filterMatchMode="contains" headerText="Gst">
+<p:outputLabel value="#{dashBoardReportMBean.getBillDetails(item.billNo).gst}" style="font-weight:bold" ></p:outputLabel>
+</p:column>
+<p:column sortBy="#{item.totalAmt}" width="65" filterBy="#{item.totalAmt}" filterMatchMode="contains" headerText="Inv Amt">
+<p:outputLabel value="#{dashBoardReportMBean.getBillDetails(item.billNo).totalAmt}" style="font-weight:bold" ></p:outputLabel>
+</p:column>
+<p:column width="65" headerText="GST 5">
 <p:outputLabel value="#{dashBoardReportMBean.getGstValue(item.billNo,5)}" ></p:outputLabel>
 </p:column>
-<p:column headerText="GST 12">
+<p:column width="65" headerText="GST 12">
 <p:outputLabel value="#{dashBoardReportMBean.getGstValue(item.billNo,12)}"  ></p:outputLabel>
 </p:column>
-<p:column headerText="GST 18">
+<p:column width="65" headerText="GST 18">
 <p:outputLabel value="#{dashBoardReportMBean.getGstValue(item.billNo,18)}"  ></p:outputLabel>
 </p:column>
-<p:column headerText="GST 28">
+<p:column width="65" headerText="GST 28">
 <p:outputLabel value="#{dashBoardReportMBean.getGstValue(item.billNo,28)}" ></p:outputLabel>
 </p:column>
-<p:column headerText="TOTAL">
-<p:outputLabel value="#{dashBoardReportMBean.getTotalGstAmount(item.billNo)}" ></p:outputLabel>
+<p:column width="65" headerText="TOTAL">
+<p:outputLabel value="#{item.gstAmount}" ></p:outputLabel>
 </p:column>
 </p:dataTable>
-<p:outputLabel value="#{dashBoardReportMBean.gstReportDomain.totalGstAmount}" ></p:outputLabel>
+<div align="right" style="margin-top:10px">
+<p:outputLabel style="font-size:18px;font-weight:bold" value="#{dashBoardReportMBean.gstReportDomain.totalGstAmount}" ></p:outputLabel>
+</div>
 <p:commandButton>
      <p:dataExporter type="xls" target="sizetable" fileName="gst" />
 </p:commandButton>

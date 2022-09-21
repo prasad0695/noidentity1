@@ -11,9 +11,6 @@ import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.component.html.HtmlInputHidden;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 
@@ -28,10 +25,19 @@ import com.jsfspring.curddemo.entity.BillTransDomain;
 import com.jsfspring.curddemo.entity.Company;
 import com.jsfspring.curddemo.entity.DeliveryChalanDomain;
 import com.jsfspring.curddemo.entity.DeliveryChalanMaster;
+import com.jsfspring.curddemo.entity.ExpenseDomain;
+import com.jsfspring.curddemo.entity.PriceListForInvoice;
 import com.jsfspring.curddemo.entity.ProductDomain;
+import com.jsfspring.curddemo.entity.ProductSellPriceDomain;
+import com.jsfspring.curddemo.entity.ProductUom;
+import com.jsfspring.curddemo.entity.QuotationMaster;
+import com.jsfspring.curddemo.entity.QuotationProductUom;
+import com.jsfspring.curddemo.entity.QuotationTrans;
 import com.jsfspring.curddemo.repositry.BillMasterRepo;
 import com.jsfspring.curddemo.repositry.BillTransRepo;
 import com.jsfspring.curddemo.repositry.DcMasterRepo;
+import com.jsfspring.curddemo.repositry.ExpenseRepo;
+import com.jsfspring.curddemo.repositry.QuotationMasterRepo;
 import com.jsfspring.curddemo.utills.SukiAppConstants;
 import com.jsfspring.curddemo.utills.SukiAppUtil;
 import com.jsfspring.curddemo.utills.SukiException;;
@@ -58,16 +64,87 @@ public class InvoiceMBean{
 	@Autowired
 	public PdfDocuments pdfDocuments;
 	
+	@Autowired
+	public QuotationMasterRepo quotationMasterRepo;
+	
+	@Autowired
+	public ExpenseRepo expenseRepo;
+	
 	public BillMasterDomain  billMaster=new BillMasterDomain();
 	public List<DeliveryChalanMaster> dcMasterList=new ArrayList<DeliveryChalanMaster>();
 	public List<DeliveryChalanMaster> selectedDcMasterList=new ArrayList<DeliveryChalanMaster>();
 	
+	public List<PriceListForInvoice> priceList;
+	
+	public ExpenseDomain expense;
+	public List<ExpenseDomain> expenseList;
+	
+	public Company company;
+	
+	public ProductDomain product;
+	int addProductRow;
 	
 	String invoice="/jsfspring/pages/Invoice/InvoiceOverview.xhtml";
 	String newinvoice="/jsfspring/pages/Invoice/newInvoice.xhtml";
+	String expensePage="/jsfspring/pages/Invoice/expenses.xhtml";
 	
 	public InvoiceMBean(){
 		
+	}
+	public void addCompany() {
+		company=new Company();
+	}
+	public void saveCompany() {
+		company = sukiBaseBean.saveCompany(company);
+		if(company.getCompId()>0) {
+			billMaster.setCompanyId(company);
+			sukiBaseBean.dialogHide("addCompany");
+		}
+	}
+	public void addProduct(ActionEvent event) {
+		addProductRow = sukiBaseBean.actionEvent(event);
+		product=new ProductDomain();
+	}
+	public void saveProduct() {
+		product = sukiBaseBean.saveProduct(product);
+//		if(product.getProdCode()>0) {
+//			billMaster.getBillTransList().get(addProductRow).setProductId(product);
+//			billMaster.getBillTransList().get(addProductRow).setGst(product.getCgst()+product.getSgst());
+		sukiBaseBean.dialogHide("addProduct");
+//		}
+	}
+	public void addNewUom() {
+		ProductUom uom = new ProductUom();
+		product.addUomTrans(uom);
+		System.out.println("MBEAN LIST SIZE---" + product.getProdUomTransList().size());
+	}
+	public void newExpense() {
+		expense = new ExpenseDomain();
+	}
+	
+	public void expenseSave() {
+		expenseRepo.save(expense);
+	}
+	
+	public void expenseDelete() {
+		expenseRepo.delete(expense);
+	}
+	
+	public void expenseOverview() {
+		sukiBaseBean.t = expense;
+		sukiBaseBean.overviewList();
+		sukiBaseBean.pageRedirect(expensePage);
+	}
+	
+	public void getExpenseEditAction(ActionEvent event) {
+		expense = new ExpenseDomain();
+		expense=expenseRepo.findById(sukiBaseBean.actionEvent(event)).get();
+		expense.setEditBoolean(true);
+	}
+	
+	public void getExpenseDeleteAction(ActionEvent event) {
+		expense = new ExpenseDomain();
+		expenseRepo.deleteById(sukiBaseBean.actionEvent(event));
 	}
 	
 	public String decimalPattern(int decimal) {
@@ -84,8 +161,27 @@ public class InvoiceMBean{
 		String value3 = formatter1.format(0000);
 		return value3;
 	}
+	
+	public String decimalPatternForConvertNo(int decimal) {
+		System.out.println("decimal"+decimal);
+		String formatter1 = null;
+		if (decimal == 0)
+			formatter1 = "0";
+		if (decimal == 1)
+			formatter1 = "0.0";
+		if (decimal == 2)
+			formatter1 = "0.00";
+		if (decimal == 3)
+			formatter1 = "0.000";
+		return formatter1;
+	}
 
 	public void newInvoice() {
+		newReset();
+		sukiBaseBean.pageRedirect(newinvoice);
+	}
+	
+	public void newReset() {
 		billMaster=new BillMasterDomain();
 		try {
 			billMaster.setBillNo(commonObjects.getAutoNumber("billNo","BillMasterDomain"));
@@ -93,7 +189,6 @@ public class InvoiceMBean{
 			e.printStackTrace();
 		}
 		billMaster.setDate(SukiAppUtil.getCurrentDateAndTime());
-		sukiBaseBean.pageRedirect(newinvoice);
 	}
 	
 	public void updateInvoice(){
@@ -107,8 +202,10 @@ public class InvoiceMBean{
 			billMaster=new BillMasterDomain();
 			billMaster=billMasterRepo.findById(sukiBaseBean.actionEvent(event)).get();
 			billMaster.setEditBoolean(true);
+			if(billMaster.isGstBill()) {
 			Map<Double,Double> map=billMaster.getBillTransList().parallelStream().collect(Collectors.groupingBy(BillTransDomain::getGst, Collectors.summingDouble(BillTransDomain::getGstAmt)));
 			billMaster.setGstValue(map);
+			}
 			billMaster.setTotalWithoutTax(billMaster.getBillTransList().parallelStream().mapToDouble(i->i.getAmount()).sum());
 			sukiBaseBean.pageRedirect(newinvoice);
 	}
@@ -191,10 +288,16 @@ public class InvoiceMBean{
 			StringJoiner joiner=new StringJoiner(",","","");
 			// StringBuffer sf=new StringBuffer();
 			billMaster.setBillTransList(new ArrayList<BillTransDomain>());
-		    selectedDcMasterList.stream().forEach(i->{i.setStatus("Billed");joiner.add(String.valueOf(i.getDeliveryNo()));i.setBillNo(billMaster);i.getDcTransList().forEach(j->{
+		    selectedDcMasterList.stream().forEach(i->{
+		    	i.setStatus("Billed");
+		    	joiner.add(String.valueOf(i.getDeliveryNo()));
+		    	i.setBillNo(billMaster);
+		    	i.getDcTransList().forEach(j->{
 			BillTransDomain newBill=new BillTransDomain();
 			ProductDomain product=j.getItems();
 			newBill.setProductId(product);
+			newBill.setUom(j.getUom());
+			newBill = setRateForBillTrans(newBill);
 			newBill.setQty(j.getNos());
 			 if(j.getUom()!=null)
 		       newBill.setRate(j.getUom().getPrice());
@@ -202,9 +305,10 @@ public class InvoiceMBean{
 				 newBill.setRate(product.getRate()); 
 		    newBill.setGst(product.getCgst()+product.getSgst());
 		    newBill.setHsn(product.getHsnCode());
-		    newBill.setUom(j.getUom());
 		    newBill.setStationOrHouse(product.getStationOrHouse());
 		    newBill.setAmount(newBill.getQty()*newBill.getRate());
+		    if(billMaster.isGstBill())
+		    newBill.setGstAmt((newBill.getGst()*newBill.getAmount())/100);
 		    newBill.setTotalAmount(newBill.getAmount()+newBill.getGstAmt());
 		    newBill.setEditBoolean(true);
 		    billMaster.setTotalWithoutTax(billMaster.getTotalWithoutTax()+newBill.getAmount());
@@ -225,18 +329,40 @@ public class InvoiceMBean{
 		int i = sukiBaseBean.ajaxEvent(event);
 		List<BillTransDomain> billTransListEdit = billMaster.getBillTransList();
 		billTransListEdit.get(i).setAmount(billTransListEdit.get(i).getRate() * billTransListEdit.get(i).getQty());
-		// billTransListEdit.get(i).setGstAmt((billTransListEdit.get(i).getGst() * billTransListEdit.get(i).getAmount() )/100);
+//		if(billMaster.isGstBill())
+//		billTransListEdit.get(i).setGstAmt((billTransListEdit.get(i).getGst() * billTransListEdit.get(i).getAmount() )/100);
 		//billTransListEdit.get(i).setTotalAmount(billTransListEdit.get(i).getAmount()
 		//		+ billTransListEdit.get(i).getGstAmt());
 		getBillAmount(billTransListEdit);
+//		sukiBaseBean.dialogHide("dlg3");
 	}
+	
+	public void billItemMrpEdit() {
+		sukiBaseBean.dialogHide("dlg3");
+	}
+	
+	public void setNonGstBill() {
+		List<BillTransDomain> billTransListEdit = billMaster.getBillTransList();
+		if(!billMaster.isEditBoolean()) {
+			billTransListEdit.forEach(i->i.setGstAmt(0));
+			getBillAmount(billTransListEdit);
+		}else {
+			billTransListEdit.forEach(i->i.setGstAmt((i.getGst()*i.getAmount())/100));
+			getBillAmount(billTransListEdit);
+		}
+//		billMaster.setEditBoolean(!billMaster.isEditBoolean());
+	}
+	
 	public void addFreightAmount(){
 		double gstAmt=billMaster.getBillTransList().parallelStream().mapToDouble(j -> j.getGstAmt()).sum();
 		billMaster.setTotalAmount(SukiAppUtil.roundedOff(billMaster.getTotalWithoutTax()+gstAmt+billMaster.getFreightCharges()));
 	}
 	public void getBillAmount(List<BillTransDomain> billTransListEdit) {
 		double amtWithoutTax=billTransListEdit.parallelStream().mapToDouble(j -> j.getAmount()).sum();
-		double gstAmt=billTransListEdit.parallelStream().mapToDouble(j -> j.getGstAmt()).sum();
+		double gstAmt = 0;
+		if(billMaster.isGstBill())
+		gstAmt=billTransListEdit.parallelStream().mapToDouble(j -> j.getGstAmt()).sum();
+		billMaster.setGstAmount(gstAmt);
 		billMaster.setTotalWithoutTax(amtWithoutTax);
 		billMaster.setTotalAmount(SukiAppUtil.roundedOff(amtWithoutTax+gstAmt+billMaster.getFreightCharges()));
 		billMaster.setAmountString(SukiAppUtil.getNumericWords(billMaster.getTotalAmount()));
@@ -251,12 +377,60 @@ public class InvoiceMBean{
 		billMaster.getBillTransList().add(billTrans);
 		return "";
 	}
+	public void getRateFromQuotation(SelectEvent event) {
+		int i=sukiBaseBean.selectEvent(event);
+		BillTransDomain trans = setRateForBillTrans(billMaster.getBillTransList().get(i));
+		billMaster.getBillTransList().set(i, trans);
+		priceList = new ArrayList<PriceListForInvoice>();
+		priceList = trans.getPriceList();
+	}
+	public BillTransDomain setRateForBillTrans(BillTransDomain billTrans) {
+		ProductDomain product=billTrans.getProductId();
+		ProductUom uom = billTrans.getUom();
+		QuotationMaster qmaster = quotationMasterRepo.findByCompanyId(billMaster.getCompanyId());
+		if(qmaster!=null) {
+		List<QuotationTrans> transList = qmaster.getQuotTransList().stream().filter(j-> j.getProductId().getProdCode()==billTrans.getProductId().getProdCode()).collect(Collectors.toList());
+		if(transList.size()>0) {
+			QuotationProductUom quotUom = transList.get(0).getQuotUomList().stream().filter(k->k.getUomId().getUnitName().equals(uom.getUomId().getUnitName())).findFirst().get();
+			billTrans.setRate(quotUom.getPrice());
+			billTrans.setGst(quotUom.getGst());
+			billTrans.getPriceList().add(new PriceListForInvoice("Quotation", qmaster.getQuotationNo(), SukiAppUtil.getUtilDateFromSQLDate(qmaster.getDate()), quotUom.getPrice()));
+		}else {
+			List<ProductSellPriceDomain> prodPriceList = product.getProductSellPriceList();
+			if(prodPriceList.size()>0) {
+				ProductSellPriceDomain price = prodPriceList.stream().filter(j-> j.getProductUom().getUomId().getUnitName().equals(uom.getUomId().getUnitName())).filter(j->j.isEnable()).findFirst().get();
+				billTrans.setRate(price.getSellPrice());
+				billTrans.getPriceList().add(new PriceListForInvoice("Purchase",0, SukiAppUtil.getUtilDateFromSQLDate(price.getDate()), price.getRate()));
+				billTrans.setPurchaseRate(price.getRate());
+			}
+		}
+		}else {
+			List<ProductSellPriceDomain> prodPriceList = product.getProductSellPriceList();
+			if(prodPriceList.size()>0) {
+				ProductSellPriceDomain price = prodPriceList.stream().filter(j-> j.getProductUom().getUomId().getUnitName().equals(uom.getUomId().getUnitName())).filter(j->j.isEnable()).findFirst().get();
+				billTrans.setRate(price.getSellPrice());
+				billTrans.getPriceList().add(new PriceListForInvoice("Purchase",0, SukiAppUtil.getUtilDateFromSQLDate(price.getDate()), price.getRate()));
+				billTrans.setPurchaseRate(price.getRate());
+			}
+		}
+		List<BillTransDomain> pastTransList = billTransRepo.findProductByCompId(billMaster.getCompanyId().getCompId(), product.getProdCode());
+		if(pastTransList.size()>0) {
+			BillTransDomain pastTrans = pastTransList.get(pastTransList.size()-1);
+			billTrans.setRate(pastTrans.getRate());
+			billTrans.getPriceList().add(new PriceListForInvoice("Past Rate---"+pastTrans.getUom().getUomName(),pastTrans.getBillMaster().getBillNo(), SukiAppUtil.getUtilDateFromSQLDate(pastTrans.getBillMaster().getDate()), pastTrans.getRate()));
+		}
+		return billTrans;
+	}
+	
 	public void billTransDetailsFromProduct(SelectEvent event) {
 		int i=sukiBaseBean.selectEvent(event);
 		ProductDomain product=new ProductDomain();
 		product=billMaster.getBillTransList().get(i).getProductId();
+		
 		billMaster.getBillTransList().get(i).setRate(product.getRate());
 		billMaster.getBillTransList().get(i).setGst(product.getCgst()+product.getSgst());
+		if(billMaster.isEditBoolean())
+			billMaster.getBillTransList().get(i).setGstAmt((billMaster.getBillTransList().get(i).getGst()* billMaster.getBillTransList().get(i).getAmount())/100);	
 		billMaster.getBillTransList().get(i).setHsn(product.getHsnCode());
 		billMaster.getBillTransList().get(i).setStationOrHouse(product.getStationOrHouse());
 		System.out.println("GST---"+billMaster.getBillTransList().get(i).getGst());
@@ -338,6 +512,12 @@ public class InvoiceMBean{
 			billMaster.getBillTransList().get(sukiBaseBean.actionEvent(event)).setEditBoolean(false);
 	}
 	
+	public void pastRateForItem(ActionEvent event){
+		int index=sukiBaseBean.actionEvent(event);
+		BillTransDomain trans=billMaster.getBillTransList().get(index);
+		priceList = trans.getPriceList();
+	}
+	
 	public void invItemEdit(ActionEvent event) {
 		int index=sukiBaseBean.actionEvent(event);
 		BillTransDomain trans=billMaster.getBillTransList().get(index);
@@ -377,5 +557,27 @@ public class InvoiceMBean{
 		public LazyDataModel getModel() {
 			return sukiBaseBean.model;
 			}
+
+		public List<PriceListForInvoice> getPriceList() {
+			return priceList;
+		}
+
+		public void setPriceList(List<PriceListForInvoice> priceList) {
+			this.priceList = priceList;
+		}
+
+		public Company getCompany() {
+			return company;
+		}
+
+		public void setCompany(Company company) {
+			this.company = company;
+		}
+		public ProductDomain getProduct() {
+			return product;
+		}
+		public void setProduct(ProductDomain product) {
+			this.product = product;
+		}
 
 	}

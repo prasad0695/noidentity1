@@ -10,6 +10,26 @@ public class DashBoardReportDomain {
 	private double salesPending;
 	
 	private double purchasePending;
+	
+	public double getTotalProfit() {
+		return totalProfit;
+	}
+
+	public void setTotalProfit(double totalProfit) {
+		this.totalProfit = totalProfit;
+	}
+
+	public double getGstCredit() {
+		return gstCredit;
+	}
+
+	public void setGstCredit(double gstCredit) {
+		this.gstCredit = gstCredit;
+	}
+
+	private double totalProfit;
+	
+	private double gstCredit;
 
 	public Map<String, Double> getSalesByMonth() {
 		return salesByMonth;

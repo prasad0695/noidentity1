@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -30,7 +31,7 @@ public class ProductDomain implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="PROD_CODE")
 	private int prodCode;
 	
@@ -69,6 +70,15 @@ public class ProductDomain implements Serializable{
 	
 	@OneToMany(fetch=FetchType.LAZY,cascade= {CascadeType.ALL},mappedBy="productId")
 	private List<ProductUom> prodUomTransList=new ArrayList<ProductUom>();
+	
+	@Transient
+	private List<String> quotUomList;
+	
+	@Transient
+	private List<String> uomList=new ArrayList<String>();
+	
+	@OneToMany(fetch=FetchType.LAZY,mappedBy="product")
+	private List<ProductSellPriceDomain> productSellPriceList=new ArrayList<ProductSellPriceDomain>();
 	
 	public String getproductUom() {
 		StringJoiner joiner=new StringJoiner(" / "," "," ");
@@ -214,6 +224,32 @@ public class ProductDomain implements Serializable{
 	public void setProdUomTransList(List<ProductUom> prodUomTransList) {
 		this.prodUomTransList = prodUomTransList;
 	}
-
-	
+	public List<String> getQuotUomList() {
+		return quotUomList;
+	}
+	public void setQuotUomList(List<String> quotUomList) {
+		this.quotUomList = quotUomList;
+	}
+	public List<String> getUomList() {
+		uomList = getProdUomTransList().stream().map(i->i.getUomId().getUnitName()).collect(Collectors.toList());
+		List<ProductSellPriceDomain> s = getProductSellPriceList();
+		if(s.size()>0) {
+			quotUomList =new ArrayList<String>();
+			ProductUom uom = s.get(s.size()-1).getProductUom();
+			UnitMasterDomain u = uom.getUomId();
+			quotUomList.add(u.getUnitName());
+		}else
+		quotUomList = uomList;
+		return uomList;
+	}
+	public void setUomList(List<String> uomList) {
+		this.uomList = uomList;
+	}
+	public List<ProductSellPriceDomain> getProductSellPriceList() {
+		productSellPriceList = productSellPriceList.stream().filter(i->i.isEnable()).collect(Collectors.toList());
+		return productSellPriceList;
+	}
+	public void setProductSellPriceList(List<ProductSellPriceDomain> productSellPriceList) {
+		this.productSellPriceList = productSellPriceList;
+	}
 }

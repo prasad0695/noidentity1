@@ -21,7 +21,7 @@ body .ui-datalist .ui-datalist-header {
 	<ui:define name="content">
 		<h:form id="mainform">
 		<p:growl id="messages" showDetail="true" ></p:growl>
-		<p:dataTable id="sizetable" var="item" value="#{productMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
+		<p:dataTable id="sizetable" var="item" value="#{quotationMBean.model}" scrollable="400" rowIndexVar="rowId"  reflow="true" lazy="true"
                      paginatorPosition="bottom" paginatorTemplate="{RowsPerPageDropdown} {CurrentPageReport} {LastPageLink} {NextPageLink} {PageLinks} {PreviousPageLink} {FirstPageLink}"
                              tableStyleClass="pdatatable-table" rows="10"
                              rowsPerPageTemplate="10,25,50,100" paginator="true"
@@ -40,16 +40,16 @@ body .ui-datalist .ui-datalist-header {
 				</p:column>
 				<p:column style="width:4%;" headerText="">
 					<p:commandLink style="margin-left:20px" 
-						actionListener="#{productMBean.getQuotationActionEvent}" ><i class="material-icons">edit</i></p:commandLink>
+						actionListener="#{quotationMBean.getQuotationActionEvent}" ><i class="material-icons">edit</i></p:commandLink>
 						<p:commandLink style="margin-left:20px" 
-						actionListener="#{productMBean.getQuotationDeleteActionEvent}" update="sizetable,mainform:messages" ><i class="material-icons">delete</i></p:commandLink>
+						actionListener="#{quotationMBean.getQuotationDeleteActionEvent}" update="sizetable,mainform:messages" ><i class="material-icons">delete</i></p:commandLink>
 						<p:commandLink style="margin-left:20px" 
-						actionListener="#{productMBean.printQuotation}" update="sizetable,mainform:messages" ><i class="material-icons">print</i></p:commandLink>
+						actionListener="#{quotationMBean.printQuotation}" update="sizetable,mainform:messages" ><i class="material-icons">print</i></p:commandLink>
 				</p:column>
 			</p:dataTable>
 <div align="right" style="margin-top:10px;" >
 				<p:commandButton
-					value="New Quotation " action="#{productMBean.newQuotation}" />
+					value="New Quotation " action="#{quotationMBean.newQuotation}" />
 			</div>
 		</h:form>
 	</ui:define>

@@ -61,6 +61,7 @@ public class DashBoardReportMBean<T>{
 	public String salesOrPurchase;
 	public List<ProductUnitWise> productUnitWiseReport;
 	public Map<Integer,List<GstDomain>> gstMap;
+	public Map<Integer,List<GstDomain>> purchaseGstMap;
 	public GstReportDomain gstReportDomain;
 	public boolean productBySales;
 	int totalRowCount = 0;
@@ -333,12 +334,14 @@ public class DashBoardReportMBean<T>{
 			Map<String, Object> filters=new HashMap<>();
 			filters.put("year(date)", currentYear);
 			filters.put("month(date)", SukiAppUtil.getMonthOfYear(currentMonth));
+			filters.put("gstBill", 1);
 			PurchaseOverviewList(filters);
 			sukiBaseBean.t=new BillMasterDomain();
 			overviewList(filters);
 			gstReportDomain = reportService.getGstReport(SukiAppUtil.getMonthOfYear(currentMonth), currentYear);
 			if(gstReportDomain!=null)
 			gstMap=gstReportDomain.getGstReportList().parallelStream().collect(Collectors.groupingBy(GstDomain::getBillNo, Collectors.toList()));
+			purchaseGstMap=gstReportDomain.getPurchaseGstReportList().parallelStream().collect(Collectors.groupingBy(GstDomain::getBillNo, Collectors.toList()));
 			System.out.println("gstMap---"+gstMap);
 			
 			sukiBaseBean.pageRedirect(gstReport);
@@ -371,11 +374,26 @@ public class DashBoardReportMBean<T>{
 		}
 		sukiBaseBean.model1.setRowCount(totalRowCount);
 	}
+    
+    public GstDomain getBillDetails(int billNo) {
+    	return gstMap.get(billNo).get(0);
+    }
+    
     public double getGstValue(int billNo,double gstPercentage) {
     	System.out.println("billNo"+billNo);
     	System.out.println("gstMap"+gstMap);
     	List<GstDomain> gstList=gstMap.get(billNo);
     	System.out.println("gstList"+gstList);
+    	for(int i=0;i<gstList.size();i++) {
+    		if(gstList.get(i).getGstPercentage()==gstPercentage) {
+    			return gstList.get(i).getGstAmount();
+    		}
+    	}
+    	return 0;
+    }
+    public double getPurchaseGstValue(int billNo,long gstPercentage) {
+    	List<GstDomain> gstList=purchaseGstMap.get(billNo);
+    	System.out.println("purchasegstList"+gstList.size());
     	for(int i=0;i<gstList.size();i++) {
     		if(gstList.get(i).getGstPercentage()==gstPercentage) {
     			return gstList.get(i).getGstAmount();

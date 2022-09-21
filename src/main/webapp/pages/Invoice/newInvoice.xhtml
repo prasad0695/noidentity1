@@ -6,6 +6,11 @@
 	template="/pages/dailyact/dailyacttemplate.xhtml">
 <ui:define name="title"></ui:define>
 <ui:define name="head"> 
+<script>
+$( "#invoiceType" ).on( "focus", function( event ) {
+	PF('selectInvoiceType').show();
+});
+</script>
 <style type="text/css" >
 
 body.layout-compact .ui-datatable tbody tr.ui-widget-content td{
@@ -28,11 +33,14 @@ body.layout-compact .ui-datatable thead th {
 <p:panelGrid columns="6" layout="grid" styleClass="ui-panelgrid-blank form-group" columnClasses="ui-g-12 ui-lg-1,ui-g-12 ui-lg-4,ui-g-12 ui-lg-1,ui-g-12 ui-lg-3,ui-g-12 ui-lg-1,ui-g-12 ui-lg-2"
 									style="border:0px none; background-color:transparent;">
 <h:outputLabel value="Company"  />
+<h:panelGrid  columns="2" cellpadding="5">
 <p:autoComplete id="group" value="#{invoiceMBean.billMaster.companyId}" completeMethod="#{sukiBaseBean.companyListAutoComplete}" requiredMessage="Enter company Name"
 						required="#{param['datalist3:save']!=null || param['datalist3:hotkey']!=null || param['datalist3:update']!=null}"
                         var="obj" itemLabel="#{obj.compName}" itemValue="#{obj}" converter="pojoConverter" forceSelection="true"
                         scrollHeight="250">
-        </p:autoComplete>
+</p:autoComplete>
+<p:commandLink oncomplete="PF('addCompany').show()" action="#{invoiceMBean.addCompany}" value="+"></p:commandLink>
+</h:panelGrid>
 <h:outputLabel value="Date"  />
 <p:calendar value="#{invoiceMBean.billMaster.dateUtil}" >
 </p:calendar>
@@ -40,12 +48,17 @@ body.layout-compact .ui-datatable thead th {
 <p:inputText  value="#{invoiceMBean.billMaster.billNo}" style="font-weight:bold" >
 </p:inputText>
 <p:outputLabel value="Inv. Type"  />
-<p:selectOneMenu value="#{invoiceMBean.billMaster.invoiceType}"  >
+<p:selectOneMenu id="invoiceType" value="#{invoiceMBean.billMaster.invoiceType}" widgetVar="selectInvoiceType" >
 <f:selectItem itemValue="-Select-" itemLabel="-Select-" />
 <f:selectItem itemValue="Direct" itemLabel="Direct" />
 <f:selectItem itemValue="DC" itemLabel="DC" />
+<f:selectItem itemValue="WithoutBill" itemLabel="Without Bill" />
 <p:ajax event="change" update="datalist3" process="datalist3" />
 </p:selectOneMenu>
+<p:outputLabel value="GSTT"></p:outputLabel>
+<p:selectBooleanCheckbox value="#{invoiceMBean.billMaster.gstBill}">
+<p:ajax event="change" listener="#{invoiceMBean.setNonGstBill}" update=",datalist3" />
+</p:selectBooleanCheckbox>
 <h:outputLabel value="Dc No" rendered="#{invoiceMBean.billMaster.invoiceType=='DC'}" />
 <h:panelGrid columns="2" rendered="#{invoiceMBean.billMaster.invoiceType=='DC'}" >
 <p:inputText id="dcNos" value="#{invoiceMBean.billMaster.dcNos}" style="font-weight:bold;" ></p:inputText>
@@ -78,9 +91,15 @@ body.layout-compact .ui-datatable thead th {
 <p:inputText id="price" rendered="#{obj.editBoolean}" value="#{obj.rate}">
 <f:convertNumber pattern="0.00"/>
 <p:ajax event="change" listener="#{invoiceMBean.billItemRateEdit}" update="datalist3" />
+<p:ajax event="focus" oncomplete="PF('dlg3').show()" />
 </p:inputText>
 <p:outputLabel rendered="#{invoiceMBean.billMaster.editBoolean and !obj.editBoolean}" value="#{obj.rate}">
 <f:convertNumber pattern="0.00"/>
+</p:outputLabel>
+</p:column>
+<p:column headerText="PurRate" width="12%">
+<p:outputLabel value="#{obj.purchaseRate}"  >
+<f:convertNumber pattern="0.0"/>
 </p:outputLabel>
 </p:column>
 <p:column headerText="GST%" width="40">
@@ -99,11 +118,11 @@ body.layout-compact .ui-datatable thead th {
 </p:column>
 </p:dataTable>
 
-<p:dataTable rowIndexVar="rowId" var="obj" scrollHeight="300" scrollable="true" rendered="#{invoiceMBean.billMaster.invoiceType=='Direct'}" value="#{invoiceMBean.billMaster.billTransList}" id="datatable2" >
-<p:column headerText="Sl.No" width="10%">
+<p:dataTable rowIndexVar="rowId" var="obj" scrollHeight="300" scrollable="true" rendered="#{invoiceMBean.billMaster.invoiceType=='Direct' or invoiceMBean.billMaster.invoiceType=='WithoutBill'}" value="#{invoiceMBean.billMaster.billTransList}" id="datatable2" >
+<p:column headerText="Sl.No" width="5%">
 <p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
-</p:column>
-<p:column headerText="Description" width="20%">
+</p:column>i
+<p:column headerText="Description" width="40%">
 <p:autoComplete id="group" rendered="#{obj.editBoolean}" value="#{obj.productId}" completeMethod="#{sukiBaseBean.productListAutoComplete}" requiredMessage="Enter Product"
                         var="item" itemLabel="#{item.item}" itemValue="#{item}" converter="pojoConverter" forceSelection="true" required="#{param['datalist3:save']!=null || param['datalist3:hotkey']!=null || param['datalist3:update']!=null}"
                         scrollHeight="250">
@@ -113,37 +132,48 @@ body.layout-compact .ui-datatable thead th {
 <h:inputHidden value="#{rowId}" id="slNo" />
 </p:column>
 <p:column headerText="Quantity" width="12%">
-<p:inputText rendered="#{obj.editBoolean}" required="#{param['datalist3:save']!=null || param['datalist3:hotkey']!=null || param['datalist3:update']!=null}" value="#{obj.qty}" >
-<p:ajax event="change" listener="#{invoiceMBean.billItemRateEdit}" update="datalist3" />
-<f:convertNumber pattern="#{productMBean.decimalPattern(obj.uom.uomId.decPattern)}" />
+<p:inputText rendered="#{obj.editBoolean}" value="#{obj.qty}" >
+<p:ajax event="blur" listener="#{invoiceMBean.billItemRateEdit}" update="datalist3" />
+<f:convertNumber pattern="0.000" />
 </p:inputText>
-<p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.qty}" />
+<p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.qty}"><f:convertNumber pattern="0.000"/></p:outputLabel>
 </p:column>
-<p:column headerText="UOM" width="25%">
+<p:column headerText="UOM" width="12%">
 <p:autoComplete id="dd" dropdown="true" rendered="#{obj.editBoolean}" value="#{obj.uom}" var="item" completeMethod="#{obj.getProdUomList}" requiredMessage="Enter UOM"
                                                 required="#{param['datalist3:save']!=null || param['datalist3:hotkey']!=null || param['datalist3:update']!=null}"
 												itemLabel="#{item.uomId.unitName}" itemValue="#{item}" converter="pojoConverter" forceSelection="true" >
-												<p:ajax event="itemSelect" update="datatable2" />
+												<p:ajax event="itemSelect" listener="#{invoiceMBean.getRateFromQuotation}" update="datatable2,priceListForm,datalist3" />
 												</p:autoComplete>
 <p:outputLabel value="#{obj.uom.uomId.unitName}" rendered="#{!obj.editBoolean}" style="margin-left:20px" >
 <f:convertNumber pattern="0.00"/>
 </p:outputLabel>
 </p:column>
-<p:column headerText="Rate" width="15%">
-<p:inputText rendered="#{obj.editBoolean}" required="#{param['datalist3:save']!=null || param['datalist3:hotkey']!=null || param['datalist3:update']!=null}" value="#{obj.rate}" >
+<p:column headerText="Rate" width="25%">
+<h:panelGrid rendered="#{obj.editBoolean}" style="border:0px" columns="3">
+<p:inputText style="text-align:left" rendered="#{obj.editBoolean}" value="#{obj.rate}" >
 <p:ajax event="blur" listener="#{invoiceMBean.billItemRateEdit}" update="datalist3" />
-<f:validateDoubleRange disabled="#{param['datalist3:save']==null || param['datalist3:hotkey']==null || param['datalist3:update']==null}" minimum="0.1" ></f:validateDoubleRange>
 <f:convertNumber pattern="0.00"/>
 </p:inputText>
-<p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.rate}" />
+<p:inputText rendered="#{obj.editBoolean}" value="#{obj.mrpRate}" >
+<p:ajax event="change" listener="#{invoiceMBean.billItemMrpEdit}" update="datalist3" />
+<f:convertNumber pattern="0.00"/>
+</p:inputText>
+<p:commandLink oncomplete="PF('dlg3').show()" actionListener="#{invoiceMBean.pastRateForItem}" update="priceListForm" value="+"></p:commandLink>
+</h:panelGrid>
+<p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.rate}"><f:convertNumber pattern="0.00"/></p:outputLabel>
 </p:column>
-<p:column headerText="GST%" width="12%">
+<p:column headerText="PurRate" width="10%">
+<p:outputLabel value="#{obj.purchaseRate}"  >
+<f:convertNumber pattern="0.0"/>
+</p:outputLabel>
+</p:column>
+<p:column headerText="GST%" width="8%">
 <p:outputLabel rendered="#{obj.editBoolean}" value="#{obj.gst}"  >
 <f:convertNumber pattern="0.0"/>
 </p:outputLabel>
 <p:outputLabel rendered="#{!obj.editBoolean}" value="#{obj.gst}" />
 </p:column>
-<p:column headerText="Amount" width="14%">
+<p:column headerText="Amount" width="12%">
 <p:outputLabel value="#{obj.amount}" id="amount" style="margin-left:20px">
 <f:convertNumber pattern="0.00"/>
 </p:outputLabel>
@@ -154,7 +184,7 @@ body.layout-compact .ui-datatable thead th {
 <p:commandLink rendered="#{invoiceMBean.billMaster.editBoolean and obj.editBoolean}" style="margin-left:10px;" actionListener="#{invoiceMBean.saveInvItem}" update="datatable2,datalist3:messages" ><i class="material-icons">save</i></p:commandLink>
 </p:column>
 </p:dataTable>
-<p:hotkey id="hotkey" bind="down" rendered="#{invoiceMBean.billMaster.invoiceType=='Direct'}" actionListener="#{invoiceMBean.addRowBillTrans}" update="datatable2" />
+<p:hotkey id="hotkey" bind="down" rendered="#{invoiceMBean.billMaster.invoiceType=='Direct' or invoiceMBean.billMaster.invoiceType=='WithoutBill'}" actionListener="#{invoiceMBean.addRowBillTrans}" update="datatable2" />
 <div align="right">
 <h:panelGrid  columns="2" id="subTotal" cellpadding="5">
 <h:outputLabel value="Sub-Total" style="font-weight:bold;font-size:18px" />
@@ -168,9 +198,9 @@ body.layout-compact .ui-datatable thead th {
 </p:inputText>
 </h:panelGrid>
 </div>
-<p:panel id="gstvalue" >
+<p:panel rendered="#{invoiceMBean.billMaster.gstBill}" id="gstvalue" >
 <div align="right" >
-<p:repeat value="#{invoiceMBean.billMaster.mapList}" var="obj" >
+<p:repeat id="gsttable" value="#{invoiceMBean.billMaster.mapList}" var="obj" >
 <h:panelGrid columns="3" width="50%">
 <h:panelGrid columns="2" width="100%">
 <h:outputLabel value="CGST #{obj.key/2}" />
@@ -202,7 +232,7 @@ body.layout-compact .ui-datatable thead th {
 </h:outputLabel>
 </h:panelGrid>
 </div>
-<p:panelGrid columns="4" styleClass="ui-panelgrid-blank form-group"
+<p:panelGrid columns="5" styleClass="ui-panelgrid-blank form-group"
 								columnClasses="ui-lg-2 ui-md-3,ui-lg-2 ui-md-3,ui-lg-2 ui-md-3,ui-lg-2 ui-md-3"
 								layout="grid">
 <p:commandButton value="PRINT" action="#{invoiceMBean.printInvoice}" >
@@ -210,6 +240,8 @@ body.layout-compact .ui-datatable thead th {
 <p:commandButton id="save" rendered="#{!invoiceMBean.billMaster.editBoolean}" value="SAVE" action="#{invoiceMBean.saveBill}" update="datalist3" ></p:commandButton>
 <p:commandButton id="update" rendered="#{invoiceMBean.billMaster.editBoolean}" value="UPDATE" action="#{invoiceMBean.updateInvoice}" update="messages" ></p:commandButton>
 <p:commandButton id="delete" disabled="#{!invoiceMBean.billMaster.editBoolean}" value="DELETE" action="#{invoiceMBean.dialogShow(invoiceMBean.billMaster.billNo)}" ></p:commandButton>
+<p:commandButton id="reset" value="RESET" action="#{invoiceMBean.newReset}" ></p:commandButton>
+<p:commandButton id="addProduct" value="ADD PRODUCT" oncomplete="PF('addProduct').show()" actionListener="#{invoiceMBean.addProduct}" ></p:commandButton>
 </p:panelGrid>
 </h:form>
 
@@ -229,7 +261,22 @@ body.layout-compact .ui-datatable thead th {
 <p:outputLabel value="#{obj.company}" style="width:30px;margin-left:60px" ></p:outputLabel>
 </p:column>
 </p:dataTable>
-<p:commandButton value="Next" actionListener="#{invoiceMBean.billSelect}" update="datalist3:datatable1,datalist3:subTotal,datalist3:subTotal,datalist3:gstvalue,datalist3:totalamt,datalist3:dcNos" />
+<p:commandButton value="Next" actionListener="#{invoiceMBean.billSelect}" update="datalist3:datatable1,datalist3:subTotal,datalist3:subTotal,datalist3:gstvalue,datalist3:totalamt,datalist3:dcNos,priceListForm" />
+</h:form>
+</p:dialog>
+<p:dialog widgetVar="dlg3" position="left top" height="200" width="400" >
+<h:form id="priceListForm">
+<p:repeat rowIndexVar="rowId" var="obj" style="margin-top:15px" value="#{invoiceMBean.priceList}" id="priceList" >
+ <h:panelGrid columns="4" cellpadding="5">
+<p:outputLabel value="#{obj.type}---" style="width:80px"></p:outputLabel>
+<p:outputLabel value="#{obj.number}" style="width:80px"></p:outputLabel>
+<p:outputLabel value="#{obj.date}" style="margin-left:40px">
+<f:convertDateTime timeZone="IST" pattern="dd/MM/YY" />
+</p:outputLabel>
+<p:outputLabel value="#{obj.price}" style="width:30px;margin-left:60px" ></p:outputLabel>
+</h:panelGrid>
+<hr/>
+</p:repeat>
 </h:form>
 </p:dialog>
 <p:dialog widgetVar="confirmDialog" modal="true" global="true" showEffect="fade" hideEffect="fade">
@@ -242,6 +289,135 @@ body.layout-compact .ui-datatable thead th {
         </h:panelGrid>
         </div>
         </h:form>
-    </p:dialog> 
+</p:dialog>
+<p:dialog widgetVar="addCompany" height="320" width="750" modal="true">
+		<h:form id="companyform">
+		<p:growl id="message" showDetail="true" />
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h3>ADD COMPANY</h3>
+                            <div class="ui-g-12 ui-lg-6">
+							<p:panelGrid columns="2" id="grid"
+								columnClasses="ui-grid-col-4,ui-grid-col-8"
+								layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<p:outputLabel value="Name *" />
+								<p:inputText id="name" value="#{invoiceMBean.company.compName}" label="Name">
+								</p:inputText>
+								
+								<p:outputLabel value="GST No" />
+								<p:inputText value="#{invoiceMBean.company.gst}" />
+								
+								<p:outputLabel value="Mail_id" />
+								<p:inputText value="#{invoiceMBean.company.mailId}">
+								</p:inputText>
+								<p:outputLabel value="Separate" />
+								<p:selectOneMenu value="#{invoiceMBean.company.split}" >
+									<f:selectItem itemValue="-select-" itemLabel="-select-" />
+									<f:selectItem itemValue="yes" itemLabel="yes" />
+									<f:selectItem itemValue="No" itemLabel="No" />
+								</p:selectOneMenu>
+								</p:panelGrid>
+								</div>
+								<div class="ui-g-12 ui-lg-6">
+								<p:panelGrid columns="2" id="grid1"
+								columnClasses="ui-grid-col-4,ui-grid-col-8"
+								layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<p:outputLabel value="Area 1" />
+								<p:inputText value="#{invoiceMBean.company.area1}" />
+								<p:outputLabel value="Area 2" />
+								<p:inputText value="#{invoiceMBean.company.area2}" />
+								<p:outputLabel value="Area 3" />
+								<p:inputText value="#{invoiceMBean.company.area3}" />
+								<p:outputLabel value="City" />
+								<p:inputText value="#{invoiceMBean.company.city}" />
+							</p:panelGrid>
+							</div>
+							<p:panelGrid columns="3" styleClass="ui-panelgrid-blank form-group"
+								columnClasses="ui-lg-3 ui-md-4,ui-lg-3 ui-md-4,ui-lg-3 ui-md-4"
+								layout="grid">
+							<p:commandButton id="save" value="SAVE" action="#{invoiceMBean.saveCompany}" update="companyform, datalist3"></p:commandButton>
+							</p:panelGrid>
+						</div>
+					</div>
+					</div>
+			</div>
+		</h:form>
+		</p:dialog>
+		<p:dialog widgetVar="addProduct" height="550" width="900" modal="true">
+<h:form id="newProduct">
+			<p:growl id="message" showDetail="true" ></p:growl>
+			<div class="ui-fluid">
+				<div class="ui-g ui-fluid">
+					<div class="ui-g-12 card card-w-title">
+						<div>
+							<h3>ADD PRODUCT</h3>
+							<div class="ui-g-12 ui-lg-5">
+								<p:panelGrid columns="2" id="grid"
+									columnClasses="ui-grid-col-3,ui-grid-col-9"
+									layout="grid" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;">
+									<p:outputLabel value="HSNCode" />
+									<p:inputText value="#{invoiceMBean.product.hsnCode}" label="HSN Code" />
+									<p:outputLabel value="PRODUCT *" />
+									<p:inputText id="productName"
+									required="#{param['mainform:save']!=null}" requiredMessage="Enter Product Name"
+									value="#{invoiceMBean.product.item}" label="Product Name" >
+										<p:ajax event="change"
+											listener="#{invoiceMBean.productSearch}" />
+									</p:inputText>
+									<p:outputLabel value="GST" />
+									<p:inputText id="gst"  onkeypress="if ( isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;" value="#{invoiceMBean.product.gst}">
+									</p:inputText>
+									<p:outputLabel value="TYPE" />
+									<p:selectOneMenu value="#{invoiceMBean.product.stationOrHouse}">
+										<f:selectItem itemValue="-select-" itemLabel="-select-" />
+										<f:selectItem itemValue="stationary" itemLabel="stationary" />
+										<f:selectItem itemValue="House keeping"
+											itemLabel="House keeping" />
+									</p:selectOneMenu>
+									<p:outputLabel rendered="false" value="Opening Stock" />
+									<p:inputText rendered="false" value="#{invoiceMBean.product.openingQty}" />
+								</p:panelGrid>
+							</div>
+							<div class="ui-g-12 ui-lg-7">
+							<p:dataTable var="val" rowIndexVar="rowId" id="uomList" value="#{invoiceMBean.product.prodUomTransList}">
+							<p:column headerText="UOM" >
+							<h:inputHidden id="slNo" value="#{rowId}" />
+							<p:outputLabel rendered="#{val.rowId > 0}" value="#{val.uomId.unitName}" />
+							<p:autoComplete rendered="#{val.rowId == 0}" id="dd" dropdown="true" value="#{val.uomId}" var="obj" completeMethod="#{sukiBaseBean.uomListAutoComplete}"
+												required="#{param['mainform:save']!=null || param['mainform:hotkey']!=null}" requiredMessage="Enter UOM" itemLabel="#{obj.unitName}" itemValue="#{obj}" converter="pojoConverter" forceSelection="true" >
+												<p:ajax event="itemSelect" update="uomList" />
+												</p:autoComplete>
+							</p:column>
+							<p:column headerText="PRICE" >
+							<p:outputLabel rendered="#{!val.editBoolean}" value="#{val.price}" />
+							<p:inputText rendered="#{val.editBoolean}" validatorMessage="Enter Price" value="#{val.price}">
+							<f:validateDoubleRange disabled="#{param['mainform:save']==null}" minimum="1"></f:validateDoubleRange>
+							</p:inputText>
+							</p:column>
+							</p:dataTable>
+							<p:hotkey id="hotkey" bind="down" actionListener="#{invoiceMBean.addNewUom}" update="uomList" />
+							</div>
+							<p:panelGrid columns="3" styleClass="ui-panelgrid-blank form-group"
+								columnClasses="ui-lg-3 ui-md-4,ui-lg-3 ui-md-4,ui-lg-3 ui-md-4"
+								layout="grid">
+							<p:commandButton id="save"
+									action="#{invoiceMBean.saveProduct}"
+									value="SAVE"
+									update="datalist3" />
+							<p:commandButton 
+									action="#{invoiceMBean.addProduct}" value="NEW/RESET"
+									update="datalist3" />
+									</p:panelGrid>
+							</div>
+					</div>
+				</div>
+			</div>
+		</h:form>
+</p:dialog> 
 </ui:define>
 </ui:composition>

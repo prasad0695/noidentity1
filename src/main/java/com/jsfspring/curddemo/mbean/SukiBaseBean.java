@@ -5,9 +5,9 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.html.HtmlInputHidden;
@@ -20,15 +20,15 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.SessionScope;
 
 import com.jsfspring.curddemo.entity.Company;
+import com.jsfspring.curddemo.entity.CompanyCategory;
 import com.jsfspring.curddemo.entity.OverviewListAndCount;
 import com.jsfspring.curddemo.entity.ProductDomain;
 import com.jsfspring.curddemo.entity.SupplierDomain;
 import com.jsfspring.curddemo.entity.UnitMasterDomain;
+import com.jsfspring.curddemo.repositry.CompanyCategoryRepo;
 import com.jsfspring.curddemo.repositry.CompanyRepo;
 import com.jsfspring.curddemo.repositry.ProductRepo;
 import com.jsfspring.curddemo.repositry.SupplierRepo;
@@ -57,6 +57,12 @@ public  class SukiBaseBean<T> implements Serializable {
 	int totalRowCount;
 	OverviewListAndCount overview;
 	
+	String fromUrl;
+	String toUrl;
+	Map<String, Object> filt;
+	
+	String newSupplier="/jsfspring/pages/Supplier/addSupplier.xhtml";
+	
 	@Autowired
 	public CommonObjects commonObjects;
 	
@@ -71,10 +77,59 @@ public  class SukiBaseBean<T> implements Serializable {
 	
 	@Autowired
 	public ProductRepo productRepo;
+	
+	@Autowired
+	public CompanyCategoryRepo companyCategoryRepo;
 
 	public SukiBaseBean() {
 		overViewList = new ArrayList<T>();
 		overViewList1 = new ArrayList<T>();
+		overview = new OverviewListAndCount<T>();
+	}
+	
+	public void urlTranslate(String from, String toUrl) {
+		fromUrl=from;
+		if(toUrl.equalsIgnoreCase("Supplier"))
+			pageRedirect(newSupplier);
+	}
+	public Company saveCompany(Company company){
+		boolean flag=false;
+		if(validateString(company.getCompName(), "Company Name"))
+			flag=true;
+		if(flag)
+			return company;
+		if(company.getCompId()>0) {
+			addMessage("Company", "Update Successfullly");
+		}else {
+		    addMessage("Company", "Saved Successfullly");
+		}
+		company=companyRepo.save(company);
+		return company;
+	}
+	public SupplierDomain saveSupplier(SupplierDomain supplier){
+		boolean flag=false;
+		if(validateString(supplier.getName(), "Supplier Name"))
+			flag=true;
+		if(flag)
+			return supplier;
+		if(supplier.getSupCode()>0) {
+			addMessage("Supplier", "Update Successfullly");
+		}else {
+		    addMessage("Supplier", "Saved Successfullly");
+		}
+		supplier=supplierRepo.save(supplier);
+		return supplier;
+	}
+	public ProductDomain saveProduct(ProductDomain product) {
+		if(validateList(product.getProdUomTransList().size(), "Product UOM"))
+			return product;
+		if (product.getProdCode() > 0) {
+			addMessage("Product", "Update Successfullly");
+		} else {
+			addMessage("Product", "Saved Successfullly");
+		}
+		product=productRepo.save(product);
+		return product;
 	}
 
 	public void overviewDialogList() {
@@ -103,10 +158,12 @@ public  class SukiBaseBean<T> implements Serializable {
 
 	public void overviewList() {
 		System.out.println("object---" + t);
+		
 		model = new LazyDataModel<T>() {
 			@Override
 			public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder,
 					Map<String, Object> filters) {
+					filt = filters;
 					System.out.println("object---" + filters);
 					 overview = commonObjects.getAll(t, first, pageSize, sortField, sortOrder.toString(),
 							filters);
@@ -115,12 +172,17 @@ public  class SukiBaseBean<T> implements Serializable {
 					System.out.println("Size---" + overViewList.size());
 				
 				return overViewList;
+				
 			}
-		};
-			overview = commonObjects.getAll(t, 0, 1, null, null,
-					null);
-		
-		model.setRowCount(overview.getCount());
+					};
+//			overview = commonObjects.getAll(t, 0, 1, null, null,
+//					null);
+		try {
+			model.setRowCount(commonObjects.getCountQuery(t, filt));
+		} catch (SukiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("RowCount   2---"+model.getRowCount());
 	}
 
@@ -185,6 +247,15 @@ public  class SukiBaseBean<T> implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	public Object pageRedirect(String pageName, Object object) {
+		try {
+			FacesContext.getCurrentInstance().getExternalContext().redirect(pageName);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return object;
+	}
 
 	public int actionEvent(ActionEvent event) {
 		HtmlInputHidden component = (HtmlInputHidden) event.getComponent().findComponent("slNo");
@@ -216,6 +287,10 @@ public  class SukiBaseBean<T> implements Serializable {
 	public List<Company> companyListAutoComplete(String query) {
 			return  companyRepo.findByCompNameContaining(query);
 		}
+	
+	public List<String> companyCategoryList() {
+		return  companyCategoryRepo.findAll().stream().map(i->i.getCategory()).collect(Collectors.toList());
+	}     
 //
 	public List<UnitMasterDomain> uomListAutoComplete(String query) {
 		return unitMasterRepo.findByUnitNameContaining(query);

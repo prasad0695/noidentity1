@@ -45,7 +45,7 @@ public class DeliveryChalanDomain implements Serializable{
 	}
 	
 @Id
-@GeneratedValue(strategy = GenerationType.AUTO)
+@GeneratedValue(strategy = GenerationType.IDENTITY)
 @Column(name="ROW_ID")
 private int rowId;
 
