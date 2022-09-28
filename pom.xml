@@ -22,11 +22,6 @@
 			<name>Prime Repo</name>
 			<url>http://repository.primefaces.org</url>
 		</repository>
-		<repository>
-			<id>Theme-repo</id>
-			<name>Theme Repo</name>
-			<url>http://agilliza.com/nexus/content/repositories/public/</url>
-		</repository>
 	</repositories>
 		
 	<properties>
