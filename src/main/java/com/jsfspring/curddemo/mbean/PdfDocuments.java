@@ -2,6 +2,7 @@ package com.jsfspring.curddemo.mbean;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -310,7 +311,17 @@ public class PdfDocuments {
 //	    tabHead.WriteSelectedRows(0, -1, 150, document.Top, writer.DirectContent);
 //	}
 		public static byte[] createBill(BillMasterDomain billmaster){
-			int billNo=billmaster.getBillNo();
+            String userDirectory = Paths.get("")
+                    .toAbsolutePath()
+                    .toString();
+            System.out.println("userDir"+userDirectory);
+            System.out.println("userDir"+System.getProperty("user.dir"));
+            System.out.println("userhome"+System.getProperty("user.home"));
+            String currentDir = System.getProperty("user.dir")+"/src/main/resources/noidentitylogo.png";
+            String desktopPath = System.getProperty("user.home")+"\\Desktop\\";
+            String desktopPathModified = desktopPath.replace("\\","/");
+//            String desktopPathModified = "/home";
+            int billNo=billmaster.getBillNo();
 			Company company=billmaster.getCompanyId();
 			String invoiceType="";
 			if(billmaster.getInvoiceType().equalsIgnoreCase("Direct")){
@@ -323,7 +334,7 @@ public class PdfDocuments {
 			byte[] dcPdf=null;
 			try{
 				PdfCommonMethods.fontNames();
-			String dest=SukiAppConstants.BILL_FOLDER+billNo+".pdf";
+			String dest=desktopPathModified+"/INVOICE/savedBill/"+billNo+".pdf";
 			ByteArrayOutputStream pdfFileout = new ByteArrayOutputStream();
 			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(dest));
 	        // Note that it is not necessary to create new PageSize object,
@@ -335,7 +346,7 @@ public class PdfDocuments {
 	        table.setWidthPercent(100);
 	        table.addCell(image);
 	        doc.add(table);*/
-	        Image img = new Image(ImageDataFactory.create("C:\\Users\\Prasad\\Desktop\\noidentitylogo.png")).setFixedPosition(12,PageSize.A4.getHeight()-110).setHeight(100).setWidthPercent(95);
+	        Image img = new Image(ImageDataFactory.create(currentDir)).setFixedPosition(12,PageSize.A4.getHeight()-110).setHeight(100).setWidthPercent(95);
 	        ImageEventHandler handler = new ImageEventHandler(img);
 	        pdfDoc.addEventHandler(PdfDocumentEvent.END_PAGE, handler);
 	       

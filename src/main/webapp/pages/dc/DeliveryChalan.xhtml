@@ -45,6 +45,9 @@ body.layout-compact .ui-datatable thead th {
 <p:column sortBy="#{obj.companyId}" headerText="Company" filterBy="#{obj.company}" width="25%">
 <p:outputLabel value="#{obj.company}" style="width:30px;margin-left:60px" ></p:outputLabel>
 </p:column>
+<p:column sortBy="#{obj.status}" headerText="Status" filterBy="#{obj.status}" width="10%">
+	<p:outputLabel value="#{obj.status}" style="width:30px;margin-left:60px" ></p:outputLabel>
+</p:column>
 <p:column  width="7%">
 <p:panelGrid columns="3" cellspacing="5" styleClass="ui-panelgrid-blank form-group"
 									style="border:0px none; background-color:transparent;" >

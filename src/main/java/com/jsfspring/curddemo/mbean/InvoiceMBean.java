@@ -41,7 +41,7 @@ import com.jsfspring.curddemo.repositry.QuotationMasterRepo;
 import com.jsfspring.curddemo.utills.SukiAppConstants;
 import com.jsfspring.curddemo.utills.SukiAppUtil;
 import com.jsfspring.curddemo.utills.SukiException;;
-
+import java.awt.Desktop;
 @Controller("invoiceMBean")
 @SessionScope
 public class InvoiceMBean{
@@ -266,16 +266,21 @@ public class InvoiceMBean{
 	public void invoicePdfprint(BillMasterDomain billMaster) {
 		try {
 		PdfDocuments.createBill(billMaster);
-		String file=SukiAppConstants.BILL_FOLDER+billMaster.getBillNo()+".pdf";
+		String desktopPath = System.getProperty("user.home")+"\\Desktop\\";
+		String desktopPathModified = desktopPath.replace("\\","/");
+//		String desktopPathModified = "/home";
+		String file=desktopPathModified+"/INVOICE/savedBill/"+billMaster.getBillNo()+".pdf";
+//		String file=SukiAppConstants.BILL_FOLDER+billMaster.getBillNo()+".pdf";
 		File pdfFile = new File(file);
-		if (pdfFile.exists()) {
-			Process p = Runtime
-			   .getRuntime()
-			   .exec("rundll32 url.dll,FileProtocolHandler "+file);
-			p.waitFor();
-		} else {
-			System.out.println("File is not exists");
-		}
+		DesktopApi.open(pdfFile);
+//		if (pdfFile.exists()) {
+//			Process p = Runtime
+//			   .getRuntime()
+//			   .exec("rundll32 url.dll,FileProtocolHandler "+file);
+//			p.waitFor();
+//		} else {
+//			System.out.println("File is not exists");
+//		}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -493,6 +498,7 @@ public class InvoiceMBean{
 			billMaster.setEditBoolean(true);
 			sukiBaseBean.addMessage("Invoice", "Invoice saved successfully");
 			}}}catch (Exception e) {
+			System.out.println("Error---"+e);
 			}
 		}
 			

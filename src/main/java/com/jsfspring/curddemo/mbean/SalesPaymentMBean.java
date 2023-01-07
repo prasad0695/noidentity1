@@ -1,5 +1,7 @@
 package com.jsfspring.curddemo.mbean;
 
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,16 +52,7 @@ public class SalesPaymentMBean{
 	}
 
 	public void newPayment() {
-		salesPayment=new SalesPaymentsDomain();
-		billListForPayment=new ArrayList<BillMasterDomain>();
-		selectedBillListForPayment=new ArrayList<BillMasterDomain>();
-		try {
-			salesPayment.setPaymentNo(commonObjects.getAutoNumber("paymentNo","SalesPaymentsDomain"));
-			salesPayment.setEditBoolean(false);
-		} catch (SukiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		resetPayment();
 		sukiBaseBean.pageRedirect(newsalesPayment);
 	}
 	
@@ -73,6 +66,7 @@ public class SalesPaymentMBean{
 			if(i.getPaidAmt()==i.getTotalAmount())
 			i.setStatus("Paid");
 			i.setPaymentNo(salesPayment);
+//			i.setPaidAmt(i.getTotalAmount());
 			});
 				salesPayment.setBillMasterList(selectedBillListForPayment);
 				sukiBaseBean.addMessage("Payment", "Payment saved succesfully");
@@ -106,9 +100,22 @@ public class SalesPaymentMBean{
 		salesPaymentRepo.delete(salesPayment);
 		sukiBaseBean.addMessage("Sales Payment", "Deleted Successfully");
 	}
+
+	public void resetPayment() {
+		salesPayment=new SalesPaymentsDomain();
+		billListForPayment=new ArrayList<BillMasterDomain>();
+		selectedBillListForPayment=new ArrayList<BillMasterDomain>();
+		try {
+			salesPayment.setPaymentNo(commonObjects.getAutoNumber("paymentNo","SalesPaymentsDomain"));
+			salesPayment.setEditBoolean(false);
+		} catch (SukiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	public void getAmtFromList(){
-		selectedBillListForPayment.parallelStream().forEach(i->{i.setPaidAmt(i.getTotalAmount());});
-		salesPayment.setAmountToPay(selectedBillListForPayment.parallelStream().mapToDouble(i -> i.getTotalAmount()).sum());
+		selectedBillListForPayment.parallelStream().forEach(i->{i.setPaidAmt(i.getBalanceAmt());});
+		salesPayment.setAmountToPay(selectedBillListForPayment.parallelStream().mapToDouble(i -> i.getPaidAmt()).sum());
 		salesPayment.setTotalAmount(salesPayment.getAmountToPay());
 	}
 	public void getTotalAmt(AjaxBehaviorEvent event) {
@@ -122,6 +129,7 @@ public class SalesPaymentMBean{
 	}
 	public void getPendingSalesBill() {
 			billListForPayment=billMasterRepo.findInvByPendingStatus(salesPayment.getCompanyId().getCompId());
+			billListForPayment.parallelStream().forEach(i->{i.setBalanceAmt(i.getTotalAmount()-i.getPaidAmt());i.setPaidAmt(0);});
 	}
 	public SalesPaymentsDomain getSalesPayment() {
 		return salesPayment;

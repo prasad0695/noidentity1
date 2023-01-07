@@ -37,7 +37,10 @@ public class BillMasterDomain implements Serializable{
 
 	@Transient
 	private String company;
-	
+
+	@Transient
+	private double balanceAmt;
+
 	@Column(name="PO_NO")
 	private String poNo;
 	
@@ -171,8 +174,14 @@ public class BillMasterDomain implements Serializable{
 		this.date = date;
 	}
 
-	
-	
+	public double getBalanceAmt() {
+		return balanceAmt;
+	}
+
+	public void setBalanceAmt(double balanceAmt) {
+		this.balanceAmt = balanceAmt;
+	}
+
 	public double getTotalAmount() {
 		return totalAmount;
 	}

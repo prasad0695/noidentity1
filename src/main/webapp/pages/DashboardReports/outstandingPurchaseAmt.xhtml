@@ -206,7 +206,10 @@ body {
        <p:repeat var="obj"  value="#{dashBoardReportMBean.outstandingSalesList}" >
        <div style="display:flex;">
        <div style="width:30%">
-       <p:outputLabel style="font-size:12px;" value="#{obj.supplierId.name}" ></p:outputLabel>
+           <h:inputHidden value="#{obj.supplierId.supCode}" id="slNo" />
+           <p:commandLink style="font-size:12px;" actionListener="#{dashBoardReportMBean.getPendingBillForSupplierId}" value="#{obj.supplierId.name}" update="dlg1"></p:commandLink>
+
+           <p:outputLabel style="font-size:12px;" value="#{obj.supplierId.name}" ></p:outputLabel>
        </div>
        <div style="width:85%">
         <div class="chart__bar" style="width:#{(obj.outStandingAmt*100/dashBoardReportMBean.totalSum)*100/dashBoardReportMBean.maxPercentage}%;">
@@ -228,7 +231,32 @@ body {
     </div>
     </div>
 </div>
-    
+
+        <p:dialog  widgetVar="dlg1" id="dlg1" header="Pending invoices" modal="true" height="700"  width="900" style="align:center">
+            <p:dataTable id="sizetable" var="item" rowIndexVar="rowId" value="#{dashBoardReportMBean.purchaseBillList}">
+                <p:column headerText="Sl.No" width="6%">
+                    <p:outputLabel value="#{rowId+1}" style="margin-left:20px"></p:outputLabel>
+                    <h:inputHidden id="slNo" value="#{item.rowId}" />
+                </p:column>
+                <p:column sortBy="#{item.date}" filterBy="#{item.date}" headerText="Date" width="12%">
+                    <p:outputLabel  value="#{item.date}"  style="margin-left:20px" >
+                        <f:convertDateTime timeZone="IST" pattern="dd/MM/yy" />
+                    </p:outputLabel>
+                </p:column>
+                <p:column sortBy="#{item.billNo}" filterBy="#{item.billNo}" headerText="Invoice No" width="9%">
+                    <p:outputLabel value="#{item.billNo}" style="margin-left:20px;font-weight:bold" ></p:outputLabel>
+                </p:column>
+                <p:column filterBy="#{item.supplier}" headerText="Supplier" width="35%">
+                    <p:outputLabel value="#{item.supplier}" style="margin-left:10px" ></p:outputLabel>
+                </p:column>
+                <p:column headerText="Amount" width="10%">
+                    <p:outputLabel value="#{item.totalAmount}" >
+                        <f:convertNumber pattern="#0.00"  />
+                    </p:outputLabel>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
+
         <!-- Horizontal, rounded -->
 <p:dataTable rendered="false" rowIndexVar="rowId" var="obj" style="margin-top:15px" widgetVar="billTable" scrollable="true" scrollHeight="470" value="#{dashBoardReportMBean.companySalesList}" id="datatable" >
 <p:column headerText="Sl.No" width="2%">
