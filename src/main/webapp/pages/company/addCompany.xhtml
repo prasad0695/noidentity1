@@ -60,6 +60,11 @@
 								<p:inputText value="#{companyMBean.company.area3}" />
 								<p:outputLabel value="City" />
 								<p:inputText value="#{companyMBean.company.city}" />
+								<p:outputLabel value="Category" />
+        						<p:selectCheckboxMenu id="multiple" value="#{companyMBean.company.categoryListString}" label="Cities" multiple="true"
+                             	 filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
+            					<f:selectItems value="#{sukiBaseBean.companyCategoryList()}" />
+      							</p:selectCheckboxMenu>
 							</p:panelGrid>
 							</div>
 							<p:panelGrid columns="3" styleClass="ui-panelgrid-blank form-group"

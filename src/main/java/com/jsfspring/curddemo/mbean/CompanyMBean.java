@@ -1,5 +1,8 @@
 package com.jsfspring.curddemo.mbean;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 import javax.faces.event.ActionEvent;
 
 import org.primefaces.model.LazyDataModel;
@@ -8,6 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.context.annotation.SessionScope;
 
 import com.jsfspring.curddemo.entity.Company;
+import com.jsfspring.curddemo.entity.CompanyCategory;
+import com.jsfspring.curddemo.entity.CompanyCategoryList;
+import com.jsfspring.curddemo.repositry.CompanyCategoryListRepo;
+import com.jsfspring.curddemo.repositry.CompanyCategoryRepo;
 import com.jsfspring.curddemo.repositry.CompanyRepo;
 
 
@@ -18,6 +25,12 @@ public class CompanyMBean{
 	
 	@Autowired
 	public CompanyRepo companyRepo;
+	
+	@Autowired
+	public CompanyCategoryRepo companyCategoryRepo;
+	
+	@Autowired
+	public CompanyCategoryListRepo companyCategoryListRepo;
 	
 	@Autowired
 	public SukiBaseBean sukiBaseBean;
@@ -55,7 +68,28 @@ public class CompanyMBean{
 //				company = CommonAPI.getInstance().save(company);
 				sukiBaseBean.addMessage("Company", "Saved Successfullly");
 			}
+			CompanyCategoryList companyCategoryList;
+			CompanyCategory companyCategory;
+			System.out.println(company.getCategoryList());
+			companyCategoryListRepo.deleteAll(company.getCategoryList());
+			company.setCategoryList(new ArrayList<CompanyCategoryList>());
+			for(int i=0;i<company.getCategoryListString().size(); i++) {
+				companyCategoryList = new CompanyCategoryList();
+				companyCategory = companyCategoryRepo.findByCategory(company.getCategoryListString().get(i));
+				companyCategoryList.setCategoryId(companyCategory);
+				companyCategoryList.setCompId(company);
+				company.getCategoryList().add(companyCategoryList);
+			}
+//			company.getCategoryListString().stream().forEach(i->{
+//				CompanyCategoryList companyCategoryList = new CompanyCategoryList();
+//				CompanyCategory companyCategory = companyCategoryRepo.findByCategory(i);
+//				companyCategoryList.setCategoryId(companyCategory);
+//				companyCategoryList.setCompId(company);
+//				company.getCategoryList().add(companyCategoryList);
+//				});
 			company=companyRepo.save(company);
+			if(company.getCategoryList()!=null && company.getCategoryList().size()>0)
+				company.setCategoryListString(company.getCategoryList().stream().map(i->i.getCategoryId().getCategory()).collect(Collectors.toList()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -64,6 +98,8 @@ public class CompanyMBean{
 	public void getCompanyObjActionEvent(ActionEvent event) {
 		company = new Company();
 		company = companyRepo.findById(sukiBaseBean.actionEvent(event)).get();
+		if(company.getCategoryList()!=null && company.getCategoryList().size()>0)
+			company.setCategoryListString(company.getCategoryList().stream().map(i->i.getCategoryId().getCategory()).collect(Collectors.toList()));
 		sukiBaseBean.pageRedirect(addCompany);
 	}
 

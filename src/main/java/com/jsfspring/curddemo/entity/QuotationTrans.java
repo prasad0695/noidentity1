@@ -28,7 +28,7 @@ public class QuotationTrans implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="ROW_ID")
 	private int rowId;
 	
@@ -43,8 +43,14 @@ public class QuotationTrans implements Serializable{
 	@OneToMany(fetch=FetchType.LAZY,mappedBy="quotTransRowId",cascade=CascadeType.ALL)
     private List<QuotationProductUom> quotUomList=new ArrayList<QuotationProductUom>();
 	
+	@Column(name="GST")
+	private double gst;
+	
 	@Transient
 	private String item;
+	
+	@Transient
+	private int slNo;
 	
 	public void addTrans(QuotationProductUom trans) {
 		quotUomList.add(trans);
@@ -91,6 +97,22 @@ public class QuotationTrans implements Serializable{
 
 	public void setItem(String item) {
 		this.item = item;
+	}
+
+	public double getGst() {
+		return gst;
+	}
+
+	public void setGst(double gst) {
+		this.gst = gst;
+	}
+
+	public int getSlNo() {
+		return slNo;
+	}
+
+	public void setSlNo(int slNo) {
+		this.slNo = slNo;
 	}
 	
 	

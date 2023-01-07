@@ -24,7 +24,7 @@ public class PurchaseBillTrans implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="ROW_ID")
 	private int rowId;
 	
@@ -45,6 +45,12 @@ public class PurchaseBillTrans implements Serializable {
 
 	@Column(name="RATE")
 	private double rate;
+	
+	@Column(name="SELLING_RATE")
+	private double sellingPrice;
+	
+	@Column(name="MRP")
+	private double mrp;
 	
 	@Column(name="AMOUNT")
 	private double amount;
@@ -83,6 +89,10 @@ public class PurchaseBillTrans implements Serializable {
 	@Transient
 	private ProductUom uomForEdit;
 	
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "PRODUCT_SELL_ID")
+	private ProductSellPriceDomain productSellPrice;
+	
 	public InwardTrans getInwardTransForBillUpdate(InwardTrans trans,PurchaseBillTrans billTrans){
 		trans.setProductId(billTrans.getProductId());
 		trans.setUom(billTrans.getUom());
@@ -93,12 +103,22 @@ public class PurchaseBillTrans implements Serializable {
 	public double getRate() {
 		return rate;
 	}
+	
 
 	public void setRate(double rate) {
+		if(rate>0) {
+			ProductSellPriceDomain productSellPrice = getProductSellPrice();
+			if(productSellPrice!=null) {
+		if(productSellPrice.getRowId()>0 && productSellPrice.getRate()!=rate)
+			productSellPrice.setRowId(0);
+			productSellPrice.setRate(rate);
+			productSellPrice.setEnable(true);
+		}}
 		this.rate = rate;
 	}
 
 	public double getAmount() {
+		amount = getRate() * getQty();
 		return amount;
 	}
 
@@ -173,6 +193,7 @@ public class PurchaseBillTrans implements Serializable {
 	}
 
 	public double getGstAmt() {
+		gstAmt=(getGst()*getAmount())/100;
 		return gstAmt;
 	}
 
@@ -181,6 +202,7 @@ public class PurchaseBillTrans implements Serializable {
 	}
 
 	public double getTotalAmount() {
+		totalAmount = getAmount() + getGstAmt();
 		return totalAmount;
 	}
 
@@ -218,6 +240,44 @@ public class PurchaseBillTrans implements Serializable {
 
 	public void setUomForEdit(ProductUom uomForEdit) {
 		this.uomForEdit = uomForEdit;
+	}
+
+	public double getSellingPrice() {
+		return sellingPrice;
+	}
+
+	public void setSellingPrice(double sellingPrice) {
+		if(sellingPrice>0) {
+			ProductSellPriceDomain productSellPrice = getProductSellPrice();
+			if(productSellPrice!=null) {
+			productSellPrice.setSellPrice(sellingPrice);
+			productSellPrice.setEnable(true);
+		}}
+		this.sellingPrice = sellingPrice;
+	}
+
+	public double getMrp() {
+		return mrp;
+	}
+
+	public void setMrp(double mrp) {
+		if(mrp>0) {
+			ProductSellPriceDomain productSellPrice = getProductSellPrice();
+			if(productSellPrice!=null) {
+		if(productSellPrice.getRowId()>0 && productSellPrice.getMrp()!=mrp)
+			productSellPrice.setRowId(0);
+			productSellPrice.setMrp(mrp);
+			productSellPrice.setEnable(true);
+		}}
+		this.mrp = mrp;
+	}
+
+	public ProductSellPriceDomain getProductSellPrice() {
+		return productSellPrice;
+	}
+
+	public void setProductSellPrice(ProductSellPriceDomain productSellPrice) {
+		this.productSellPrice = productSellPrice;
 	}
 
 	

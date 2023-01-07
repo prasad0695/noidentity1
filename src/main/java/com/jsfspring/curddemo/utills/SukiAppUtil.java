@@ -637,6 +637,22 @@ public static int getIntMonthFromStringMonth(String prefixStr){
 		NumberFormat formatter = new DecimalFormat("#0.00");
 		return Double.valueOf(formatter.format(d));
 	}
+	
+	public static String formatDoubleNew(double d, int decimal) {
+		System.out.println("value"+d+decimal);
+		// DecimalFormat twoDForm = new DecimalFormat("#.##");
+		NumberFormat formatter1 = null;
+		if (decimal == 0)
+			formatter1 = new DecimalFormat("#0");
+		if (decimal == 1)
+			formatter1 = new DecimalFormat("#0.0");
+		if (decimal == 2)
+			formatter1 = new DecimalFormat("#0.00");
+		if (decimal == 3)
+			formatter1 = new DecimalFormat("#0.000");
+		System.out.println("value"+d+"---"+decimal+"---"+formatter1);
+		return String.valueOf(formatter1.format(d));
+	}
 
 	public static String getTaxPer(double tax) {
 		double cst = tax;
@@ -3096,7 +3112,7 @@ public static int getIntMonthFromStringMonth(String prefixStr){
 //        double d=Double.valueOf(df.format(0));
 //        System.out.println(d);
 //        System.out.println(df.format(364565.1454));
-		System.out.println(round(1.99));
+		System.out.println(formatDoubleNew(1.99, 3));
  
 }
 }

@@ -25,7 +25,7 @@ public class ProductUom implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue (strategy= GenerationType.AUTO)
+	@GeneratedValue (strategy= GenerationType.IDENTITY)
 	@Column(name="ROW_ID")
 	private int rowId;
 	
@@ -33,7 +33,7 @@ public class ProductUom implements Serializable{
 	@JoinColumn(name = "PRODUCT_ID")
 	private ProductDomain productId;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="UOM_ID")
 	private UnitMasterDomain uomId;
 

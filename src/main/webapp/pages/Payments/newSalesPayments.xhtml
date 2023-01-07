@@ -23,7 +23,7 @@ body.layout-compact .ui-datatable thead th {
 	<ui:define name="content">
 		<h:form id="pay">
 			<p:growl id="messages" showDetail="true"></p:growl>
-			<h:panelGrid columns="6" cellpadding="5" style="width:100%">
+			<h:panelGrid columns="6" cellpadding="5" style="width:100%; margin-top:20px">
 				<h:outputLabel value="Company Name" />
 				<p:autoComplete id="group"
 					value="#{salesPaymentMBean.salesPayment.companyId}"
@@ -73,7 +73,7 @@ body.layout-compact .ui-datatable thead th {
 					<p:outputLabel value="#{obj1.billNo}" style="margin-left:20px"></p:outputLabel>
 				</p:column>
 				<p:column headerText="Balance" width="10%">
-					<p:outputLabel value="#{obj1.totalAmount-obj1.paidAmt}" style="margin-left:20px">
+					<p:outputLabel value="#{obj1.balanceAmt}" style="margin-left:20px">
 						<f:convertNumber pattern="#0.00" />
 					</p:outputLabel>
 				</p:column>
@@ -112,6 +112,7 @@ body.layout-compact .ui-datatable thead th {
 					style="height:23px;width:160px">
 					<f:selectItem itemValue="-Select-" itemLabel="-Select-" />
 					<p:ajax event="change" update="cheq,cheqNo" />
+					<f:selectItem itemValue="Gpay" itemLabel="Gpay" />
 					<f:selectItem itemValue="Cash" itemLabel="Cash" />
 					<f:selectItem itemValue="Cheque" itemLabel="Cheque" />
 					<f:selectItem itemValue="NEFT" itemLabel="NEFT" />
@@ -134,10 +135,14 @@ body.layout-compact .ui-datatable thead th {
 					<f:validateDoubleRange minimum="1" ></f:validateDoubleRange>
 				</p:inputText>
 			</h:panelGrid>
+			<p:panelGrid columns="6" styleClass="ui-panelgrid-blank form-group" style="margin-top:40px"
+						 layout="grid">
 			<p:commandButton id="save" value="Save"
 				action="#{salesPaymentMBean.savePayment}" update="messages"></p:commandButton>
 			<p:commandButton id="delete" value="Delete"
-				action="#{salesPaymentMBean.deletePayment}" update="messages"></p:commandButton>	
+				action="#{salesPaymentMBean.deletePayment}" update="messages"></p:commandButton>
+			<p:commandButton id="new" value="New" action="#{salesPaymentMBean.resetPayment}" update="messages, pay"></p:commandButton>
+			</p:panelGrid>
 		</h:form>
 	</ui:define>
 </ui:composition>

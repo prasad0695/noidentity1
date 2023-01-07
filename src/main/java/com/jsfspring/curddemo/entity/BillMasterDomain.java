@@ -33,11 +33,14 @@ public class BillMasterDomain implements Serializable{
 	private int billNo;
 
 	@Column(name="DATE")
-	private Timestamp date;
+	private Timestamp date;	
 
 	@Transient
 	private String company;
-	
+
+	@Transient
+	private double balanceAmt;
+
 	@Column(name="PO_NO")
 	private String poNo;
 	
@@ -66,6 +69,9 @@ public class BillMasterDomain implements Serializable{
 	@Column(name="FREIGHT_CHARGES")
 	private double freightCharges;
 	
+	@Column(name="GST_AMOUNT")
+	private double gstAmount;
+	
 	@Transient
 	private String statusColor;
 	
@@ -74,6 +80,9 @@ public class BillMasterDomain implements Serializable{
 	
 	@Transient
 	private boolean editBoolean;
+	
+	@Column(name="GST_BILL")
+	private boolean gstBill;
 	
 	@OneToMany(orphanRemoval=true,mappedBy="billMaster",targetEntity=BillTransDomain.class,
 		       fetch=FetchType.LAZY,cascade = CascadeType.ALL)
@@ -165,8 +174,14 @@ public class BillMasterDomain implements Serializable{
 		this.date = date;
 	}
 
-	
-	
+	public double getBalanceAmt() {
+		return balanceAmt;
+	}
+
+	public void setBalanceAmt(double balanceAmt) {
+		this.balanceAmt = balanceAmt;
+	}
+
 	public double getTotalAmount() {
 		return totalAmount;
 	}
@@ -355,6 +370,22 @@ public class BillMasterDomain implements Serializable{
 
 	public void setFreightCharges(double freightCharges) {
 		this.freightCharges = freightCharges;
+	}
+
+	public boolean isGstBill() {
+		return gstBill;
+	}
+
+	public void setGstBill(boolean gstBill) {
+		this.gstBill = gstBill;
+	}
+
+	public double getGstAmount() {
+		return gstAmount;
+	}
+
+	public void setGstAmount(double gstAmount) {
+		this.gstAmount = gstAmount;
 	}
 	
 }

@@ -2,6 +2,7 @@ package com.jsfspring.curddemo.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -25,7 +26,7 @@ public class BillTransDomain implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="ROW_ID")
 	private int rowId;
 	
@@ -59,10 +60,12 @@ public class BillTransDomain implements Serializable {
 	@Column(name="GST")
 	private double gst;
 	
+	@Column(name="PUR_RATE")
+	private double purchaseRate;
+	
 	@OneToOne(orphanRemoval=true,mappedBy="billTransNo",targetEntity=DeliveryChalanDomain.class,
 		       fetch=FetchType.LAZY,cascade = CascadeType.ALL)
 	private DeliveryChalanDomain dcTrans;
-	
 
 	@Transient
 	private double gstAmt;
@@ -81,6 +84,15 @@ public class BillTransDomain implements Serializable {
 	
 	@Transient
 	private boolean editBoolean;
+	
+	@Transient
+	private double mrpRate;
+	
+	@Transient
+	private int decimalPattern;
+	
+	@Transient
+	private List<PriceListForInvoice> priceList;
 	
 	public List<ProductUom> getProdUomList(String query){
 		if(productId!=null)
@@ -128,6 +140,9 @@ public class BillTransDomain implements Serializable {
 	}
 
 	public void setRate(double rate) {
+		if(rate>0) {
+			mrpRate = rate + ((rate * gst)/100);
+		}
 		this.rate = rate;
 	}
 
@@ -197,7 +212,6 @@ public class BillTransDomain implements Serializable {
 
 	public double getGstAmt() {
 		gstAmt=(getGst()*getAmount())/100;
-		System.out.println(getGst()+"---"+gstAmt);
 		return gstAmt;
 	}
 
@@ -226,6 +240,8 @@ public class BillTransDomain implements Serializable {
 	}
 
 	public void setUom(ProductUom uom) {
+		System.out.println("uom.getUomId().getDecPattern()" + uom.getUomId().getDecPattern());
+		this.decimalPattern = uom.getUomId().getDecPattern();
 		this.uom = uom;
 	}
 
@@ -269,4 +285,41 @@ public class BillTransDomain implements Serializable {
 		this.uomForEdit = uomForEdit;
 	}
 
+	public List<PriceListForInvoice> getPriceList() {
+		if(priceList==null) {
+			return priceList = new ArrayList<PriceListForInvoice>();
+		}
+		return priceList;
+	}
+
+	public void setPriceList(List<PriceListForInvoice> priceList) {
+		this.priceList = priceList;
+	}
+
+	public double getMrpRate() {
+		return mrpRate;
+	}
+
+	public void setMrpRate(double mrpRate) {
+		if(mrpRate>0) {
+			rate = (mrpRate*100)/(100+gst);
+		}
+		this.mrpRate = mrpRate;
+	}
+
+	public double getPurchaseRate() {
+		return purchaseRate;
+	}
+
+	public void setPurchaseRate(double purchaseRate) {
+		this.purchaseRate = purchaseRate;
+	}
+
+	public int getDecimalPattern() {
+		return decimalPattern;
+	}
+
+	public void setDecimalPattern(int decimalPattern) {
+		this.decimalPattern = decimalPattern;
+	}
 }

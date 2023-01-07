@@ -24,7 +24,7 @@ public class QuotationProductUom implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="ROW_ID")
 	private int rowId;
 	
@@ -38,6 +38,12 @@ public class QuotationProductUom implements Serializable{
 
 	@Column(name="PRICE")
 	private double price;
+	
+	@Column(name="GST")
+	private double gst;
+	
+	@Column(name="PRICEWITHGST")
+	private double priceWithGst;
 	
 	@Transient
 	private String uomName;
@@ -81,6 +87,23 @@ public class QuotationProductUom implements Serializable{
 
 	public void setUomName(String uomName) {
 		this.uomName = uomName;
+	}
+
+	public double getGst() {
+		return gst;
+	}
+
+	public void setGst(double gst) {
+		this.gst = gst;
+	}
+
+	public double getPriceWithGst() {
+		priceWithGst = getPrice() + (getGst()*getPrice())/100;
+		return priceWithGst;
+	}
+
+	public void setPriceWithGst(double priceWithGst) {
+		this.priceWithGst = priceWithGst;
 	}
 	
 	

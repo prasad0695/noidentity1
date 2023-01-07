@@ -73,11 +73,11 @@ public class SukiAppConstants {
 	public static final String PENDING_STATUS="pending";
 	public static final String DELIVERED_STATUS="delivered";
 	public static final String CLOSED_STATUS="Closed";
-	public static final String DC_FOLDER="C:\\Users\\Wrightoff\\Desktop\\INVOICE\\Dc\\";
-	public static final String PO_FOLDER="C:\\Users\\Wrightoff\\Desktop\\INVOICE\\Po\\";
-	public static final String QUOTATION_FOLDER="C:\\Users\\Wrightoff\\Desktop\\INVOICE\\Quotation\\";
-	public static final String DC_PRINTED_FOLDER="C:\\Users\\Wrightoff\\Desktop\\INVOICE\\PrintedPdf\\";
-	public static final String BILL_FOLDER="C:\\Users\\Wrightoff\\Desktop\\INVOICE\\savedBill\\";
+	public static final String DC_FOLDER="C:\\Users\\Prasad\\Desktop\\INVOICE\\Dc\\";
+	public static final String PO_FOLDER="C:\\Users\\Prasad\\Desktop\\INVOICE\\Po\\";
+	public static final String QUOTATION_FOLDER="C:\\Users\\Prasad\\Desktop\\INVOICE\\Quotation\\";
+	public static final String DC_PRINTED_FOLDER="C:\\Users\\Prasad\\Desktop\\INVOICE\\PrintedPdf\\";
+	public static final String BILL_FOLDER="C:\\Users\\Prasad\\Desktop\\INVOICE\\savedBill\\";
 	
 	public static final String OVERVIEW_QUERY="from %s";
 	public static final String COUNT_QUERY="select count(a) FROM %s a";

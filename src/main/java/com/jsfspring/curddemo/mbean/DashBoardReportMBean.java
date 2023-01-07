@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.jsfspring.curddemo.entity.*;
+import com.jsfspring.curddemo.repositry.BillMasterRepo;
+import com.jsfspring.curddemo.repositry.PurchaseBillMasterRepo;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 import org.primefaces.model.chart.BarChartModel;
@@ -14,25 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.annotation.SessionScope;
 
-import com.jsfspring.curddemo.entity.BillMasterDomain;
-import com.jsfspring.curddemo.entity.CommonReportDomain;
-import com.jsfspring.curddemo.entity.Company;
-import com.jsfspring.curddemo.entity.CompanyWiseSalesDomain;
-import com.jsfspring.curddemo.entity.DashBoardReportDomain;
-import com.jsfspring.curddemo.entity.GstDomain;
-import com.jsfspring.curddemo.entity.GstReportDomain;
-import com.jsfspring.curddemo.entity.OverviewListAndCount;
-import com.jsfspring.curddemo.entity.ProductUnitWise;
-import com.jsfspring.curddemo.entity.PurchaseBillMaster;
-import com.jsfspring.curddemo.entity.PurchaseOutstanding;
-import com.jsfspring.curddemo.entity.SalesOutstanding;
-import com.jsfspring.curddemo.entity.SupplierDomain;
-import com.jsfspring.curddemo.entity.VWCompany;
-import com.jsfspring.curddemo.entity.VWProduct;
-import com.jsfspring.curddemo.entity.VWSupplier;
 import com.jsfspring.curddemo.utills.SukiAppConstants;
 import com.jsfspring.curddemo.utills.SukiAppUtil;
 import com.jsfspring.curddemo.utills.SukiException;
+
+import javax.faces.event.ActionEvent;
 
 
 @Controller("dashBoardReportMBean")
@@ -50,6 +39,9 @@ public class DashBoardReportMBean<T>{
 	
 	
 	List<CompanyWiseSalesDomain> companySalesList= null;
+	List<BillMasterDomain> invoiceList = null;
+
+	List<PurchaseBillMaster> purchaseBillList = null;
 	public List<T> outstandingSalesList= null;
 	private BarChartModel barModel;
 	public double maxPercentage=0;
@@ -61,7 +53,14 @@ public class DashBoardReportMBean<T>{
 	public String salesOrPurchase;
 	public List<ProductUnitWise> productUnitWiseReport;
 	public Map<Integer,List<GstDomain>> gstMap;
+	public Map<Integer,List<GstDomain>> purchaseGstMap;
 	public GstReportDomain gstReportDomain;
+
+	@Autowired
+	public BillMasterRepo billMasterRepo;
+
+	@Autowired
+	public PurchaseBillMasterRepo purchaseBillMasterRepo;
 	public boolean productBySales;
 	int totalRowCount = 0;
 	DashBoardReportDomain dashboardReport=new DashBoardReportDomain();
@@ -213,7 +212,19 @@ public class DashBoardReportMBean<T>{
 			e.printStackTrace();
 		}
 	}
-	
+
+	public void getPendingBillForCompanyId(ActionEvent event) {
+		invoiceList = new ArrayList<BillMasterDomain>();
+		invoiceList = billMasterRepo.findInvByPendingStatus(sukiBaseBean.actionEvent(event));
+		sukiBaseBean.dialogShow("dlg1");
+	}
+
+	public void getPendingBillForSupplierId(ActionEvent event) {
+		purchaseBillList = new ArrayList<PurchaseBillMaster>();
+		purchaseBillList = purchaseBillMasterRepo.findInvByPendingStatus(sukiBaseBean.actionEvent(event));
+		sukiBaseBean.dialogShow("dlg1");
+	}
+
     public void onCompanySelect() {
     	createBarModel();
     	companySalesList= new ArrayList<CompanyWiseSalesDomain>();
@@ -333,12 +344,14 @@ public class DashBoardReportMBean<T>{
 			Map<String, Object> filters=new HashMap<>();
 			filters.put("year(date)", currentYear);
 			filters.put("month(date)", SukiAppUtil.getMonthOfYear(currentMonth));
+			filters.put("gstBill", 1);
 			PurchaseOverviewList(filters);
 			sukiBaseBean.t=new BillMasterDomain();
 			overviewList(filters);
 			gstReportDomain = reportService.getGstReport(SukiAppUtil.getMonthOfYear(currentMonth), currentYear);
 			if(gstReportDomain!=null)
 			gstMap=gstReportDomain.getGstReportList().parallelStream().collect(Collectors.groupingBy(GstDomain::getBillNo, Collectors.toList()));
+			purchaseGstMap=gstReportDomain.getPurchaseGstReportList().parallelStream().collect(Collectors.groupingBy(GstDomain::getBillNo, Collectors.toList()));
 			System.out.println("gstMap---"+gstMap);
 			
 			sukiBaseBean.pageRedirect(gstReport);
@@ -371,11 +384,26 @@ public class DashBoardReportMBean<T>{
 		}
 		sukiBaseBean.model1.setRowCount(totalRowCount);
 	}
+    
+    public GstDomain getBillDetails(int billNo) {
+    	return gstMap.get(billNo).get(0);
+    }
+    
     public double getGstValue(int billNo,double gstPercentage) {
     	System.out.println("billNo"+billNo);
     	System.out.println("gstMap"+gstMap);
     	List<GstDomain> gstList=gstMap.get(billNo);
     	System.out.println("gstList"+gstList);
+    	for(int i=0;i<gstList.size();i++) {
+    		if(gstList.get(i).getGstPercentage()==gstPercentage) {
+    			return gstList.get(i).getGstAmount();
+    		}
+    	}
+    	return 0;
+    }
+    public double getPurchaseGstValue(int billNo,long gstPercentage) {
+    	List<GstDomain> gstList=purchaseGstMap.get(billNo);
+    	System.out.println("purchasegstList"+gstList.size());
     	for(int i=0;i<gstList.size();i++) {
     		if(gstList.get(i).getGstPercentage()==gstPercentage) {
     			return gstList.get(i).getGstAmount();
@@ -393,6 +421,14 @@ public class DashBoardReportMBean<T>{
     }
 	public List<CompanyWiseSalesDomain> getCompanySalesList() {
 		return companySalesList;
+	}
+
+	public List<BillMasterDomain> getInvoiceList() {
+		return invoiceList;
+	}
+
+	public void setInvoiceList(List<BillMasterDomain> invoiceList) {
+		this.invoiceList = invoiceList;
 	}
 
 	public void setCompanySalesList(List<CompanyWiseSalesDomain> companySalesList) {
@@ -502,5 +538,13 @@ public class DashBoardReportMBean<T>{
 	}
 	public void setDashboardReport(DashBoardReportDomain dashboardReport) {
 		this.dashboardReport = dashboardReport;
+	}
+
+	public List<PurchaseBillMaster> getPurchaseBillList() {
+		return purchaseBillList;
+	}
+
+	public void setPurchaseBillList(List<PurchaseBillMaster> purchaseBillList) {
+		this.purchaseBillList = purchaseBillList;
 	}
 }

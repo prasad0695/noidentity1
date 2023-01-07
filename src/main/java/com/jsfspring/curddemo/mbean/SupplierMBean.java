@@ -13,6 +13,7 @@ import org.springframework.web.context.annotation.SessionScope;
 import com.jsfspring.curddemo.entity.SupplierDomain;
 import com.jsfspring.curddemo.repositry.CompanyRepo;
 import com.jsfspring.curddemo.repositry.SupplierRepo;
+import com.jsfspring.curddemo.utills.SukiAppUtil;
 import com.jsfspring.curddemo.utills.SukiException;
 
 @Controller("supplierMBean")
@@ -45,17 +46,7 @@ public class SupplierMBean{
 		supplier=new SupplierDomain();
 	}
 	public void saveSupplier(){
-			boolean flag=false;
-			if(sukiBaseBean.validateString(supplier.getName(), "Supplier Name"))
-				flag=true;
-			if(flag)
-				return;
-			if(supplier.getSupCode()>0) {
-				sukiBaseBean.addMessage("Supplier", "Update Successfullly");
-			}else {
-			    sukiBaseBean.addMessage("Supplier", "Saved Successfullly");
-			}
-			supplier=supplierRepo.save(supplier);
+		supplier = sukiBaseBean.saveSupplier(supplier);
 	}
 	
 	public void getSupObjActionEvent(ActionEvent event) {
