@@ -266,7 +266,7 @@ public class InvoiceMBean{
 	public void invoicePdfprint(BillMasterDomain billMaster) {
 		try {
 		PdfDocuments.createBill(billMaster);
-		String desktopPath = System.getProperty("user.home")+"\\Desktop\\";
+		String desktopPath = System.getProperty("user.home");
 		String desktopPathModified = desktopPath.replace("\\","/");
 //		String desktopPathModified = "/home";
 		String file=desktopPathModified+"/INVOICE/savedBill/"+billMaster.getBillNo()+".pdf";

@@ -318,7 +318,7 @@ public class PdfDocuments {
             System.out.println("userDir"+System.getProperty("user.dir"));
             System.out.println("userhome"+System.getProperty("user.home"));
             String currentDir = System.getProperty("user.dir")+"/src/main/resources/noidentitylogo.png";
-            String desktopPath = System.getProperty("user.home")+"\\Desktop\\";
+            String desktopPath = System.getProperty("user.home");
             String desktopPathModified = desktopPath.replace("\\","/");
 //            String desktopPathModified = "/home";
             int billNo=billmaster.getBillNo();
