@@ -70,7 +70,7 @@
 			<groupId>org.primefaces</groupId>
 			<artifactId>ultima-theme</artifactId>
 			<version>1.0.7</version>  
-		</dependency> 
+		</dependency>
 		<dependency>
         <groupId>com.itextpdf</groupId>
         <artifactId>kernel</artifactId>
