@@ -84,12 +84,12 @@ body.layout-compact .ui-datatable thead th {
 <p:outputLabel value="#{rowId+1}"></p:outputLabel>
 <h:inputHidden id="invoiceno" value="#{item.billNo}" />
 </p:column>
-<p:column sortBy="#{item.date}" filterBy="#{item.date}" width="100" headerText="Date">
+<p:column sortBy="#{item.date}" filterBy="#{item.date}" width="40" headerText="Date">
 <p:outputLabel  value="#{item.date}">
 <f:convertDateTime timeZone="IST" pattern="dd/MM/YY" />
 </p:outputLabel>
 </p:column>
-<p:column sortBy="#{item.billNo}" width="65" filterBy="#{item.billNo}" filterMatchMode="contains" headerText="Invoice No">
+<p:column sortBy="#{item.billNo}" width="45" filterBy="#{item.billNo}" filterMatchMode="contains" headerText="Invoice No">
 <p:outputLabel value="#{item.billNo}" style="font-weight:bold" ></p:outputLabel>
 <h:inputHidden value="#{item.billNo}" id="slNo" />
 </p:column>
@@ -103,16 +103,24 @@ body.layout-compact .ui-datatable thead th {
 <p:outputLabel value="#{dashBoardReportMBean.getBillDetails(item.billNo).totalAmt}" style="font-weight:bold" ></p:outputLabel>
 </p:column>
 <p:column width="65" headerText="GST 5">
-<p:outputLabel value="#{dashBoardReportMBean.getGstValue(item.billNo,5)}" ></p:outputLabel>
+    <p:outputLabel value="#{dashBoardReportMBean.getGstTotalValue(item.billNo,5)}   /  "  style="font-weight:bold">
+    </p:outputLabel>
+    <p:outputLabel value="#{dashBoardReportMBean.getGstValue(item.billNo,5)}" ></p:outputLabel>
 </p:column>
 <p:column width="65" headerText="GST 12">
-<p:outputLabel value="#{dashBoardReportMBean.getGstValue(item.billNo,12)}"  ></p:outputLabel>
+    <p:outputLabel value="#{dashBoardReportMBean.getGstTotalValue(item.billNo,12)}   /  " style="font-weight:bold">
+    </p:outputLabel>
+    <p:outputLabel value="#{dashBoardReportMBean.getGstValue(item.billNo,12)}"  ></p:outputLabel>
 </p:column>
 <p:column width="65" headerText="GST 18">
-<p:outputLabel value="#{dashBoardReportMBean.getGstValue(item.billNo,18)}"  ></p:outputLabel>
+    <p:outputLabel value="#{dashBoardReportMBean.getGstTotalValue(item.billNo,18)}   /  " style="font-weight:bold">
+    </p:outputLabel>
+    <p:outputLabel value="#{dashBoardReportMBean.getGstValue(item.billNo,18)}"  ></p:outputLabel>
 </p:column>
 <p:column width="65" headerText="GST 28">
-<p:outputLabel value="#{dashBoardReportMBean.getGstValue(item.billNo,28)}" ></p:outputLabel>
+    <p:outputLabel value="#{dashBoardReportMBean.getGstTotalValue(item.billNo,28)}   /  " style="font-weight:bold">
+    </p:outputLabel>
+    <p:outputLabel value="#{dashBoardReportMBean.getGstValue(item.billNo,28)}" ></p:outputLabel>
 </p:column>
 <p:column width="65" headerText="TOTAL">
 <p:outputLabel value="#{item.gstAmount}" ></p:outputLabel>

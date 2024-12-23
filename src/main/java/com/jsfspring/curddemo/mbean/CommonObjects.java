@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
+import com.jsfspring.curddemo.repositry.ProductUomRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -47,6 +48,9 @@ public class CommonObjects{
 	
 	@Autowired
 	public ProductRepo productRepo;
+
+	@Autowired
+	public ProductUomRepo ProductUomRepo;
 	
 	public CommonObjects() {
 		// TODO Auto-generated constructor stub
@@ -164,7 +168,8 @@ public class CommonObjects{
 	     query.setParameter(1, billNo);
 	     query.executeUpdate();
 	}
-    
+
+	@Transactional
 	public <T> T save(T object) throws SukiException {
 		if (object.getClass().equals(PurchaseBillMaster.class)) {
 			PurchaseBillMaster temp = (PurchaseBillMaster) object;
@@ -177,8 +182,7 @@ public class CommonObjects{
 //				});
 //			}
 		}
-		object=entityManager.merge(object); 
-		
+
 		if (object.getClass().equals(DeliveryChalanMaster.class)) {
 			DeliveryChalanMaster temp = (DeliveryChalanMaster) object;
 			temp.getDcTransList().parallelStream().forEach(i -> {
@@ -217,7 +221,9 @@ public class CommonObjects{
 				temp.getBillTransList().parallelStream().forEach(i -> {
 					ProductUom product = i.getUom();
 					product.setStock(product.getStock() - i.getQty());
-					entityManager.merge(product);
+					System.out.println("product stock"+product.getStock()+" id "+product.getRowId());
+					ProductUomRepo.save(product);
+//					entityManager.merge(product);
 				});
 			}
 		}
@@ -237,6 +243,7 @@ public class CommonObjects{
 					entityManager.merge(product);
 			}
 		}
+		object=entityManager.merge(object);
 		return object;
 	}
 

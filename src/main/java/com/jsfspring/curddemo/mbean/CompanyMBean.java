@@ -70,16 +70,16 @@ public class CompanyMBean{
 			}
 			CompanyCategoryList companyCategoryList;
 			CompanyCategory companyCategory;
-			System.out.println(company.getCategoryList());
-			companyCategoryListRepo.deleteAll(company.getCategoryList());
-			company.setCategoryList(new ArrayList<CompanyCategoryList>());
-			for(int i=0;i<company.getCategoryListString().size(); i++) {
-				companyCategoryList = new CompanyCategoryList();
-				companyCategory = companyCategoryRepo.findByCategory(company.getCategoryListString().get(i));
-				companyCategoryList.setCategoryId(companyCategory);
-				companyCategoryList.setCompId(company);
-				company.getCategoryList().add(companyCategoryList);
-			}
+//			System.out.println(company.getCategoryList());
+//			companyCategoryListRepo.deleteAll(company.getCategoryList());
+//			company.setCategoryList(new ArrayList<CompanyCategoryList>());
+//			for(int i=0;i<company.getCategoryListString().size(); i++) {
+//				companyCategoryList = new CompanyCategoryList();
+//				companyCategory = companyCategoryRepo.findByCategory(company.getCategoryListString().get(i));
+//				companyCategoryList.setCategoryId(companyCategory);
+//				companyCategoryList.setCompId(company);
+//				company.getCategoryList().add(companyCategoryList);
+//			}
 //			company.getCategoryListString().stream().forEach(i->{
 //				CompanyCategoryList companyCategoryList = new CompanyCategoryList();
 //				CompanyCategory companyCategory = companyCategoryRepo.findByCategory(i);
@@ -88,8 +88,8 @@ public class CompanyMBean{
 //				company.getCategoryList().add(companyCategoryList);
 //				});
 			company=companyRepo.save(company);
-			if(company.getCategoryList()!=null && company.getCategoryList().size()>0)
-				company.setCategoryListString(company.getCategoryList().stream().map(i->i.getCategoryId().getCategory()).collect(Collectors.toList()));
+//			if(company.getCategoryList()!=null && company.getCategoryList().size()>0)
+//				company.setCategoryListString(company.getCategoryList().stream().map(i->i.getCategoryId().getCategory()).collect(Collectors.toList()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -98,8 +98,8 @@ public class CompanyMBean{
 	public void getCompanyObjActionEvent(ActionEvent event) {
 		company = new Company();
 		company = companyRepo.findById(sukiBaseBean.actionEvent(event)).get();
-		if(company.getCategoryList()!=null && company.getCategoryList().size()>0)
-			company.setCategoryListString(company.getCategoryList().stream().map(i->i.getCategoryId().getCategory()).collect(Collectors.toList()));
+//		if(company.getCategoryList()!=null && company.getCategoryList().size()>0)
+//			company.setCategoryListString(company.getCategoryList().stream().map(i->i.getCategoryId().getCategory()).collect(Collectors.toList()));
 		sukiBaseBean.pageRedirect(addCompany);
 	}
 

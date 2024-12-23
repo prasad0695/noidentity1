@@ -4,6 +4,8 @@ public class GstDomain {
 	
 	private double gstPercentage;
 	private double gstAmount;
+
+	private double gstValue;
 	private int billNo;
 	private String companyName;
 	private String gst;
@@ -21,6 +23,15 @@ public class GstDomain {
 	public void setGstAmount(double gstAmount) {
 		this.gstAmount = gstAmount;
 	}
+
+	public double getGstValue() {
+		return gstValue;
+	}
+
+	public void setGstValue(double gstValue) {
+		this.gstValue = gstValue;
+	}
+
 	public int getBillNo() {
 		return billNo;
 	}
