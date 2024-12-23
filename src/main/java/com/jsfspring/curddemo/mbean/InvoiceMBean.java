@@ -40,7 +40,7 @@ import com.jsfspring.curddemo.repositry.ExpenseRepo;
 import com.jsfspring.curddemo.repositry.QuotationMasterRepo;
 import com.jsfspring.curddemo.utills.SukiAppConstants;
 import com.jsfspring.curddemo.utills.SukiAppUtil;
-import com.jsfspring.curddemo.utills.SukiException;;
+import com.jsfspring.curddemo.utills.SukiException;
 import java.awt.Desktop;
 @Controller("invoiceMBean")
 @SessionScope
@@ -116,6 +116,7 @@ public class InvoiceMBean{
 	public void addNewUom() {
 		ProductUom uom = new ProductUom();
 		product.addUomTrans(uom);
+		product = new ProductDomain();
 		System.out.println("MBEAN LIST SIZE---" + product.getProdUomTransList().size());
 	}
 	public void newExpense() {
@@ -191,7 +192,7 @@ public class InvoiceMBean{
 		billMaster.setDate(SukiAppUtil.getCurrentDateAndTime());
 	}
 	
-	public void updateInvoice(){
+	public void updateInvoice() throws SukiException {
 				if(billMaster.getInvoiceType().equalsIgnoreCase("Direct"))
 					billMaster.setDcMaster(billMaster.getDcMasterFromBillMaster(billMaster));
 				billMaster=billMasterRepo.save(billMaster);
@@ -461,6 +462,7 @@ public class InvoiceMBean{
 					billMaster.setDcMaster(new DeliveryChalanMaster(billMaster));;
 					billMaster.getDcMaster().setDeliveryNo(commonObjects.getAutoNumber("deliveryNo","DeliveryChalanMaster"));
 				billMasterRepo.save(billMaster);
+//				commonObjects.save(billMaster);
 				sukiBaseBean.addMessage("Invoice", "Invoice saved successfully");
 			}else {
 		//		selectedDcMasterList.parallelStream().forEach(i->{i.setStatus("Billed");i.setBillNo(billMaster);i.setForBill(String.valueOf(billMaster.getBillNo()))};
@@ -496,6 +498,7 @@ public class InvoiceMBean{
 				billMasterRepo.save(billMaster);
 				}
 			billMaster.setEditBoolean(true);
+			commonObjects.save(billMaster);
 			sukiBaseBean.addMessage("Invoice", "Invoice saved successfully");
 			}}}catch (Exception e) {
 			System.out.println("Error---"+e);

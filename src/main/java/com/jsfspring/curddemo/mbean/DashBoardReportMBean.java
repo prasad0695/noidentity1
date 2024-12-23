@@ -401,6 +401,19 @@ public class DashBoardReportMBean<T>{
     	}
     	return 0;
     }
+	public String getGstTotalValue(int billNo,double gstPercentage) {
+		System.out.println("billNo"+billNo);
+		System.out.println("gstMap"+gstMap);
+		List<GstDomain> gstList=gstMap.get(billNo);
+		System.out.println("gstList"+gstList);
+		double gstValue = 0;
+		for(int i=0;i<gstList.size();i++) {
+			if(gstList.get(i).getGstPercentage()==gstPercentage) {
+				gstValue+=gstList.get(i).getGstValue();
+			}
+		}
+		return SukiAppUtil.formatDouble(gstValue);
+	}
     public double getPurchaseGstValue(int billNo,long gstPercentage) {
     	List<GstDomain> gstList=purchaseGstMap.get(billNo);
     	System.out.println("purchasegstList"+gstList.size());

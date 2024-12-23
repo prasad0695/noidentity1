@@ -162,7 +162,7 @@ public class ReportService {
 	}
 	public GstReportDomain getGstReport(int month, int year) throws SukiException {
 		GstReportDomain gstReport=new GstReportDomain();
-		String sql="SELECT A.GST,SUM((A.QUANTITY*A.RATE)*A.GST/100),B.INVOICE_NO AS GSTAMOUNT,C.COMPANY_NAME,C.GST AS GSTNO,B.TOTAL_AMOUNT FROM BILL_TRANS A,BILL_MASTER B,COMPANY C WHERE A.BILL_NO=B.INVOICE_NO AND B.COMPANY_ID=C.COMPANY_ID AND MONTH(B.DATE)=? AND YEAR(B.DATE)=? AND B.GST_BILL='1' GROUP BY A.GST,B.INVOICE_NO,C.COMPANY_NAME,C.GST,B.TOTAL_AMOUNT";
+		String sql="SELECT A.GST,SUM((A.QUANTITY*A.RATE)*A.GST/100),B.INVOICE_NO AS GSTAMOUNT,C.COMPANY_NAME,C.GST AS GSTNO, B.TOTAL_AMOUNT, A.AMOUNT AS GSTVALUE FROM BILL_TRANS A,BILL_MASTER B,COMPANY C WHERE A.BILL_NO=B.INVOICE_NO AND B.COMPANY_ID=C.COMPANY_ID AND MONTH(B.DATE)=? AND YEAR(B.DATE)=? AND B.GST_BILL='1' GROUP BY A.GST,B.INVOICE_NO,C.COMPANY_NAME,C.GST,B.TOTAL_AMOUNT,A.AMOUNT";
 		Query query = entityManager.createNativeQuery(sql);
 		query.setParameter(1, month);
 		query.setParameter(2, year);
@@ -177,6 +177,7 @@ public class ReportService {
 			gst.setCompanyName(list.get(i)[3].toString());
 			gst.setGst(list.get(i)[4].toString());
 			gst.setTotalAmt(Double.parseDouble(list.get(i)[5].toString()));
+			gst.setGstValue(Double.parseDouble(list.get(i)[6].toString()));
 			gstReportList.add(gst);
 		}
 		gstReport.setGstReportList(gstReportList);

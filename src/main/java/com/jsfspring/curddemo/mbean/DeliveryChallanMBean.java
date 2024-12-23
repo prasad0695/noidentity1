@@ -103,16 +103,20 @@ public class DeliveryChallanMBean {
 	public void dcPdfprint(DeliveryChalanMaster deliveryMaster) {
 		try {
 		pdfDocuments.createDc(deliveryMaster);
-		String file=SukiAppConstants.DC_FOLDER+deliveryMaster.getDeliveryNo()+".pdf";
+			String desktopPath = System.getProperty("user.home");
+			String desktopPathModified = desktopPath.replace("\\","/");
+//		String desktopPathModified = "/home";
+		String file=desktopPathModified+"/INVOICE/Dc/"+deliveryMaster.getDeliveryNo()+".pdf";
+//		String file=SukiAppConstants.DC_FOLDER+deliveryMaster.getDeliveryNo()+".pdf";
 		File pdfFile = new File(file);
-		if (pdfFile.exists()) {
-			Process p = Runtime
-			   .getRuntime()
-			   .exec("rundll32 url.dll,FileProtocolHandler "+file);
-			p.waitFor();
-		} else {
-			System.out.println("File is not exists");
-		}
+//		if (pdfFile.exists()) {
+//			Process p = Runtime
+//			   .getRuntime()
+//			   .exec("rundll32 url.dll,FileProtocolHandler "+file);
+//			p.waitFor();
+//		} else {
+//			System.out.println("File is not exists");
+//		}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

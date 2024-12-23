@@ -1,11 +1,13 @@
 package com.jsfspring.curddemo.mbean;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Service;
 
@@ -51,7 +53,10 @@ public class PdfDocuments {
 		byte[] dcPdf=null;
 		try{
 			PdfCommonMethods.fontNames();
-		String dest=SukiAppConstants.DC_FOLDER+dcNo+".pdf";
+//		String dest=SukiAppConstants.DC_FOLDER+dcNo+".pdf";
+		String desktopPath = System.getProperty("user.home");
+        String desktopPathModified = desktopPath.replace("\\","/");
+        String dest=desktopPathModified+"/INVOICE/Dc/"+dcNo+".pdf";
 		ByteArrayOutputStream pdfFileout = new ByteArrayOutputStream();
 		PdfDocument pdfDoc = new PdfDocument(new PdfWriter(dest));
         // Note that it is not necessary to create new PageSize object,
@@ -310,6 +315,61 @@ public class PdfDocuments {
 //	    tabHead.AddCell(cell);
 //	    tabHead.WriteSelectedRows(0, -1, 150, document.Top, writer.DirectContent);
 //	}
+        public static void runCommand(File whereToRun, String command) throws Exception {
+            System.out.println("Running in: " + whereToRun);
+            System.out.println("Command: " + command);
+
+            ProcessBuilder builder = new ProcessBuilder();
+            builder.directory(whereToRun);
+
+            if(false) {
+                builder.command("cmd.exe", "/c", command);
+            }else {
+                builder.command("sh", "-c", command);
+            }
+
+            Process process = builder.start();
+
+            OutputStream outputStream = process.getOutputStream();
+            InputStream inputStream = process.getInputStream();
+            InputStream errorStream = process.getErrorStream();
+
+            printStream(inputStream);
+            printStream(errorStream);
+
+            boolean isFinished = process.waitFor(30, TimeUnit.SECONDS);
+            outputStream.flush();
+            outputStream.close();
+
+            if(!isFinished) {
+                process.destroyForcibly();
+            }
+        }
+
+        private static void printStream(InputStream inputStream) throws IOException {
+            try(BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+                String line;
+                while((line = bufferedReader.readLine()) != null) {
+                    System.out.println(line);
+                }
+
+            } catch (java.io.IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        public static void downloadUsingStream(String urlStr, String file) throws Exception {
+            URL url = new URL(urlStr);
+            BufferedInputStream bis = new BufferedInputStream(url.openStream());
+            FileOutputStream fis = new FileOutputStream(file);
+            byte[] buffer = new byte[1024];
+            int count=0;
+            while((count = bis.read(buffer,0,1024)) != -1)
+            {
+                fis.write(buffer, 0, count);
+            }
+            fis.close();
+            bis.close();
+        }
 		public static byte[] createBill(BillMasterDomain billmaster){
             String userDirectory = Paths.get("")
                     .toAbsolutePath()
@@ -486,6 +546,8 @@ public class PdfDocuments {
 	        }
 	        doc.close();
 	        dcPdf=loadFile(dest);
+//            File location = new File("/");
+//            runCommand(location, "gcloud auth login");
 	        return dcPdf;
 			}catch (Exception e) {
 				e.printStackTrace();
