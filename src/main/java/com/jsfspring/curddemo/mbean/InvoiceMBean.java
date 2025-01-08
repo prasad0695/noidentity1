@@ -2,12 +2,16 @@ package com.jsfspring.curddemo.mbean;
 
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.faces.application.FacesMessage;
@@ -17,7 +21,13 @@ import javax.faces.event.AjaxBehaviorEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.annotation.SessionScope;
 
 import com.jsfspring.curddemo.entity.BillMasterDomain;
@@ -42,7 +52,7 @@ import com.jsfspring.curddemo.utills.SukiAppConstants;
 import com.jsfspring.curddemo.utills.SukiAppUtil;
 import com.jsfspring.curddemo.utills.SukiException;
 import java.awt.Desktop;
-@Controller("invoiceMBean")
+@RestController("invoiceMBean")
 @SessionScope
 public class InvoiceMBean{
 
@@ -91,6 +101,38 @@ public class InvoiceMBean{
 	public InvoiceMBean(){
 		
 	}
+
+	@GetMapping("/downloadFile/{billNo}")
+	public ResponseEntity<byte[]> downloadFile(@PathVariable String billNo) throws IOException {
+		String desktopPath = System.getProperty("user.home");
+		String desktopPathModified = desktopPath.replace("\\","/");
+		String file=desktopPathModified+"/INVOICE/savedBill/"+billNo+".pdf";
+		final byte[] pdfBytes = Files.readAllBytes(Paths.get(file));
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.parseMediaType("application/pdf"));
+		headers.setContentDispositionFormData("attachment", billNo);
+		headers.setCacheControl("no-cache");
+
+		return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setContentType(MediaType.APPLICATION_PDF);
+//		// Here you have to set the actual filename of your pdf
+//		byte[] contents = "Any String you want".getBytes();
+//		String filename = "output.pdf";
+//		headers.setContentDispositionFormData(filename, filename);
+//		headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+//		ResponseEntity<byte[]> response = new ResponseEntity<>(contents, headers, HttpStatus.OK);
+//		return response;
+
+
+
+//		return ResponseEntity.ok()
+//				.contentType(MediaType.parseMediaType("application/pdf"))
+//				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "abcd" + "\"")
+//				.body(file);
+	}
+
 	public void addCompany() {
 		company=new Company();
 	}
@@ -273,6 +315,7 @@ public class InvoiceMBean{
 		String file=desktopPathModified+"/INVOICE/savedBill/"+billMaster.getBillNo()+".pdf";
 //		String file=SukiAppConstants.BILL_FOLDER+billMaster.getBillNo()+".pdf";
 		File pdfFile = new File(file);
+//		downloadFile(file);
 		DesktopApi.open(pdfFile);
 //		if (pdfFile.exists()) {
 //			Process p = Runtime
