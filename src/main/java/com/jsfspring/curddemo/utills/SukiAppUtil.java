@@ -1041,6 +1041,7 @@ public static int getIntMonthFromStringMonth(String prefixStr){
 		list.add(2022);
 		list.add(2023);
 		list.add(2024);
+		list.add(2025);
 		return list;
 	}
 	public static String getShortMonthOfYear(int month) {
